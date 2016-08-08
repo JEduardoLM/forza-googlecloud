@@ -1,0 +1,77 @@
+application: prueba-1364
+version: 1
+runtime: php55
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+#PHP
+
+- url: /bl/(.+\.php)(.*)
+  script: /bl/\1
+
+#CSS
+
+- url: /front/shell/css
+  static_dir: front/shell/css
+
+- url: /front/assets/icons
+  static_dir: front/assets/icons
+
+- url: /front/modulos/usuariosModulo/css
+  static_dir: front/modulos/usuariosModulo/css
+
+# Utils
+
+- url: /front/utils
+  static_dir: front/utils
+
+# Librerias
+
+- url: /front/utils/jquery.js
+  script: /front/utils/jquery.js
+
+- url: /front/utils/bootstrap.min.js
+  script: /front/utils/bootstrap.min.js
+
+- url: /front/utils/angu-fixed-header-table.js
+  script: /front/utils/angu-fixed-header-table.js
+
+# JS
+
+- url: /front/shell/js/angularModule.js
+  script: /front/shell/js/angularModule.js
+
+- url: /front/modulos/usuariosModulo/js
+  static_dir: front/modulos/usuariosModulo/js
+
+- url: /front/modulos/aparatosModulo/js
+  static_dir: front/modulos/aparatosModulo/js
+
+# HTML
+
+- url: /front/shell/(.+\.html)(.*)
+  script: /front/shell/\1
+
+- url: /front/modulos/usuariosModulo/view/(.+\.html)(.*)
+  script: /front/modulos/usuariosModulo/view/\1
+
+- url: /front/modulos/configuracionModulo/(.+\.html)(.*)
+  script: /front/modulos/configuracionModulo/\1
+
+- url: /front/modulos/aparatosModulo/view/(.+\.html)(.*)
+  script: /front/modulos/aparatosModulo/view/\1
+
+- url: /front/modulos/musculosModulo/view/(.+\.html)(.*)
+  script: /front/modulos/musculosModulo/view/\1
+
+
+
+#DEFAULT
+
+- url: .*
+  script: index.html

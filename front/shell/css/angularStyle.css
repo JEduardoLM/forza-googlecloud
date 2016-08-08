@@ -1,0 +1,178 @@
+.logoIcon{
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 24px;
+    width: 24px;
+}
+
+html, body{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: dimgray;
+    background-image: url(/front/assets/icons/artecLogo.svg);
+}
+
+h2{
+    font-weight: bold;
+}
+
+input{
+    width: 200px !important;
+}
+
+img{
+    height: 64px;
+    width: 33%;
+    margin-top: 10px
+}
+
+p{
+    width: 100%;
+    margin-top: 20px
+}
+
+div{
+    border-radius: 4px;
+}
+
+.container {
+    height: 100%;
+    width: auto;
+    display: table;
+    vertical-align: middle;
+    /*border: 1px solid #f00;*/
+}
+
+.containerCenter{
+    height: auto;
+    width: auto;
+    //padding: 0;
+    display: table;
+    vertical-align: middle;
+    /*border: 1px solid #f00;*/
+}
+
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+    /*border: 1px solid #0f0;*/
+}
+
+.divLogin{
+    margin-left: 5%;
+    max-height: 500px;
+    max-width: 500px;
+    width: 90%;
+    padding-top: 8px;
+    padding-left: 32px;
+    padding-right: 32px;
+    /*border-style: outset;*/
+    background-color: rgba(245, 245, 245, 0.95);
+}
+
+.rigth-horizontal-align{
+    width: 100%;
+    display: table;
+    text-align: right;
+    margin-top: 10px;
+    margin-bottom: 8px;
+}
+
+td.container{
+    height: 36px !important;
+    display: table-cell;
+}
+
+.containerCentered {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    /*border: 1px solid #00f;*/
+}
+
+.containerForm{
+    margin: auto;
+    /*height: 124px;
+    width: 336px
+    border: 1px solid #000;*/
+}
+
+.divGyms{
+    width: 336px;
+    height: 124px;
+}
+
+select{
+    width: 200px;
+}
+
+/*div{
+    border: 1px solid #000;
+}*/
+
+.small {
+    width:0px;
+    /*pacity: 0;*/
+}
+.big {
+    width:336px;
+    /*opacity: 1;*/
+}
+.smallGrid{
+    width: 0px;
+}
+.bigGrid{
+    width: 336px;
+}
+/*.transformable {
+    -webkit-transition: height 100ms linear;
+    -moz-transition: height 100ms linear;
+    -o-transition: height 100ms linear;
+    -ms-transition: height 100ms linear;
+    transition: height 100ms linear;
+    background-color: rgba(238,238,238,1);
+    height: 124px;
+}*/
+
+
+.capa1{
+    position:absolute;
+    z-index:1;
+    background-color: rgba(238,238,238,1);
+    left: calc(100%/2 - 152px);
+}
+.capa2{
+    position:absolute;
+    z-index:0;
+    left: calc(100%/2 - 152px);}
+
+/* validator */
+:required {
+    background: #fff url('/front/assets/icons/comment-alert-outline-red.svg') no-repeat 100% 0;
+}
+input:valid{
+    background-color: #e8f5e9 !important;
+    background: url('/front/assets/icons/comment-check-outline-green.svg') no-repeat 100% 0;
+}
+/* fin validator */
+
+#dialog{
+    display: none;
+}
+.imglogin{
+    width: 33.3%;
+}
+.imglogcont{
+    display: flex;
+}
+#fLogin{
+    /*background-color: aqua*/
+}
+input {
+    margin-top: 1em;
+}

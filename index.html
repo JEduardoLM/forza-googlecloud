@@ -1,0 +1,119 @@
+<!doctype html>
+<html data-ng-app="demoGym">
+    <head>
+        <meta charset="utf-8">
+        <title>Gym</title>
+        <!-- jQuery-->
+        <script type="text/javascript" src="/front/utils/jquery.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+        <script type="application/javascript" src="/front/utils/bootstrap.min.js"></script>
+        <!-- Bootstrap -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+        <!-- AngularJS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-route.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-animate.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-cookies.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-messages.js"></script>
+        <script src="/front/utils/angu-fixed-header-table.js"></script>
+
+        <link rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css">
+        <script src="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.js"></script>
+
+        <script type="text/javascript" src="/front/shell/js/angularModule.js"></script>
+
+        <!-- CSS -->
+        <link href="/front/shell/css/angularStyle.css" rel="stylesheet"/>
+
+        <style>
+
+        </style>
+    </head>
+
+    <body data-ng-controller="loginCommand" onresize="adapta()">
+        <div class="container">
+            <div class="vertical-center-row">
+                <div class="divLogin" data-ng-style="{'color': 'gary'}">
+                    <h2>FORZA</h2>
+                    Entrenamiento formalizado
+                    <br><br><br>
+
+                    <div class="containerCenter">
+
+                        <div class="containerCentered containerForm">
+                            <div>
+                                <form role="form" name="loginForm" id="fLogin" data-ng-submit="loginHandler()">
+                                    <table>
+                                        <tr>
+                                            <td dir="rtl" class="container" style="display:" id="correo">:Correo</td>
+                                            <td><input type="email" class="form-control input-sm" placeholder="example@something.com" data-ng-model="email_login" maxlength="250" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td dir="rtl" class="container" style="display:" id="pass">:Contraseña</td>
+                                            <td><input type="password" class="form-control input-sm" placeholder="password" data-ng-model="pass_login" maxlength="250" required></td>
+                                        </tr>
+                                    </table>
+
+                                    <div class="rigth-horizontal-align">
+                                        <button class="btn btn-success" type="submit">Ingresar</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!--div data-ng-view></div-->
+                            <modal title="Seleccione gimnasio" style="display:none" visible="showModal">
+                                <div class="container">
+                                    <div class="vertical-center-row sizeLogin">
+                                        Gimnasio:
+                                        <select data-ng-model="selectedItem"
+                                            data-ng-options="gym as gym.NombreGimnasio for gym in aGym" data-ng-change="goToMenu(selectedItem)">
+                                        </select>
+                                    </div>
+                                </div>
+                            </modal>
+                        </div>
+
+                        <div id="dialog" title="Error">
+                            {{messageLogin}}
+                        </div>
+
+                        <div ng-style="{'background-color': 'black', height: '1px',width:'90%',margin:'auto'}"></div>
+                        <div class="imglogcont">
+                        <img src="/front/assets/icons/dumbbell.svg" class="imglogin">
+                        <img src="/front/assets/icons/nutrition.svg" class="imglogin">
+                        <img src="/front/assets/icons/seguimiento.svg" class="imglogin">
+                        </div>
+
+                        <p>Administra las rutinas de tus socios, lleva el seguimiento de sus avances, y conectate con ellos aún fuera del gimnacio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $( document ).ready(function() {
+                adapta()
+            });
+
+            function adapta(){
+                if(window.innerWidth<400){
+                    //alert("hi");
+                    $("#correo").css("display","none");
+                    $("#pass").css("display","none")
+                }else{
+                    $("#correo").css("display","");
+                    $("#pass").css("display","")
+                }
+            }
+
+
+        </script>
+    </body>
+</html>

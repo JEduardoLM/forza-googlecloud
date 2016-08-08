@@ -1,0 +1,165 @@
+<!doctype html>
+<html data-ng-app="demoGym">
+    <head>
+        <meta charset="utf-8">
+        <title>Configuración</title>
+        <!-- Bootstrap -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+        <!-- AngularJS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-route.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-animate.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-cookies.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-messages.js"></script>
+        <script src="/front/utils/angu-fixed-header-table.js"></script>
+
+        <link rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css">
+        <script src="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.js"></script>
+
+        <!-- CSS iconos -->
+        <link href="/front/utils/iconos.css" rel="stylesheet" type="text/css" />
+        <link href="/front/modulos/usuariosModulo/css/usersStyle.css" rel="stylesheet" type="text/css"/>
+
+        <!-- jQuery-->
+        <script type="text/javascript" src="/front/utils/jquery.js"></script>
+
+        <script type="text/javascript" src="/front/shell/js/angularModule.js"></script>
+
+        <style>
+            html, body{
+                height: calc(100% - (2px));
+                width: 100%;
+            }
+            body{
+                padding-top: 56px;
+                padding-left: 5px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-image: url(/front/assets/icons/artecLogo.svg);
+                background-color: dimgray;
+            }
+
+            div{
+                /*border-style: solid;*/
+                border-radius: 4px;
+            }
+
+            label{
+                color: black;
+            }
+
+            a{
+                color: black;
+            }
+
+            .aMenu{
+                color: white;
+            }
+
+            .divBack{
+                margin-bottom: 5px;
+            }
+
+            .divMenu{
+                /*height: calc(100% - (0px));*/
+                height: 100%;
+                width: 200px;
+                float: left;
+                background: rgba(245,245,245,0.9); /*rgba(250,250,250,0.9);*/
+            }
+
+
+            .divContent{
+                /*height: calc(100% - (0px));*/
+                height: 100%;
+                width: calc(100% - (200px));
+                padding-top: 1px;
+                margin-left: 201px;
+                background-color: rgba(159,168,218,0.9);;
+            }
+
+            .logoIcon{
+                background-size: contain;
+                background-repeat: no-repeat;
+                height: 36px;
+                width: 36px;
+            }
+
+            .btnBackIcon{
+                background-image: url(/front/assets/icons/keyboard-backspace.svg) !important;
+                background-color: lightgray
+            }
+
+        </style>
+    </head>
+
+    <body data-ng-controller="loginCommand">
+        <!--div data-ng-include src=" '/front/shell/view/menuNav.html' "></div-->
+        <nav class="navbar navbar-fixed-top" role="navigation"
+             data-ng-controller="ConfiguracionCommand">
+            <div class="container">
+                <div class="navbar-brand">
+                    {{nombreGym}}
+                </div>
+
+                <div class="collapse navbar-collapse navHeaderCollapse">
+                    <ul class=" nav navbar-nav navbar-right">
+                        <li class="active"> <a class="aMenu" href="#"> {{usuarioAutenticadoNombre}} </a> </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="divMenu" data-ng-controller="ConfiguracionCommand">
+            <button data-ng-click="backToMenu()" class="btn logoIcon btnBackIcon"></button>
+            <label>CATÁLOGO</label>
+
+            <ul class="list-group">
+                <li class="list-group-item" data-ng-repeat="catalogo in aCatalogo">
+                    <a href="#{{catalogo.url}}">{{catalogo.name}}</a>
+                </li>
+            </ul>
+            <!--div class="list-group">
+                <a href="#/musculos" class="list-group-item" data-ng-repeat="catalogo in aCatalogo">{{catalogo.name}}</a>
+            </div-->
+        </div>
+
+        <script type="text/javascript" src="/front/modulos/aparatosModulo/js/AparatoBL.js"></script>
+        <!--<div class="divContent" data-ng-view data-ng-controller="AparatosCommand"></div>-->
+        <div class="divContent" data-ng-view></div>
+
+        <script>
+            myApplication.controller('ConfiguracionCommand', ['$scope', '$cookies', function($scope, $cookies){
+                $scope.usuarioAutenticadoId = $cookies.get('usuarioAutenticadoId');
+                $scope.usuarioAutenticadoNombre =  $cookies.get('usuarioAutenticadoNombre');
+                $scope.gimnasioId = parseInt($cookies.get('GymId'), 10);
+                $scope.nombreGym = $cookies.get('nombreGym');
+
+                $scope.aCatalogo = [{name: 'Músculos', url: '/musculos'},
+                                   {name: 'Aparatos', url: '/aparatos'},
+                                   {name: 'Ejercicios pesas', url: '/'},
+                                   {name: 'Ejercicios cárdio', url: '/'},
+                                   {name: 'Tipos de series', url: '/'},
+                                   {name: 'Unidades de velocidad', url: '/'},
+                                   {name: 'Unidades de peso', url: '/'}];
+            }]);
+
+            myApplication.config(['$routeProvider', function($routeProvider){
+                $routeProvider.when('/musculos',{
+                    templateUrl: '/front/modulos/musculosModulo/view/musculosBandeja.html',
+                }).
+                when('/aparatos',{
+                    templateUrl: '/front/modulos/aparatosModulo/view/aparatosBandeja.html',
+                }).
+                otherwise({
+                    redirectTo: '/',
+                });
+            }]);
+        </script>
+    </body>
+</html>

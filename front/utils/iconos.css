@@ -1,0 +1,41 @@
+.iconMedium{
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 36px;
+    width: 36px;
+}
+
+.ic_back{
+    background-image: url(/front/assets/icons/keyboard-backspace.svg) !important;
+    background-color: #c5cae9;
+}
+
+.ic_save{
+    background-image: url(/front/assets/icons/content-save.svg) !important;
+    background-color: lightgray
+}
+
+.ic_edit{
+    background-image: url(/front/assets/icons/pencil.svg) !important;
+    background-color: lightgray
+}
+
+.ic_user_asociar{
+    background-image: url(/front/assets/icons/account-plus.svg) !important;
+    background-color: lightgray
+}
+
+.ic_user_cambio_suc{
+    background-image: url(/front/assets/icons/account-switch.svg) !important;
+    background-color: lightgray
+}
+
+.ic_user_baja{
+    background-image: url(/front/assets/icons/account-minus.svg) !important;
+    background-color: lightgray
+}
+
+.ic_user_reingresar{
+    background-image: url(/front/assets/icons/account-convert.svg) !important;
+    background-color: lightgray
+}
