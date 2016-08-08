@@ -212,7 +212,7 @@ class Ejercicio{
                 $idEjercicioCardio=$datosEjercicio["IdEjercicioSubrutina"];
                 $circuito = $datosEjercicio["Circuito"];
                 $orden = $datosEjercicio["Orden"];
-                // $idSubrutina = $datosEjercicio["IdSubrutina"];
+                //$idSubrutina = $datosEjercicio["IdSubrutina"];
 
                 if ($tipoEjercicio==1){  // Si el tipo de ejercicio es 1, significa que es Cardio
                     $sql="UPDATE `subrutinaejerciciocardio` SET `Circuito`=$circuito, `Orden`=$orden WHERE `SEC_ID`=$idEjercicioCardio;";
@@ -353,23 +353,6 @@ class Ejercicio{
                                     $item["Circuito"]=$row["Circuito"];
                                     if ($item["Circuito"]==NULL){$item["Circuito"]=0;}
 
-                                    //********************************************************
-                                    if ($item["Circuito"]==0)
-                                    {
-                                        if ($bandera)
-                                        {
-                                            $item["CircuitoColor"]=0;
-                                        }
-                                        else
-                                        {
-                                            $item["CircuitoColor"]=1;
-                                        }
-                                        $bandera=!$bandera;
-                                    }
-                                    else
-                                    {
-                                        $item["CircuitoColor"]=$item["Circuito"]+1;
-                                    }
 
                                     //********************************************************
 
@@ -689,24 +672,7 @@ class Ejercicio{
                                     if ($item["Circuito"]==NULL){$item["Circuito"]=0;}
 
                                     //********************************************************
-                                    if ($item["Circuito"]==0)
-                                    {
-                                        if ($bandera)
-                                        {
-                                            $item["CircuitoColor"]=0;
-                                        }
-                                        else
-                                        {
-                                            $item["CircuitoColor"]=1;
-                                        }
-                                        $bandera=!$bandera;
-                                    }
-                                    else
-                                    {
-                                        $item["CircuitoColor"]=$item["Circuito"]+1;
-                                    }
 
-                                    //********************************************************
 
                                     $item["TiempoDescansoEntreSerie"]=$row["TiempoDescansoEntreSerie"];
                                     if ($item["TiempoDescansoEntreSerie"]==NULL){$item["TiempoDescansoEntreSerie"]=0;}

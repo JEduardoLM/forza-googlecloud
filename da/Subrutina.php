@@ -646,23 +646,6 @@ class Subrutina{
                                     $item["Circuito"]=$row["Circuito"];
                                     if ($item["Circuito"]==NULL){$item["Circuito"]=0;}
 
-                                    //********************************************************
-                                    if ($item["Circuito"]==0)
-                                    {
-                                        if ($bandera)
-                                        {
-                                            $item["CircuitoColor"]=0;
-                                        }
-                                        else
-                                        {
-                                            $item["CircuitoColor"]=1;
-                                        }
-                                        $bandera=!$bandera;
-                                    }
-                                    else
-                                    {
-                                        $item["CircuitoColor"]=$item["Circuito"]+1;
-                                    }
 
                                     //********************************************************
 
@@ -792,7 +775,7 @@ class Subrutina{
     }
 
 
-    function getDetalleEjercicioByID ($idEjercicio,$circuitoColor){// Esta función nos regresa el detalle de ejercicios contenidos en una subrutina
+    function getDetalleEjercicioByID ($idEjercicio){// Esta función nos regresa el detalle de ejercicios contenidos en una subrutina
 		//Creamos la conexión con la función anterior
 		$conexion = obtenerConexion();
 
@@ -866,9 +849,7 @@ class Subrutina{
                                     $item["Circuito"]=$row["Circuito"];
                                     if ($item["Circuito"]==NULL){$item["Circuito"]=0;}
 
-                                    //********************************************************
 
-                                    $item["CircuitoColor"]=$circuitoColor;
 
                                     //********************************************************
 

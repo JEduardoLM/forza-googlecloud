@@ -5,15 +5,15 @@
 	// Creación de archivo PHP, el cual permite administrar la información de una rutina (Subrutinas, ejercicios, series, repeticiones, etc...)
 
 
-	 $data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
+	  $data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
-     //$json = '{"metodo":"getEjerciciosBySubrutina","IdSubrutina":1,"Ejercicios":[{"TipoEjercicio":1,"IdEjercicio":1,"Orden":1},{"TipoEjercicio":1,"IdEjercicio":2,"Orden":2}]}';
+    //  $json = '{"metodo":"actualizarOrdenCircuito","Ejercicios":[{"TipoEjercicio":1, "IdEjercicioSubrutina":2, "Circuito":1, "Orden":1},{"TipoEjercicio":1, "IdEjercicioSubrutina":3, "Circuito":1, "Orden":2},"IdSubrutina":2}';
 
 
-    //$data=(json_decode($json, true));
+    // $data=(json_decode($json, true));
 
-	//Extraemos la información del método POST, y lo asignamos a diferentes variables
 
+    //Extraemos la información del método POST, y lo asignamos a diferentes variables
 
     $metodoBl = $data["metodo"];
 
@@ -217,31 +217,28 @@
                 if ($Observaciones==NULL){$Observaciones='';}
 
                 switch ($TipoSerie) {
-                    case "Sin peso":
-                    $TipoSerieId=1;
-                    break;
                     case "Peso fijo":
-                        $TipoSerieId=2;
+                        $TipoSerieId=1;
                     break;
                     case "Ascendente":
-                        $TipoSerieId=3;
+                        $TipoSerieId=2;
                     break;
                     case "Descendente":
-                        $TipoSerieId=4;
+                        $TipoSerieId=3;
                     break;
                     case "Ascendente-descendente":
-                        $TipoSerieId=5;
+                        $TipoSerieId=4;
                     break;
                     case "Descendente-ascendente":
-                        $TipoSerieId=6;
+                        $TipoSerieId=5;
                     break;
                     default:
                     {
-                        $TipoSerieId=2;
+                        $TipoSerieId=1;
                     }
 
                 }
-                if ($TipoPeso='lb')
+                if ($TipoPeso=='lb' or $TipoPeso=='2' or $TipoPeso==2)
                     {
                         $TipoPesoId=2;
                     }

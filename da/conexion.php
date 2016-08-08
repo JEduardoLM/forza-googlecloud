@@ -3,8 +3,8 @@
 //require_once('config.php');
 
 
-/*
 
+/*
 	define('SERVIDOR', 'mysql.hostinger.mx');
 	define('USUARIO', 'u304663758_admin');
 	define('CONTRASENA','enforma123');
@@ -15,7 +15,7 @@
 	define('SERVIDOR', 'localhost');
 	define('USUARIO', 'admin');
 	define('CONTRASENA','enforma123');
-	define('BASEDEDATOS','forza');
+	define('BASEDEDATOS','enforma');
 
 function obtenerConexion(){
 
@@ -31,9 +31,9 @@ function obtenerConexion(){
     error_reporting(0);
 
     $username='root';
-    $password='enforma';
-    $database='enforma';
-    $instance_name="/cloudsql/prueba-1364:enforma";
+    $password='enforma123';
+    $database='forza';
+    $instance_name="/cloudsql/forza-1355:db-forza";
 
 
     $conexion = mysqli_connect(null, $username, $password, $database, 0, $instance_name);

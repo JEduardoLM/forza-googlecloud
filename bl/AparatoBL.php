@@ -14,20 +14,20 @@
 
 	//Extraemos la información del método POST, y lo asignamos a diferentes variables
 	$metodoBl = $data["metodo"];
-	$idAparatoBl = $data["id"];
-	$nombreBl = $data['nombre'];
-	$descripcionBl = $data['descripcion'];
-	$estatusBl = $data['estatus'];
+	$idAparatoBl = $data["IdAparato"];
+	$nombreBl = $data['Nombre'];
+	$descripcionBl = $data['Descripcion'];
+	$estatusBl = $data['Estatus'];
 
 
 
-	/*
-	$metodoBl="saveAparato";
-	$idAparatoBl=14;
+
+	$metodoBl="getAparato";
+	$idAparatoBl=3;
 	$nombreBl='BARRA Z';
 	$descripcionBl='APARATO DE PRUEBA - NO EXISTE 14';
 	$estatusBl=1;
-	*/
+
 
 	//***************************************************************************************************************************************
 	//***************************************************************************************************************************************

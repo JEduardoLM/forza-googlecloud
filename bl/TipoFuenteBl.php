@@ -14,12 +14,6 @@
 	$nombreBl = $data['nombre'];
 
 
-	/* $metodoBl="getTipoFuente";
-	$idTipoFuenteBl=0;
-	$nombreBl='PANTORRILLA 2';*/
-
-
-
 	//***************************************************************************************************************************************
 	//***************************************************************************************************************************************
 	//**********               AQUI INICIA LA DEFINICIÓN DE FUNCIONES QUE A SU VEZ ACCEDERAN A LOS MÉTODOS DEL OBJETO $TipoFuente    ***********

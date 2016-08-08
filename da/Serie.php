@@ -172,7 +172,6 @@ class Serie{
                 VALUES ($NumeroSerie, $Repeticiones, $TipoSerie, $Peso, $idSubrutinaEjercicio,'$Observaciones', $TipoPeso);";
 
 
-
         	if($result = mysqli_query($conexion, $sql)){
 
                 $fecha = new DateTime();
@@ -450,8 +449,8 @@ class Serie{
 
 
 //
- // $S = new Serie();
-//  $Ss=$S->deleteSerie(14,5,2);
+//  $S = new Serie();
+//  $Ss=$S->deleteSerie (49996,13111,3);
 //  echo json_encode ($Ss);
 
 

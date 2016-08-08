@@ -22,16 +22,6 @@
 	$colorFuenteImagenBl = $data['ColorFuenteImagen'];
 
 
-	$metodoBl="saveMusculo";
-	$idMusculoBl=9;
-	$nombreBl='PANTORRILLA 2';
-	$descripcionBl='MUSCULO EN LA PARTE INFERIOR DE LA PIERNA 2';
-	$estatusBl=1;
-	$imagenBl='O';
-	$tipoFuenteImagenBl=1;
-	$tamañoFuenteImagenBl=22;
-	$colorFuenteImagenBl='RED';
-
 
 	//***************************************************************************************************************************************
 	//***************************************************************************************************************************************

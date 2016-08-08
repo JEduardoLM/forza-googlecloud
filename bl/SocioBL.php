@@ -10,8 +10,8 @@
 
 	 $data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
-    // $json = '{"metodo":"ObtenerSubrutinasByIdUIdGymCompleta","idUsuario":"1","idGimnasio":"1"}';
-    // $data=(json_decode($json, true));
+    // $json = '{"metodo":"actulizarPesoEnSerie","IdSerie":"6","PesoNuevo":"10","TipoPeso":"1","IdEjercicio":"2","CircuitoColor":"0"}';
+  //   $data=(json_decode($json, true));
 
 	require('../da/UsuarioGym.php'); //Se requiere el archivo de acceso a la base de datos
     require('../da/Socio.php'); //Se requiere el archivo de acceso a la base de datos
@@ -39,30 +39,11 @@
     $PesoNuevoBl=$data["PesoNuevo"];
     $TipoPesoBl=$data["TipoPeso"];
     $idEjercicioBl=$data["IdEjercicio"];
-    $circuitoColorBl=$data["CircuitoColor"];
+
 
     $idEjercicioBl=$data["IdEjercicio"];
 
 
-
-
-	    //$metodoBl="getAvancesPesoPorEjercicio";
-        //$idUsuarioBl='8';
-        //$idGimnasioBl='2';
-        //$idSocioBl=7;
-        //$idRutinaBl=3;
-        //$idSucursalBl=3;
-
-        //$IdSerieBl=1;
-        //$PesoNuevoBl=100;
-        //$TipoPesoBl=1;
-        //$idEjercicioBl=1;
-        //$circuitoColorBl=0;
-        //$idUsuarioGymBl=7;
-        //$idSucursalBl=2;
-        //$estatusBl=1;
-
-        //$idEjercicioBl=1;
 
 	function getUsuarioGymByIDU($idUsuario){
 
@@ -310,7 +291,7 @@
 
     }
 
-    function actualizarPesoEnSerie($IdSerie,$PesoNuevo,$TipoPeso,$idEjercicio, $circuitoColor){
+    function actualizarPesoEnSerie($IdSerie,$PesoNuevo,$TipoPeso,$idEjercicio){
 
         if ($IdSerie!=NULL and $IdSerie>0 ){
             $serie= new Serie();
@@ -318,7 +299,7 @@
 
             if ($response["Serie"]["success"]==0){
                 $subrutina = new Subrutina();
-                $response["Ejercicio"]=$subrutina->getDetalleEjercicioByID($idEjercicio, $circuitoColor);
+                $response["Ejercicio"]=$subrutina->getDetalleEjercicioByID($idEjercicio);
                 if ($response["Ejercicio"]["success"]==0){
                     $response["success"]=0;
 			        $response["message"]='El peso se registró correctamente';
@@ -470,7 +451,7 @@
             $response=ObtenerSociosBySucursal($idSucursalBl);
 		break;
         case "actulizarPesoEnSerie":
-            $response=actualizarPesoEnSerie($IdSerieBl,$PesoNuevoBl,$TipoPesoBl, $idEjercicioBl,$circuitoColorBl);
+            $response=actualizarPesoEnSerie($IdSerieBl,$PesoNuevoBl,$TipoPesoBl, $idEjercicioBl);
 		break;
         case "actualizarEstatusSocio":
             $response=actualizarEstatusSocio($idUsuarioGymBl, $estatusBl, $idSucursalBl);

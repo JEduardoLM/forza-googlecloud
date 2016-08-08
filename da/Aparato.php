@@ -38,10 +38,10 @@ class Aparato{
 				{
 
 					$item = array();
-					$item["Id"]=$row["A_ID"];
-					$item["Nombre"]=$row["Nombre"];
+					$item["IdAparato"]=$row["A_ID"];
+					$item["NombreAparato"]=$row["Nombre"];
 					$item["Descripcion"]=$row["Descripcion"];
-					$item["estatus"]=$row["estatus"];
+					$item["Estatus"]=$row["estatus"];
 					array_push($response["aparatos"], $item);
 				}
 				$response["success"]=1;
@@ -176,10 +176,10 @@ class Aparato{
 				while($row = mysqli_fetch_array($result))
 				{
 					$item = array();
-					$item["Id"]=$row["A_ID"];
-					$item["Nombre"]=$row["Nombre"];
+					$item["IdAparato"]=$row["A_ID"];
+					$item["NombreAparato"]=$row["Nombre"];
 					$item["Descripcion"]=$row["Descripcion"];
-					$item["estatus"]=$row["estatus"];
+					$item["Estatus"]=$row["estatus"];
 					array_push($response["aparatos"], $item);
 				}
 				$response["success"]=1;

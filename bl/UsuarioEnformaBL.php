@@ -23,15 +23,6 @@
     $gimnasioBl= $data["gimansio"];
     $sucursalBl= $data["sucursal"];
 
-     //$metodoBl='getUsuarioEnformaByCodigo';
-     //$correoBl='scorres5o@correo.com';
-     //$idFacebookBl='li.eduardo.lm@gmail.com';
-     //$nombreBl='Usuario de prueba BL';
-     //$apellidosBl='LM TEST Bl';
-	 //$passwordBl='correo';
-     //$codigoEnformaBl='EDU0001';
-     //$gimnasioBl=2;
-     //$sucursalBl=0;
 
     function validarTextoNulo($Texto,$Valor){
 		if ($Texto!==NULL){
