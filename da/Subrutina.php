@@ -469,7 +469,7 @@ class Subrutina{
 			$sql= "SELECT Sr_ID, NumeroSerie, ( SELECT ts.Nombre FROM tiposerie ts WHERE ts.TSr_ID = s.id_TipoSerie ) AS TipoSerie,
                             Repeticiones, PesoPropuesto,
                             (SELECT Abreviatura FROM unidadespeso up WHERE up.UP_ID = s.TipoPeso ) AS TipoPeso, Observaciones FROM serie s
-                    WHERE id_SubrutinaEjercicio =$idEjercicio;";
+                    WHERE id_SubrutinaEjercicio =$idEjercicio order by NumeroSerie;";
 
             if($result = mysqli_query($conexion, $sql))
             {

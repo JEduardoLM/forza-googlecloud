@@ -46,12 +46,12 @@ class Ejercicio{
 
             mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
 
-            $sql= "( SELECT SEC_ID as ID,1 as TipoEjercicio, Alias as NombreEnSucursal, Explicacion as NombreGenerico, CodigoImagen2, ImagenGenerica2,
+            $sql= "( SELECT SEC_ID as ID,1 as TipoEjercicio, Alias as NombreEnSucursal, Explicacion as NombreGenerico, CodigoImagen1, ImagenGenerica2,
 		                    (Select Nombre from aparato where A_ID=ec.Id_Aparato) as Aparato,
                             '' as Musculos
                      FROM sucursalejerciciocardio sec join ejerciciocardio ec on sec.Id_EjercicioCardio=ec.EC_ID where Id_Sucursal=1)
                  UNION
-                 ( SELECT SEP_ID as ID, 2 as TipoEjercicio, Alias as NombreEnSucursal, Explicacion as NombreGenerico, CodigoImagen2, ImagenGenerica2,
+                 ( SELECT SEP_ID as ID, 2 as TipoEjercicio, Alias as NombreEnSucursal, Explicacion as NombreGenerico, CodigoImagen1, ImagenGenerica2,
 		                  (Select Nombre from aparato where A_ID=ep.Id_Aparato) as Aparato,
 		                  (Select  group_concat(distinct Nombre) as Musculos from musculo M join musculoejerciciopesa MEP on M.M_ID=MEP.idMusculo  where idEjercicioPesa=EP_ID and EsGrupoMuscular=1) as Musculos
                     FROM sucursalejerciciopesa sep join ejerciciopesa ep on sep.Id_EjercicioPesa=ep.EP_ID where Id_Sucursal=1);";
@@ -81,8 +81,8 @@ class Ejercicio{
 
                                     //*******************************************************************************************
 
-                                    $item["CodigoImagen"]=$row["CodigoImagen2"];
-                                    if ($item["CodigoImagen"]==NULL){$item["CodigoImagen"]=0;}
+                                    $item["CodigoImagen"]=$row["CodigoImagen1"];
+                                    if ($item["CodigoImagen"]===NULL){$item["CodigoImagen"]=0;}
 
                                     $item["UrlImagen"]=$row["ImagenGenerica2"];
                                     if ($item["UrlImagen"]==NULL){$item["UrlImagen"]='';}
@@ -496,7 +496,7 @@ class Ejercicio{
 			$sql= "SELECT Sr_ID, NumeroSerie, ( SELECT ts.Nombre FROM tiposerie ts WHERE ts.TSr_ID = s.id_TipoSerie ) AS TipoSerie,
                             Repeticiones, PesoPropuesto,
                             (SELECT Abreviatura FROM unidadespeso up WHERE up.UP_ID = s.TipoPeso ) AS TipoPeso, Observaciones FROM serie s
-                    WHERE id_SubrutinaEjercicio =$idEjercicio;";
+                    WHERE id_SubrutinaEjercicio =$idEjercicio ORDER BY NumeroSerie;";
 
             if($result = mysqli_query($conexion, $sql))
             {
@@ -799,8 +799,9 @@ class Ejercicio{
 
     }
 
-    function deleteEjercicio ($idEjercicio,$idTipo,$idSubrutina, $Orden){
+    function deleteEjercicio ($idEjercicio,$idTipo,$idSubrutina, $Orden, $circuito){
         // Esta función nos permite eliminar un ejercicio
+
 		//Creamos la conexión con la función anterior
 		$conexion = obtenerConexion();
 
@@ -830,6 +831,7 @@ class Ejercicio{
 
             desconectar($conexion); //desconectamos la base de datos
             if ($response["success"]===0){
+                $response["reajustarCircuitos"]=$this->reordenarCircuito($idSubrutina,$circuito);
                 $response["getEjercicios"]=$this->getEjerciciosBySubrutina($idSubrutina);
             }
             }
@@ -882,6 +884,110 @@ class Ejercicio{
         }
 
 		return ($response); //devolvemos el array
+    }
+
+    function reordenarCircuito($idSubrutina,$circuito){
+        //Este método es utilizado, para verificar, que cuando quede un ejercicio sólo, con un número de circuito diferente de cero, se elimine el dato de circuito
+
+		//Creamos la conexion a la base de datos
+		$conexion = obtenerConexion();
+
+        if ($conexion){ //Verificamos que la conexión se haya realizado de manera correcta
+
+            mysqli_set_charset($conexion, "utf8"); //Formato de datos utf8
+
+
+                //Armamos una consulta para verificar cuantos elementos quedan del mis circuito.
+                $sql="SELECT * FROM
+                        (Select SEC_ID as ID, 1 as Tipo FROM subrutinaejerciciocardio where Id_Subrutina=$idSubrutina and Circuito=$circuito
+                        UNION ALL
+                        Select SEP_ID as ID, 2 as Tipo FROM subrutinaejerciciopeso where Id_Subrutina=$idSubrutina and Circuito=$circuito) as conteo;";
+
+                if($result = mysqli_query($conexion, $sql))
+                {
+                    if($result!=null){
+                            if ($result->num_rows==1){
+                                //Si el conteo de registros es igual a uno, significa que el ejercicio ha quedado sólo, y por lo tanto debemos reacomodar los circuitos
+                                  while($row = mysqli_fetch_array($result))
+                                 {
+                                    $iD=$row["ID"];
+                                    $tipoEjercicio=$row["Tipo"];
+                                  }
+
+                                //Si sólo queda un ejercicio, debemos convertir el circuito en CERO
+
+                                if ($tipoEjercicio==2){
+                                    //Si el tipo de ejercicio es 2, significa que es de pesas
+                                    $sqlActualizarCircuito="UPDATE `subrutinaejerciciopeso` SET `Circuito`=0 WHERE `SEP_ID`=$iD;";
+                                }
+                                else{
+                                    //Si el tipo de ejercicio es 1, significa que es de cardio
+                                    $sqlActualizarCircuito="UPDATE `subrutinaejerciciocardio` SET `Circuito`=0 WHERE `SEC_ID`=$iD;";
+
+                                }
+                                if($result = mysqli_query($conexion, $sqlActualizarCircuito))
+                                {
+                                    //Ahora vamos a proceder a actualizar todos los circuitos (recorrerlos un lugar)
+
+                                    $sql="UPDATE `subrutinaejerciciocardio` SET `Circuito`=(Circuito-1) WHERE  Id_Subrutina=$idSubrutina and Circuito >$circuito;";
+
+                                    if($result = mysqli_query($conexion, $sql))
+                                    {
+                                        $sql="UPDATE `subrutinaejerciciopeso` SET `Circuito`=(Circuito-1) WHERE  Id_Subrutina=$idSubrutina and Circuito >$circuito;";
+
+                                        if($result = mysqli_query($conexion, $sql))
+                                        {
+
+                                                    $response["success"]=0;
+                                                    $response["message"]='Circuitos actualizados correctamente';
+                                        }
+                                        else
+                                        {
+                                                    $response["success"]=8;
+                                                    $response["message"]='Se presentó un error al actualizar los ejercicios de peso';
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $response["success"]=7;
+                                        $response["message"]='Se presentó un error al actualizar los ejercicios de cardio';
+                                    }
+
+                                }
+                                else{
+                                    $response["success"]=6;
+                                    $response["message"]='Se presentó un error al actualizar el número de circuito';
+                                }
+
+                            }
+                        else{
+                            $response["success"]=5;
+                            $response["message"]='No es necesario reordenar los circuitos';
+                        }
+                    }
+                    else{
+                            $response["success"]=5;
+                            $response["message"]='No es necesario reordenar los circuitos';
+                    }
+
+
+
+                }
+                else
+                {
+                    $response["success"]=4;
+                    $response["message"]='Se presentó un error al ejecutar una consulta';
+                }
+
+            desconectar($conexion); //desconectamos la base de datos
+            }
+        else{
+            $response["success"]=3;
+            $response["message"]='Se presentó un error al realizar la conexión con la base de datos';
+        }
+
+		return ($response); //devolvemos el array
+
     }
 
     function actualizarObservaciones($idEjercicio,$idTipo, $Observaciones){
@@ -1124,18 +1230,18 @@ class Ejercicio{
 
 }
 
-//    $t1 = array("TipoEjercicio"=>"2", "IdEjercicioSubrutina"=>"118", "Circuito"=>"118", "TiempoDescanso"=>"0", "Orden"=>"118","IdSubrutina"=>"33");
-//    $t2 = array("TipoEjercicio"=>"2", "IdEjercicioSubrutina"=>"119", "Circuito"=>"119", "TiempoDescanso"=>"0", "Orden"=>"119","IdSubrutina"=>"33");
-//    $t3 = array("TipoEjercicio"=>"1", "IdEjercicioSubrutina"=>"163", "Circuito"=>"163", "TiempoDescanso"=>"0", "Orden"=>"163","IdSubrutina"=>"33");
-//    $t4 = array("TipoEjercicio"=>"1", "IdEjercicioSubrutina"=>"164", "Circuito"=>"164", "TiempoDescanso"=>"0", "Orden"=>"164","IdSubrutina"=>"33");
+//      $t1 = array("TipoEjercicio"=>"2", "IdEjercicioSubrutina"=>"118", "Circuito"=>"118", "TiempoDescanso"=>"0", "Orden"=>"118","IdSubrutina"=>"33");
+//      $t2 = array("TipoEjercicio"=>"2", "IdEjercicioSubrutina"=>"119", "Circuito"=>"119", "TiempoDescanso"=>"0", "Orden"=>"119","IdSubrutina"=>"33");
+//      $t3 = array("TipoEjercicio"=>"1", "IdEjercicioSubrutina"=>"163", "Circuito"=>"163", "TiempoDescanso"=>"0", "Orden"=>"163","IdSubrutina"=>"33");
+//      $t4 = array("TipoEjercicio"=>"1", "IdEjercicioSubrutina"=>"164", "Circuito"=>"164", "TiempoDescanso"=>"0", "Orden"=>"164","IdSubrutina"=>"33");
 //
-//    $arreglo=array ($t1,$t2,$t3,$t4);
+//      $arreglo=array ($t1,$t2,$t3,$t4);
 //
-  //    $ejercicio = new Ejercicio();
- //
- //  $resultado=$ejercicio->actualizarOrdenCircuito($arreglo);
-//     $resultado=$ejercicio->actualizarObservaciones(4,2, 'NUEVAS OBSERVACIONES');
-//     echo json_encode ($resultado);
+//      $ejercicio = new Ejercicio();
+//      ($idEjercicio,$idTipo,$idSubrutina, $Orden, $circuito)
+//      $resultado=$ejercicio->deleteEjercicio(5,1, 1,1,2);
+//      $resultado=$ejercicio->actualizarObservaciones(4,2, 'NUEVAS OBSERVACIONES');
+//      echo json_encode ($resultado);
 
 
 ?>

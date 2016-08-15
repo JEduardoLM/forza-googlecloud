@@ -130,7 +130,7 @@ class Rutina{
 
                                     //Una vez que tenemos la subrutina, vamos a proceder a duplicar los registros de la tabla de cardio.
                                     $sqlCardio="INSERT INTO subrutinaejerciciocardio
-                                        (SELECT NULL as SEC_ID, '$idSubrutinaNueva' as Id_Subrutina, Id_EjercicioCardio, Tiempototal, Velocidadpromedio, TipoDeVelocidad, DistanciaTotal, TipoDistancia, Ritmocardiaco, Nivel, Observaciones, Orden FROM subrutinaejerciciocardio where Id_Subrutina=$idSubrutinaOrigen);";
+                                        (SELECT NULL as SEC_ID, '$idSubrutinaNueva' as Id_Subrutina, Id_EjercicioCardio, Tiempototal, Velocidadpromedio, TipoDeVelocidad, DistanciaTotal, TipoDistancia, Ritmocardiaco, Nivel, Observaciones, Orden, Circuito FROM subrutinaejerciciocardio where Id_Subrutina=$idSubrutinaOrigen);";
 
                                     if($resultCardio = mysqli_query($conexion, $sqlCardio)){
 

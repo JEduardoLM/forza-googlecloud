@@ -45,6 +45,7 @@
     $numeroSerieBl= $data["NumeroSerie"];
 
     $ordenBl= $data["Orden"];
+    $circuitoBl= $data["Circuito"];
 
     require('../da/Subrutina.php');
     require('../da/Ejercicio.php');
@@ -73,11 +74,11 @@
     }
 
 
-    function deleteEjercicioSubrutina($idEjercicio, $idTipo, $idSubrutina, $orden){
+    function deleteEjercicioSubrutina($idEjercicio, $idTipo, $idSubrutina, $orden, $circuito){
         if ($idEjercicio!=NULL){
             if ($idEjercicio!=0){
                 $ejercicio = new Ejercicio();
-                $response = $ejercicio->deleteEjercicio($idEjercicio,$idTipo,$idSubrutina, $orden);
+                $response = $ejercicio->deleteEjercicio($idEjercicio,$idTipo,$idSubrutina, $orden, $circuito);
             }
             else {
                 $response["success"]=6;
@@ -305,7 +306,7 @@ switch ($metodoBl) {
 			$response=actualizarOrdenCircuito($ejerciciosBl,$idSubrutinaBl);
 		break;
         case "deleteEjercicioSubrutina": //
-			$response=deleteEjercicioSubrutina($idEjercicioBl, $tipoEjercicioBl,$idSubrutinaBl, $ordenBl);
+			$response=deleteEjercicioSubrutina($idEjercicioBl, $tipoEjercicioBl,$idSubrutinaBl, $ordenBl, $circuitoBl);
 		break;
         case "getEjerciciosBySubrutina": //
 			$response=getEjerciciosBySubrutina($idSubrutinaBl);

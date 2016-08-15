@@ -540,23 +540,50 @@ class UsuarioEnforma{
  		//generamos la consulta
 		mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
 
-			$sql=$conexion->prepare("CALL nuevoUsuario(?,?,?,?,?);");
-			$sql->bind_param("sssss",$nombre,$apellido,$correo, $facebook, $password);
+        //Vamos a proceder a armar las consultas para almacenar al nuevo usuario dentro de la base de datos.
+        $codigo=strtoupper(substr ($nombre,0,3)) ;
 
-            if ($sql->execute()){
-                $response["Usuario"]= array();
-                $arregloUsuarios=$this->getUsuarioEnformaByID(0);
-                $response["Usuario"]=$arregloUsuarios["Usuario"];
-                $response["success"]=1;
-                $response["message"]='Usuario almacenado correctamente';
+        $sqlCodigo="SELECT COUNT( codigoEnforma ) as conteo FROM  `usuarioenforma` WHERE codigoEnforma LIKE '%$codigo%';";
 
+        if($result = mysqli_query($conexion, $sqlCodigo)){
+                  if($result!=null){
+                    if ($result->num_rows>0){
+                        while($row = mysqli_fetch_array($result))
+                        {
+                             $conteo=$row["conteo"];
+                        }
+                        $codigoTexto=$codigo.str_pad($conteo, 4, "0", STR_PAD_LEFT);
+                        $sql="INSERT INTO  `UsuarioEnforma` (
+                                            `Id` ,
+                                            `CodigoEnforma` ,
+                                            `Nombre` ,
+                                            `Apellidos` ,
+                                            `Correo` ,
+                                            `IdFacebook` ,
+                                            `Password` ,
+                                            `Estatus`
+                                            )
+                                            VALUES (
+                                                NULL , '$codigoTexto', '$nombre' , '$apellido' , '$correo' , '$facebook', '$password', 1
+                                            );";
+                                if($result = mysqli_query($conexion, $sql)){
+                                    $response["success"]=0;
+                					$response["message"]='El Usuario fue almacenado correctamente';
+                                }
+                                else
+                                {
+
+                                    $response["success"]=1;
+                					$response["message"]='Se presentó un error';
+
+                                }
+
+                    }
+                  }
             }
-			else {
-				    //return 'El Usuario no pudo ser almacenado correctamente';
-					$response["success"]=0;
-					$response["message"]='El Usuario no pudo ser almacenado correctamente';
+        else{
 
-				}
+        }
 		desconectar($conexion); //desconectamos la base de datos
 		return  ($response); //devolvemos el array
 
@@ -575,20 +602,49 @@ class UsuarioEnforma{
 
 		mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
 
-			$sql=$conexion->prepare("CALL nuevoUsuario(?,?,?,?,?);");
-			$sql->bind_param("sssss",$nombre,$apellido,$correo, $facebook, $password);
+        $codigo=strtoupper(substr ($nombre,0,3)) ;
+		$sqlCodigo="SELECT COUNT( codigoEnforma ) as conteo FROM  `usuarioenforma` WHERE codigoEnforma LIKE '%$codigo%';";
 
-            if ($sql->execute()){
+        if($result = mysqli_query($conexion, $sqlCodigo)){
+              if($result!=null){
+                    if ($result->num_rows>0){
+                        while($row = mysqli_fetch_array($result))
+                        {
+                             $conteo=$row["conteo"]+1;
+                        }
+                        $codigoTexto=$codigo.str_pad($conteo, 4, "0", STR_PAD_LEFT);
+                        $sql="INSERT INTO  `usuarioenforma` (
+                                            `Id` ,
+                                            `CodigoEnforma` ,
+                                            `Nombre` ,
+                                            `Apellidos` ,
+                                            `Correo` ,
+                                            `IdFacebook` ,
+                                            `Password` ,
+                                            `Estatus`
+                                            )
+                                            VALUES (
+                                                NULL , '$codigoTexto', '$nombre' , '$apellido' , '$correo' , '$facebook', '$password', 1
+                                            );";
+                                if($result = mysqli_query($conexion, $sql)){
+                                        $response["Usuario"]= array();
+                                        $arregloUsuarios=$this->buscarUsuarioEnformaCorreo($correo);
+                                        $response["Usuario"]=$arregloUsuarios["Usuario"];
+                                        $response["success"]=0;
+                                        $response["message"]='Usuario almacenado correctamente';
+                                }
+                                else
+                                {
 
-                $sql->close();
+                                    $response["success"]=4;
+                					$response["message"]='El Usuario no pudo ser almacenado correctamente';
 
-                $response["Usuario"]= array();
-                $arregloUsuarios=$this->buscarUsuarioEnformaCorreo($correo);
-                $response["Usuario"]=$arregloUsuarios["Usuario"];
-                $response["success"]=0;
-                $response["message"]='Usuario almacenado correctamente';
+                                }
 
+                    }
             }
+        }
+
 			else {
 				    //return 'El Usuario no pudo ser almacenado correctamente';
 					$response["success"]=4;
@@ -608,10 +664,6 @@ class UsuarioEnforma{
 
 
 }
-
-   // $UE=new UsuarioEnforma();
-   // $usuario = $UE->getUsuarioEnformaCodigo('kjkjhkhj',6,3);
-   // echo json_encode($usuario);
 
 
 
