@@ -10,7 +10,7 @@
 	define('CONTRASENA','enforma123');
 	define('BASEDEDATOS','u304663758_enfo');
 
-*/
+
 
 	define('SERVIDOR', 'localhost');
 	define('USUARIO', 'admin');
@@ -24,7 +24,7 @@ function obtenerConexion(){
     return $conexion;
 }
 
-/*
+*/
 //Aqui se describe la conexión con google cloud
 function obtenerConexion(){
 
@@ -41,7 +41,7 @@ function obtenerConexion(){
     return $conexion;
 }
 
-*/
+
 
 function desconectar($conexion){
 

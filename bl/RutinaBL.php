@@ -4,6 +4,7 @@
 	// 08/04/2016
 	// Creación de archivo PHP, el cual permite administrar la información de una rutina (Subrutinas, ejercicios, series, repeticiones, etc...)
 
+    header("Access-Control-Allow-Origin: *");
 
 	  $data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
@@ -46,6 +47,8 @@
 
     $ordenBl= $data["Orden"];
     $circuitoBl= $data["Circuito"];
+
+    $notaSocioBl= $data["NotaSocio"];
 
     require('../da/Subrutina.php');
     require('../da/Ejercicio.php');
@@ -153,6 +156,30 @@
 
 
 
+
+//******************************************************************************************************************
+
+    function actualizarNotaSocio($idEjercicio,$idTipo, $notaSocio){
+        if ($idEjercicio!=NULL){
+            if ($idEjercicio!=0){
+                if ($notaSocio==NULL){$notaSocio='';}
+                $ejercicio = new Ejercicio();
+                $response = $ejercicio->actualizarNotaSocio($idEjercicio,$idTipo, $notaSocio);
+            }
+            else {
+                $response["success"]=6;
+                $response["message"]='El id del ejercicio debe ser diferente de cero';
+            }
+        }
+        else {
+            $response["success"]=5;
+            $response["message"]='El id del ejercicio debe ser diferente de NULO';
+        }
+		return $response;
+    }
+
+//******************************************************************************************************************
+
     function actualizarDetalleEjercicioCardio($idEjercicio,$tiempoTotal, $velocidadPromedio, $tipoVelocidad, $distanciaTotal, $tipoDistancia, $ritmoCardiaco, $nivel, $observaciones){
         if ($idEjercicio!=NULL){
             if ($idEjercicio!=0){
@@ -208,7 +235,7 @@
         }
         else{
             if ($idSubrutinaEjercicio==NULL){
-                $response["success"]=10;
+                $response["success"]=7;
                 $response["message"]='El id de la subrutina debe ser un valor numerico';
             }
             else{
@@ -323,6 +350,11 @@ switch ($metodoBl) {
         case "actualizarDetalleEjercicioCardio":
             $response=actualizarDetalleEjercicioCardio($idEjercicioBl,$tiempoTotalBl, $velocidadPromedioBl, $tipoVelocidadBl, $distanciaTotalBl, $tipoDistanciaBl, $ritmoCardiacoBl, $nivelBl, $ObservacionesBl);
         break;
+
+        case "actualizarNotaSocio": //
+			$response=actualizarNotaSocio($idEjercicioBl,$tipoEjercicioBl, $notaSocioBl);
+		break;
+
 //*************************************AQUÍ SE INCLUYEN LOS MÉTODOS PARA AGREGAR Y ELIMINAR SERIES  **************************************************************************
 
         case "saveSerie": // Este método lo utilizaremos para obtener el id del instructor

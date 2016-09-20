@@ -4,6 +4,8 @@
 	// 26/01/2016
 	// Creación de archivo PHP, el cual permite obtener el listado de Musculos, agregar un nuevo Musculo o modificar uno existente
 
+    header("Access-Control-Allow-Origin: *");
+
 	$data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
 	require('../da/Musculo.php'); //Se requiere el archivo de acceso a la base de datos

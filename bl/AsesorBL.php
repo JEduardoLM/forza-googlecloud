@@ -4,6 +4,7 @@
 	// 08/04/2016
 	// Creación de archivo PHP, el cual permite ingresar a las funcionalidades de la aplicación FORZA Instructor
 
+    header("Access-Control-Allow-Origin: *");
 
 	$data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 

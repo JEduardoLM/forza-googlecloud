@@ -4,6 +4,8 @@
 	// 24/02/2016
 	// Creación de archivo PHP, el cual permite gestionar los gimnasios
 
+    header("Access-Control-Allow-Origin: *");
+
 	$data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
 	require('../da/Gimnasio.php'); //Se requiere el archivo de acceso a la base de datos, de los gimnasios

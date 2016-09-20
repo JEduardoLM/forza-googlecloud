@@ -21,7 +21,7 @@ class UsuarioEnforma{
 
 		if ($idUsuarioEnforma!=0) //Si el id es igual a cero, obtenemos todos Usuarios, en caso contrario, vamos por el UsuarioEnforma especifico.
 		{
-			$sql="select * from usuarioenforma where Id='$idUsuarioEnforma'";
+			$sql="select Id, CodigoEnforma, Nombre, Apellidos, Correo, IdFacebook, Estatus from usuarioenforma where Id='$idUsuarioEnforma'";
 		}
 		else
 		{
@@ -42,7 +42,7 @@ class UsuarioEnforma{
                         $item["Apellidos"]=$row["Apellidos"];
                         $item["Correo"]=$row["Correo"];
                         $item["IdFacebook"]=$row["IdFacebook"];
-                        $item["Password"]=$row["Password"];
+                       // $item["Password"]=$row["Password"];
                         $item["Estatus"]=$row["Estatus"];
                         $response["Usuario"]=$item;
                        // array_push($response["Usuarios"], $item);
@@ -51,20 +51,20 @@ class UsuarioEnforma{
                     $response["message"]='Consulta exitosa';
 			}
 			else{
-				$response["success"]=0;
+				$response["success"]=1;
 				$response["message"]='No se encontró UsuarioEnforma con el Id indicado';
 			}
 
 		}
 		else
 			{
-				$response["success"]=0;
+				$response["success"]=4;
 				$response["message"]='No se encontró UsuarioEnforma con el Id indicado';
 			}
 		}
 		else
 		{
-			$response["success"]=0;
+			$response["success"]=3;
 			$response["message"]='Se presento un error al ejecutar la consulta';
 		}
 
@@ -613,6 +613,8 @@ class UsuarioEnforma{
                              $conteo=$row["conteo"]+1;
                         }
                         $codigoTexto=$codigo.str_pad($conteo, 4, "0", STR_PAD_LEFT);
+
+
                         $sql="INSERT INTO  `usuarioenforma` (
                                             `Id` ,
                                             `CodigoEnforma` ,
@@ -626,9 +628,48 @@ class UsuarioEnforma{
                                             VALUES (
                                                 NULL , '$codigoTexto', '$nombre' , '$apellido' , '$correo' , '$facebook', '$password', 1
                                             );";
+
+
+
+                        if ($correo==='' or $correo===0 or $correo===NULL){
+                            $sql="INSERT INTO  `usuarioenforma` (
+                                            `Id` ,
+                                            `CodigoEnforma` ,
+                                            `Nombre` ,
+                                            `Apellidos` ,
+                                            `IdFacebook` ,
+                                            `Password` ,
+                                            `Estatus`
+                                            )
+                                            VALUES (
+                                                NULL , '$codigoTexto', '$nombre' , '$apellido' , '$facebook', '$password', 1
+                                            );";
+                        }
+
+                        if ($facebook==='' or $facebook===0 or $facebook===NULL){
+                                                $sql="INSERT INTO  `usuarioenforma` (
+                                            `Id` ,
+                                            `CodigoEnforma` ,
+                                            `Nombre` ,
+                                            `Apellidos` ,
+                                            `Correo` ,
+                                            `Password` ,
+                                            `Estatus`
+                                            )
+                                            VALUES (
+                                                NULL , '$codigoTexto', '$nombre' , '$apellido' , '$correo' , '$password', 1
+                                            );";
+                        }
+
+
+
+
+
                                 if($result = mysqli_query($conexion, $sql)){
+
                                         $response["Usuario"]= array();
-                                        $arregloUsuarios=$this->buscarUsuarioEnformaCorreo($correo);
+                                        $idUsuario=mysqli_insert_id($conexion);
+                                        $arregloUsuarios=$this->getUsuarioEnformaByID($idUsuario);
                                         $response["Usuario"]=$arregloUsuarios["Usuario"];
                                         $response["success"]=0;
                                         $response["message"]='Usuario almacenado correctamente';
@@ -661,6 +702,258 @@ class UsuarioEnforma{
 		return  ($response); //devolvemos el array
 
 	}
+
+
+   	//******************************************************************************************************************************************************
+	//******************************************************************************************************************************************************
+	//******************************************************************************************************************************************************
+
+    function aplanarPassword($correo){
+        //Este método es utlizado para actualizar el pasword de un socio
+
+        //Lo primero que vamos a realizar es buscar el usuario, por correo
+        $buscarUsuarioPorCorreo=$this->buscarUsuarioEnformaCorreo($correo);
+
+        //Validamos si se encontró el correo
+        if ($buscarUsuarioPorCorreo["success"]==0){
+        // Una vez que encontramos el usuario, procedemos a generar un código, para poder modificar la contraseña
+
+            $idUsuario=$buscarUsuarioPorCorreo["Usuario"]["Id"];
+            $fecha = new DateTime();
+            $fechaCodigo= $fecha->getTimestamp();
+            $CodigoPassword= substr($buscarUsuarioPorCorreo["Usuario"]["CodigoEnforma"],0,3).'+'.$this->generar_clave(3);
+
+
+
+            // Creamos una conexión con la base de datos, para guardar el código generado y la fecha
+
+            $conexion = obtenerConexion();
+            //generamos la consulta
+            if ($conexion){
+
+            mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
+
+            $codigo=strtoupper(substr ($nombre,0,3)) ;
+            $sql="UPDATE `usuarioenforma` SET `CodigoPassword`='$CodigoPassword', `FechaCodigoPassword`=$fechaCodigo WHERE `Id`=$idUsuario;";
+
+            if($result = mysqli_query($conexion, $sql)){
+
+                $link='http://enformadesarrollo.esy.es/DemoGym/bl/UsuarioEnformaBL.php';
+                   $mensaje = '<html>
+                             <head>
+                                <title>Restablece tu contraseña</title>
+                             </head>
+                             <body>
+                               <p>Hemos recibido una petición para restablecer la contraseña de tu cuenta.</p>
+                               <p>Si hiciste esta petición, haz clic en el siguiente enlace, o puedes acceder a cambiar tu contraseña directamente desde tu aplicación móvil.</p>
+                                <p>Si no hiciste esta petición puedes ignorar este correo.</p>
+
+                                <p>
+                                 <strong>Para reestablecer desde tu aplicación móvil, debes copiar el siguiente código:</strong><br>
+                                 <p><big>'.$CodigoPassword.'</big></p>
+                               </p>
+
+                               <p>
+                                 <strong>Enlace para restablecer tu contraseña</strong><br>
+                                 <a href="'.$link.'?CodigoPassword='.$CodigoPassword.'"> Restablecer contraseña </a>
+                               </p>
+
+
+                              <p><i> Este correo es informativo, favor no responder a esta dirección de correo, ya que no se encuentra habilitada para recibir mensajes </i> </p>
+
+                             </body>
+                            </html>';
+
+
+                $cabeceras = 'MIME-Version: 1.0' . "\r\n";
+                $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+
+                // $cabeceras .= 'From: FORZA';
+
+                $bool2=mail($correo,"Código de recuperación de contraseña FORZA",$mensaje,$cabeceras);
+
+                        if($bool2){
+
+                                $response["success"]=0;
+                                $response["message"]='Se ha generado correctamente el código de recuperación de password y ha sido enviado a su correo electrónico';
+
+                        }else{
+
+                                $response["success"]=1;
+                                $response["message"]='Se ha generado correctamente el código de recuperación de password pero no pudo ser enviado a su correo electrónico';
+                        }
+
+
+
+            }
+
+            else {
+                        //return 'El Usuario no pudo ser almacenado correctamente';
+                        $response["success"]=4;
+                        $response["message"]='Se ha presentado un error en la consulta';
+
+            }
+
+            desconectar($conexion); //desconectamos la base de datos
+            }
+            else
+            {
+               $response["success"]=3;
+               $response["message"]='Se presentó un error en la conexión con la base de datos';
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+        else{
+            //Sino se encontró el correo, regresamos mensaje de error.
+            $response=$buscarUsuarioPorCorreo;
+        }
+
+
+       // UPDATE `forza`.`usuarioenforma` SET `CodigoPassword`='UN-DOS-TRES-SIN-PARAR-DE BAILAR', `FechaCodigoPassword`='FECHA-DE-CODIGO' WHERE `Id`='3';
+
+
+        return  ($response); //devolvemos el array
+
+    }
+
+
+    function generar_clave($longitud){
+       $cadena="[^A-Z0-9]";
+       return substr(eregi_replace($cadena, "", md5(rand())) .
+       eregi_replace($cadena, "", md5(rand())) .
+       eregi_replace($cadena, "", md5(rand())),
+       0, $longitud);
+    }
+
+
+   	//******************************************************************************************************************************************************
+	//******************************************************************************************************************************************************
+	//******************************************************************************************************************************************************
+
+
+   function actualizarPassword($correo,$password, $codigoPassword){
+       // Éste método nos va a permitir actualizar la contraseña de un usuario
+
+       //Lo primero que haremos será buscar el usuario con el correo proporcionado, para obtener el código y la vigencia del código
+
+
+       	//Creamos la conexión a la base de datos
+		$conexion = obtenerConexion();
+        if ($conexion){ //Verificamos la conexión con la base de datos
+
+            mysqli_set_charset($conexion, "utf8"); //Formato de datos utf8
+
+
+            $sql="select Id, CodigoPassword, FechaCodigoPassword  from usuarioenforma where Correo='$correo'";
+
+
+            if($result = mysqli_query($conexion, $sql))
+            {
+                if($result!=null){
+                    if ($result->num_rows==1){
+                        while($row = mysqli_fetch_array($result))
+                        {
+
+                            $idUsuario=$row["Id"];
+                            $codigoPasswordBD=$row["CodigoPassword"];
+                            $fechaCodigoPassword=$row["FechaCodigoPassword"];
+
+                        }
+
+
+                        //Verificaremos que el código ingresado por el usuario, corresponda con el código generado por el sistema y se encuentra almacenado en la base de datos
+
+                        if ($codigoPasswordBD==$codigoPassword){
+
+                            //Si el código es correcto, procedemos a verificar que aún se encuentra vigente.
+
+                            $fecha = new DateTime();
+                            $hoy= $fecha->getTimestamp();
+
+                           $tiempoDiferencia=$hoy-$fechaCodigoPassword;
+
+
+                            if ($tiempoDiferencia<86400){
+                                // Si el código es correcto y se encuentra vigente, procederemos a actualizar la contraseña
+
+
+                                $sql2="UPDATE `usuarioenforma` SET `Password`='$password' WHERE `Id`='$idUsuario';";
+			                     if($result = mysqli_query($conexion, $sql2)){
+
+                                    $response["success"]=0;
+                                    $response["message"]='La contraseña ha sido correctamente actualizada';
+                                 }
+                                else
+                                {
+                                    $response["success"]=8;
+                                    $response["message"]='Se presentó un error al actualizar la contraseña';
+                                }
+
+
+
+
+                            }
+                            else{
+                                $response["success"]=7;
+                                $response["message"]='El código ingresado no se encuentra vigente';
+                            }
+
+
+                        }
+                        else{
+                            $response["success"]=6;
+                            $response["message"]='El código para modificar la contraseña es incorrecto ';
+
+                        }
+
+
+                    }
+                    else{
+                        $response["success"]=5;
+                        $response["message"]='El correo indicado no se encuentra registrado';
+                    }
+
+                }
+            else
+                {
+                    $response["success"]=5;
+                    $response["message"]='El correo indicado no se encuentra registrado';
+                }
+            }
+            else
+            {
+                $response["success"]=4;
+                $response["message"]='Se presento un error al ejecutar la consulta';
+            }
+
+            desconectar($conexion); //desconectamos la base de datos
+        }
+        else
+        {
+            $response["success"]=3;
+			$response["message"]='Se presentó un error en la conexión con la base de datos';
+        }
+		return  ($response); //devolvemos el array
+
+
+
+
+
+
+
+
+   }
 
 
 }

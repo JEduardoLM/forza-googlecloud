@@ -14,6 +14,12 @@ handlers:
 - url: /bl/(.+\.php)(.*)
   script: /bl/\1
 
+
+#PHP (CONEXIÓN A DATASTORAGE)
+
+- url: /datastorage/(.+\.php)(.*)
+  script: /datastorage/\1
+
 #CSS
 
 - url: /front/shell/css

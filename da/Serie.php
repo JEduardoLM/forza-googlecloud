@@ -95,7 +95,7 @@ class Serie{
 		return ($response); //devolvemos el array
     }
 
-    function updatePesoEnSerie ($idSerie,$NuevoPeso,$TipoDePeso)
+    function updatePesoEnSerie ($idSerie,$NuevoPeso,$TipoDePeso,$idEjercicio)
 	{
 		//Creamos la conexión con la función anterior
 		$conexion = obtenerConexion();
@@ -109,11 +109,34 @@ class Serie{
 		    $sql="UPDATE `serie` SET `PesoPropuesto`='$NuevoPeso', `TipoPeso`='$TipoDePeso' WHERE `Sr_ID`='$idSerie'";
 
 			if($result = mysqli_query($conexion, $sql)){
+            // Una vez que se ha insertado un nuevo peso, procedemos a buscar cual es el peso máximo de todo el ejercicio
+            // El peso máximo de todo el ejercicio, nos permite saber, cual es el valor máximo para utilizarlo posteriormente en indicadores.
+
+                //El peso máximo siempre se va a guardar en Kilogramos
+                $sqlMax="SELECT max(tipoPeso) as PesoMaximo FROM
+                (SELECT 	case TipoPeso  when 1 then PesoPropuesto  when 2 then PesoPropuesto*0.453592 end as tipoPeso
+                        FROM serie  where  id_SubrutinaEjercicio=$idEjercicio) as Peso;";
+
+                $pesoMaximo=$NuevoPeso;
+
+                if($result = mysqli_query($conexion, $sqlMax))
+                    {
+                        if($result!=null){
+                            if ($result->num_rows>0){
+                                while($row = mysqli_fetch_array($result))
+                                {
+                                    $pesoMaximo=$row["PesoMaximo"];
+
+                                }
+                            }
+                        }
+                }
+
 
                 $fecha = new DateTime();
                 $hoy = $fecha->getTimestamp();
 
-                $sql2="INSERT INTO pesoavances (`Peso`, `TipoPeso`, `id_Serie`,`Fecha`) VALUES ($NuevoPeso, $TipoDePeso, $idSerie, $hoy)";
+                $sql2="INSERT INTO pesoavances (`Peso`, `TipoPeso`, `id_Serie`,`Fecha`,`PesoMaximo`) VALUES ($NuevoPeso, $TipoDePeso, $idSerie, $hoy, $pesoMaximo)";
 
                 if($result = mysqli_query($conexion, $sql2)){
                     mysqli_commit($conexion);
@@ -377,6 +400,7 @@ class Serie{
 
             if($result = mysqli_query($conexion, $sql))
             {
+
                 if($result!=null){
                     if ($result->num_rows>0){
 

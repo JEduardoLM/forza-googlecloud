@@ -259,10 +259,11 @@ class Ejercicio{
             if ($idEjercicio!=0)
             { //Verificamos que el id del ejercicio sea diferente de cero
 
-                if ($tipo===1){
+                if ($tipo==1){
                       $sql= "(SELECT sec.SEC_ID as ID, sec.Orden, sec.Id_EjercicioCardio as IdEjercicio,
                             e.Explicacion as NombreEjercicio,
                             sc.Alias as AliasEjercicio,
+                            sc.NumAparato as CodigoAparato,
                             e.CodigoImagen1,
                             e.CodigoImagen2,
                             e.ImagenGenerica1,
@@ -279,7 +280,7 @@ class Ejercicio{
                             (select abreviatura from unidadesvelocidad where UV_ID= sec.TipoDeVelocidad) as UnidadVelocidad,
                             sec.DistanciaTotal,
                             (select Abreviatura from unidadesdistancia where UD_ID= sec.TipoDistancia) as UnidadDistancia,
-                            sec.RitmoCardiaco, sec.Nivel, sec.Observaciones, 0 as TiempoDescansoEntreSerie,
+                            sec.RitmoCardiaco, sec.Nivel, sec.Observaciones, sec.NotaSocio, 0 as TiempoDescansoEntreSerie,
                             e.ImagenUrl as ImagenUrl1, sc.ImagenUrl as ImagenUrl2, e.VideoUrl as VideoUrl1, sc.VideoUrl as VideoUrl2,
                             1 as TipoDeEjercicio
                         FROM subrutinaejerciciocardio sec JOIN sucursalejerciciocardio sc on sec.Id_EjercicioCardio=sc.SEC_ID
@@ -292,6 +293,7 @@ class Ejercicio{
                         $sql= "(Select sep.SEP_ID as ID, sep.Orden, sep.Id_EjercicioPeso as IdEjercicio,
                                 p.Explicacion as NombreEjercicio,
                                 sp.Alias as AliasEjercicio,
+                                sp.NumAparato as CodigoAparato,
                                 p.CodigoImagen1,
                                 p.CodigoImagen2,
                                 p.ImagenGenerica1,
@@ -303,7 +305,7 @@ class Ejercicio{
                                 (Select group_concat(Repeticiones) as Repeticiones FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as Repeticiones,
                                 (Select group_concat(DISTINCT PesoPropuesto) as PesoPropuesto FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as PesoPropuesto,
                                 (SELECT u.Abreviatura FROM serie s join unidadespeso u ON s.TipoPeso=u.UP_ID where id_SubrutinaEjercicio=sep.SEP_ID LIMIT 1) AS UnidadPeso,
-                                0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, TiempoDescansoEntreSerie,
+                                0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, NotaSocio, TiempoDescansoEntreSerie,
                                 p.ImagenUrl as ImagenUrl1, sp.ImagenUrl as ImagenUrl2, p.VideoUrl as VideoUrl1, sp.VideoUrl as VideoUrl2,
                                 2 as TipoDeEjercicio
 
@@ -334,6 +336,9 @@ class Ejercicio{
 
                                     $item["AliasEjercicio"]=$row["AliasEjercicio"];
                                     if ($item["AliasEjercicio"]==NULL){$item["AliasEjercicio"]='';}
+
+                                    $item["CodigoAparato"]=$row["CodigoAparato"];
+                                    if ($item["CodigoAparato"]==NULL){$item["CodigoAparato"]='';}
 
                                     $item["CodigoImagen1"]=$row["CodigoImagen1"];
                                     if ($item["CodigoImagen1"]==NULL){$item["CodigoImagen1"]=0;}
@@ -401,6 +406,14 @@ class Ejercicio{
 
                                     $item["Observaciones"]=$row["Observaciones"];
                                     if ($item["Observaciones"]==NULL){$item["Observaciones"]='';}
+
+                                    $item["NotaSocio"]=$row["NotaSocio"];
+                                    if ($item["NotaSocio"]==NULL){$item["NotaSocio"]='';}
+
+                                    // Se verifica, sí el ejercicio es génerico (CodigoImagen 2 mayor a cero), entonces en el nombre, regresamos las observaciones
+                                     if ($item["CodigoImagen2"]>0 and $item["Observaciones"]!='') {
+                                         $item["NombreEjercicio"]=$item["Observaciones"];
+                                     }
 
                                     //********************************************************
                                     // 01/05/2016  Se realiza modificación, para agregar los valores de ImagenURL y videoURL
@@ -496,7 +509,7 @@ class Ejercicio{
 			$sql= "SELECT Sr_ID, NumeroSerie, ( SELECT ts.Nombre FROM tiposerie ts WHERE ts.TSr_ID = s.id_TipoSerie ) AS TipoSerie,
                             Repeticiones, PesoPropuesto,
                             (SELECT Abreviatura FROM unidadespeso up WHERE up.UP_ID = s.TipoPeso ) AS TipoPeso, Observaciones FROM serie s
-                    WHERE id_SubrutinaEjercicio =$idEjercicio ORDER BY NumeroSerie;";
+                    WHERE id_SubrutinaEjercicio =$idEjercicio order by NumeroSerie;";
 
             if($result = mysqli_query($conexion, $sql))
             {
@@ -582,6 +595,7 @@ class Ejercicio{
                     $sql= "(SELECT sec.SEC_ID as ID, sec.Orden, sec.Id_EjercicioCardio as IdEjercicio,
                             e.Explicacion as NombreEjercicio,
                             sc.Alias as AliasEjercicio,
+                            sc.NumAparato as CodigoAparato,
                             e.CodigoImagen1,
                             e.CodigoImagen2,
                             e.ImagenGenerica1,
@@ -598,7 +612,7 @@ class Ejercicio{
                             (select abreviatura from unidadesvelocidad where UV_ID= sec.TipoDeVelocidad) as UnidadVelocidad,
                             sec.DistanciaTotal,
                             (select Abreviatura from unidadesdistancia where UD_ID= sec.TipoDistancia) as UnidadDistancia,
-                            sec.RitmoCardiaco, sec.Nivel, sec.Observaciones, 0 as TiempoDescansoEntreSerie,
+                            sec.RitmoCardiaco, sec.Nivel, sec.Observaciones, sec.NotaSocio, 0 as TiempoDescansoEntreSerie,
                             e.ImagenUrl as ImagenUrl1, sc.ImagenUrl as ImagenUrl2, e.VideoUrl as VideoUrl1, sc.VideoUrl as VideoUrl2,
                             1 as TipoDeEjercicio
                         FROM subrutinaejerciciocardio sec JOIN sucursalejerciciocardio sc on sec.Id_EjercicioCardio=sc.SEC_ID
@@ -608,6 +622,7 @@ class Ejercicio{
                         (Select sep.SEP_ID as ID, sep.Orden, sep.Id_EjercicioPeso as IdEjercicio,
 							p.Explicacion as NombreEjercicio,
                             sp.Alias as AliasEjercicio,
+                            sp.NumAparato as CodigoAparato,
                             p.CodigoImagen1,
                             p.CodigoImagen2,
                             p.ImagenGenerica1,
@@ -619,7 +634,7 @@ class Ejercicio{
                             (Select group_concat(Repeticiones) as Repeticiones FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as Repeticiones,
                             (Select group_concat(DISTINCT PesoPropuesto) as PesoPropuesto FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as PesoPropuesto,
                             (SELECT u.Abreviatura FROM serie s join unidadespeso u ON s.TipoPeso=u.UP_ID where id_SubrutinaEjercicio=sep.SEP_ID LIMIT 1) AS UnidadPeso,
-                            0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, TiempoDescansoEntreSerie,
+                            0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, NotaSocio, TiempoDescansoEntreSerie,
                             p.ImagenUrl as ImagenUrl1, sp.ImagenUrl as ImagenUrl2, p.VideoUrl as VideoUrl1, sp.VideoUrl as VideoUrl2,
                             2 as TipoDeEjercicio
 
@@ -628,6 +643,8 @@ class Ejercicio{
                     where Id_Subrutina=$idSubrutina
                     )
                     order by Orden";
+
+
 
                     if($result = mysqli_query($conexion, $sql))
                     {
@@ -652,6 +669,9 @@ class Ejercicio{
 
                                     $item["AliasEjercicio"]=$row["AliasEjercicio"];
                                     if ($item["AliasEjercicio"]==NULL){$item["AliasEjercicio"]='';}
+
+                                    $item["CodigoAparato"]=$row["CodigoAparato"];
+                                    if ($item["CodigoAparato"]==NULL){$item["CodigoAparato"]='';}
 
                                     $item["CodigoImagen1"]=$row["CodigoImagen1"];
                                     if ($item["CodigoImagen1"]==NULL){$item["CodigoImagen1"]=0;}
@@ -719,6 +739,15 @@ class Ejercicio{
 
                                     $item["Observaciones"]=$row["Observaciones"];
                                     if ($item["Observaciones"]==NULL){$item["Observaciones"]='';}
+
+                                    $item["NotaSocio"]=$row["NotaSocio"];
+                                    if ($item["NotaSocio"]==NULL){$item["NotaSocio"]='';}
+
+                                    // Se verifica, sí el ejercicio es génerico (CodigoImagen 2 mayor a cero), entonces en el nombre, regresamos las observaciones
+                                     if ($item["CodigoImagen2"]>0 and $item["Observaciones"]!='') {
+                                         $item["NombreEjercicio"]=$item["Observaciones"];
+                                     }
+
 
                                     //********************************************************
                                     // 01/05/2016  Se realiza modificación, para agregar los valores de ImagenURL y videoURL
@@ -1009,7 +1038,7 @@ class Ejercicio{
 
                 if($result = mysqli_query($conexion, $sql))
                 {
-                            $response["getEjercicio"]=$this->getEjercicioByID($idEjercicio,2);
+                            $response["getEjercicio"]=$this->getEjercicioByID($idEjercicio,$idTipo);
                             $response["success"]=0;
                             $response["message"]='Ejercicio actualizado correctamente';
                 }
@@ -1079,8 +1108,8 @@ class Ejercicio{
 
             mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
 
-            $sql= " Select  PA_ID, Peso, TipoPeso, id_Serie, Fecha,  from_unixtime(Fecha,'%y%m%d') as FechaCorta
-		                  from pesoavances where id_Serie in (Select Sr_ID from serie where id_SubrutinaEjercicio=$idEjercicio) order By id_Serie, Fecha desc;";
+            $sql= " Select  PA_ID, PesoMaximo as Peso, id_Serie, Fecha,  from_unixtime(Fecha,'%y%m%d') as FechaCorta
+		                  from pesoavances where id_Serie in (Select Sr_ID from serie where id_SubrutinaEjercicio=$idEjercicio) order By Fecha asc;";
 
                     if($result = mysqli_query($conexion, $sql)) //Verificamos que la conexión se haya realizado correctamente
                     {
@@ -1089,112 +1118,65 @@ class Ejercicio{
 
                                 $response["AvanceDePeso"]=array();
 
-                                $idSerie=0;
+
                                 $fecha=0;
 
                                 $i=0; //Creo un indice para recorrer el arreglo y obtener el objeto de la posición anterior
                                 $arregloDeAvances=array();
                                 $registro=array();
+                                $pesoMayorKg=0;
+                                $pesoMayorLb=0;
                                 while($row = mysqli_fetch_array($result))
                                 {
                                     $item = array();
                                     // Lo primero que haremos, será depurar los datos que se hayan ingresado por error, y que se hayan corregido en el mismo día.
                                     // Para depurar los datos erroneos, vamos a quedarnos sólo con el último registro de cada Fecha-Día
 
-                                    $item["PA_ID"]=$row["PA_ID"];
-                                    $item["id_Serie"]=$row["id_Serie"];
-                                    if ($row["TipoPeso"]==1){
-                                            $item["PesoKg"]=$row["Peso"];
-                                            $item["PesoLbs"]=$item["PesoKg"]*2.205;
-                                        }
-                                        else{
-                                            $item["PesoKg"]=$row["Peso"]* 0.454;
-                                            $item["PesoLbs"]=$row["Peso"];
-                                        }
-
-                                        $item["Fecha"]=$row["Fecha"];
-                                        $item["FechaCorta"]=$row["FechaCorta"];
-                                       array_push($registro,$item);
 
 
-                                    if ($i>0 and ($idSerie!=$row["id_Serie"] or $fecha!=$row["FechaCorta"])){
+                                    $item["PesoKg"]=$row["Peso"];
+                                    $item["PesoLbs"]=$item["PesoKg"]*2.205;
+
+                                    $pesoMayorKg=$item["PesoKg"];
+                                    $pesoMayorLb=$item["PesoLbs"];
+
+                                    $item["Fecha"]=$row["Fecha"];
+
+                                    array_push($registro,$item);
+
+
+                                    if ($i>0 and  $fecha!=$row["FechaCorta"]){
 
                                             array_push($arregloDeAvances, $registro[$i-1]);
 
                                     }
 
-                                            $idSerie=$row["id_Serie"];
+
                                             $fecha=$row["FechaCorta"];
                                             $i=$i+1;
 
 
                                 }
+
                                 array_push($arregloDeAvances, $item);
 
-                                // Una vez que se han depurado las correcciones de pesos (pesos registrados en la misma fecha, para el mismo día), procederemos a ordenar el arreglo por FECHA, de tal manera
-                                // que podamos obtener el peso mayor  y menor de cada fecha
-                                $arregloDeAvances=$this->array_sort($arregloDeAvances,"Fecha", SORT_ASC);
 
-                                $pesoMayorKg=0;
-                                $pesoMayorLb=0;
-                                $idSeriePesoMayor=0;
-                                $arregloDeAvances2= array();
-
-                                // Procederemos a crear un nuevo arreglo, de tal manera que vayamos extrayendo cada fecha en que se modificó el peso, e ir calculando cuanto fue el peso máximo y minumo que se cargó en cada pesa.
-                                $fecha=0;
-                                $fechaLarga=0;
-                                $registroFecha=array();
-                                $j=0;
                                 $item2 = array();
-                                foreach ($arregloDeAvances as $registroDePeso) {
-
-                                    // Vamos a armar un arreglo, con los siguientes valores: Fecha, y el valor máximo de cada Fecha
-
-                                    if ($j>0){
-                                        if ($registroDePeso["FechaCorta"]!=$fecha){
-                                            $item2["Fecha"]=$fechaLarga;
-                                            $item2["PesoKg"]=$pesoMayorKg;
-                                            $item2["PesoLbs"]=$pesoMayorLb;
-                                            array_push($arregloDeAvances2, $item2);
-                                        }
-
-                                    }
-
-
-                                    //Si se tiene un peso Mayor, entonces procedemos a registrarlo
-                                    if (($pesoMayorKg<$registroDePeso["PesoKg"]) or ($idSeriePesoMayor==$registroDePeso["id_Serie"])){
-                                        $pesoMayorKg=$registroDePeso["PesoKg"];
-                                        $pesoMayorLb=$registroDePeso["PesoLbs"];
-                                        $idSeriePesoMayor=$registroDePeso["id_Serie"];
-                                    }
-
-
-
-                                    $fecha=$registroDePeso["FechaCorta"];
-                                    $fechaLarga=$registroDePeso["Fecha"];
-                                    $j=$j+1;
-
-                                }
-
-                                $item2["Fecha"]=$fechaLarga;
-                                $item2["PesoKg"]=$pesoMayorKg;
-                                $item2["PesoLbs"]=$pesoMayorLb;
-                                array_push($arregloDeAvances2, $item2);
-
                                 $fecha = new DateTime();
                                 $hoy = $fecha->getTimestamp();
 
                                 $item2["Fecha"]=$hoy;
                                 $item2["PesoKg"]=$pesoMayorKg;
                                 $item2["PesoLbs"]=$pesoMayorLb;
-                                array_push($arregloDeAvances2, $item2);
+                                array_push($arregloDeAvances, $item2);
 
 
 
 
                                 $response["success"]=0;
                                 $response["message"]='Consulta exitosa';
-                                $response["AvanceDePeso"]=$arregloDeAvances2;
+                                $response["AvanceDePeso"]=$arregloDeAvances;
+
                             }
                             else{
                                 $response["success"]=1;
@@ -1225,6 +1207,49 @@ class Ejercicio{
 		return ($response); //devolvemos el array
 
 
+    }
+
+
+    //******************************************************************************************************
+
+      function actualizarNotaSocio($idEjercicio,$idTipo, $notaSocio){
+        // Esta función nos permite actualizar las notas del socio de un ejercicio
+		//Creamos la conexión con la función anterior
+		$conexion = obtenerConexion();
+
+        if ($conexion){ //Verificamos que la conexión se haya realizado de manera correcta
+
+            mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
+
+                if ($idTipo==1){
+                    $sql="UPDATE `subrutinaejerciciocardio` SET `NotaSocio`='$notaSocio' WHERE `SEC_ID`=$idEjercicio;";
+                } else
+                {
+                    $sql="UPDATE `subrutinaejerciciopeso` SET `NotaSocio`='$notaSocio' WHERE `SEP_ID`=$idEjercicio;";
+                }
+
+
+                if($result = mysqli_query($conexion, $sql))
+                {
+
+                            $response["getEjercicio"]=$this->getEjercicioByID($idEjercicio,$idTipo);
+                            $response["success"]=0;
+                            $response["message"]='Ejercicio actualizado correctamente';
+                }
+                else
+                {
+                    $response["success"]=4;
+                    $response["message"]='Se presentó un error al actualizar las observaciones del ejercicio';
+                }
+
+            desconectar($conexion); //desconectamos la base de datos
+            }
+        else{
+            $response["success"]=3;
+            $response["message"]='Se presentó un error al realizar la conexión con la base de datos';
+        }
+
+		return ($response); //devolvemos el array
     }
 
 

@@ -4,6 +4,8 @@
 	// 27/01/2016
 	// Creación de archivo PHP, el cual permite obtener acceder a la clase UsuarioEnforma
 
+    header("Access-Control-Allow-Origin: *");
+
 	$data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
 
@@ -22,6 +24,10 @@
     $codigoEnformaBl= $data["codigoEnforma"];
     $gimnasioBl= $data["gimansio"];
     $sucursalBl= $data["sucursal"];
+
+    $codigoPasswordBl=$data["CodigoPassword"];
+
+
 
 
     function validarTextoNulo($Texto,$Valor){
@@ -86,8 +92,11 @@
 //***********************************************************************************
 
 	function nuevoUsuarioEnforma($nombre, $apellidos,$correo,$facebook, $password){
+
 		$facebookValidado= validarTextoNulo($facebook, "El id facebook del usuario");
         $correoValidado= validarTextoNulo($correo, "El correo del usuario");
+
+
 		if ($facebookValidado["success"]==1 or $correoValidado["success"]==1){
 				$usuario = new UsuarioEnforma();
                 $bandera=0;
@@ -151,6 +160,66 @@
 		return $respuesta;
 	}
 
+//***********************************************************************************
+
+	function aplanarPassword($correo){
+        if ($correo==NULL or $correo=='' or $correo==0){
+
+            $usuario = new UsuarioEnforma();
+			$respuesta= $usuario->aplanarPassword($correo);
+
+        }else
+        {
+            $respuesta["success"]=6;
+			$respuesta["message"]='El correo debe ser diferente de nulo o cadena vacia';
+
+        }
+
+		return $respuesta;
+	}
+
+//***********************************************************************************
+
+    function actualizarPassword($correo,$password, $codigoPassword){
+        //Esta función nos permite actualizar la contraseña de un usuario
+
+        if ($correo!==NULL and $correo!=='' and $correo!==0){
+
+            if ($password!==NULL and $password!=='' and $password!==0){
+
+                    if ($codigoPassword!==NULL and $codigoPassword!=='' and $codigoPassword!==0){
+
+                        $salt = '$EnfoArt$/';
+                        $password = sha1(md5($salt . $password));
+
+                        $usuario = new UsuarioEnforma();
+
+                        $respuesta= $usuario->actualizarPassword($correo,$password, $codigoPassword);
+
+                    }else
+                    {
+                        $respuesta["success"]=11;
+                        $respuesta["message"]='El código para cambiar su contraseña debe ser diferente de nulo o cadena vacia';
+
+                    }
+
+            }else
+            {
+                $respuesta["success"]=10;
+                $respuesta["message"]='La contraseña debe ser diferente de nulo o cadena vacia';
+
+            }
+
+        }else
+        {
+            $respuesta["success"]=9;
+			$respuesta["message"]='El correo debe ser diferente de nulo o cadena vacia';
+
+        }
+
+		return $respuesta;
+
+    }
 
 
 
@@ -180,6 +249,15 @@
         case "getUsuarioEnformaByCodigo":
             $response=getUsuarioEnformaByCodigo($codigoEnformaBl,$gimnasioBl, $sucursalBl);
         break;
+
+        case "aplanarPassword":
+            $response=aplanarPassword($correoBl);
+        break;
+
+        case "actualizarPassword":
+            $response=actualizarPassword($correoBl,$passwordBl,$codigoPasswordBl);
+        break;
+
 		default:
 		{
 			$response["success"]=2;

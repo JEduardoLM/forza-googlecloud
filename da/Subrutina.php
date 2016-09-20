@@ -557,6 +557,7 @@ class Subrutina{
                     $sql= "(SELECT sec.SEC_ID as ID, sec.Orden, sec.Id_EjercicioCardio as IdEjercicio,
                             e.Explicacion as NombreEjercicio,
                             sc.Alias as AliasEjercicio,
+                            sc.NumAparato as CodigoAparato,
                             e.CodigoImagen1,
                             e.CodigoImagen2,
                             e.ImagenGenerica1,
@@ -573,7 +574,7 @@ class Subrutina{
                             (select abreviatura from unidadesvelocidad where UV_ID= sec.TipoDeVelocidad) as UnidadVelocidad,
                             sec.DistanciaTotal,
                             (select Abreviatura from unidadesdistancia where UD_ID= sec.TipoDistancia) as UnidadDistancia,
-                            sec.RitmoCardiaco, sec.Nivel, sec.Observaciones, 0 as TiempoDescansoEntreSerie,
+                            sec.RitmoCardiaco, sec.Nivel, sec.Observaciones, sec.NotaSocio, 0 as TiempoDescansoEntreSerie,
                             e.ImagenUrl as ImagenUrl1, sc.ImagenUrl as ImagenUrl2, e.VideoUrl as VideoUrl1, sc.VideoUrl as VideoUrl2,
                             1 as TipoDeEjercicio
                         FROM subrutinaejerciciocardio sec JOIN sucursalejerciciocardio sc on sec.Id_EjercicioCardio=sc.SEC_ID
@@ -583,6 +584,7 @@ class Subrutina{
                         (Select sep.SEP_ID as ID, sep.Orden, sep.Id_EjercicioPeso as IdEjercicio,
 							p.Explicacion as NombreEjercicio,
                             sp.Alias as AliasEjercicio,
+                            sp.NumAparato as CodigoAparato,
                             p.CodigoImagen1,
                             p.CodigoImagen2,
                             p.ImagenGenerica1,
@@ -594,7 +596,7 @@ class Subrutina{
                             (Select group_concat(Repeticiones) as Repeticiones FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as Repeticiones,
                             (Select group_concat(DISTINCT PesoPropuesto) as PesoPropuesto FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as PesoPropuesto,
                             (SELECT u.Abreviatura FROM serie s join unidadespeso u ON s.TipoPeso=u.UP_ID where id_SubrutinaEjercicio=sep.SEP_ID LIMIT 1) AS UnidadPeso,
-                            0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, TiempoDescansoEntreSerie,
+                            0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, NotaSocio, TiempoDescansoEntreSerie,
                             p.ImagenUrl as ImagenUrl1, sp.ImagenUrl as ImagenUrl2, p.VideoUrl as VideoUrl1, sp.VideoUrl as VideoUrl2,
                             2 as TipoDeEjercicio
 
@@ -627,6 +629,9 @@ class Subrutina{
 
                                     $item["AliasEjercicio"]=$row["AliasEjercicio"];
                                     if ($item["AliasEjercicio"]==NULL){$item["AliasEjercicio"]='';}
+
+                                    $item["CodigoAparato"]=$row["CodigoAparato"];
+                                    if ($item["CodigoAparato"]==NULL){$item["CodigoAparato"]='';}
 
                                     $item["CodigoImagen1"]=$row["CodigoImagen1"];
                                     if ($item["CodigoImagen1"]==NULL){$item["CodigoImagen1"]=0;}
@@ -694,6 +699,15 @@ class Subrutina{
 
                                     $item["Observaciones"]=$row["Observaciones"];
                                     if ($item["Observaciones"]==NULL){$item["Observaciones"]='';}
+
+                                    $item["NotaSocio"]=$row["NotaSocio"];
+                                    if ($item["NotaSocio"]==NULL){$item["NotaSocio"]='';}
+
+                                    // Se verifica, sí el ejercicio es génerico (CodigoImagen 2 mayor a cero), entonces en el nombre, regresamos las observaciones
+                                     if ($item["CodigoImagen2"]>0 and $item["Observaciones"]!='') {
+                                         $item["NombreEjercicio"]=$item["Observaciones"];
+                                     }
+
 
                                     //********************************************************
                                     // 01/05/2016  Se realiza modificación, para agregar los valores de ImagenURL y videoURL
@@ -789,6 +803,7 @@ class Subrutina{
                     $sql= "(Select sep.SEP_ID as ID, sep.Orden, sep.Id_EjercicioPeso as IdEjercicio,
 							p.Explicacion as NombreEjercicio,
                             sp.Alias as AliasEjercicio,
+                            sp.NumAparato as CodigoAparato,
                             p.CodigoImagen1,
                             p.CodigoImagen2,
                             p.ImagenGenerica1,
@@ -800,7 +815,7 @@ class Subrutina{
                             (Select group_concat(Repeticiones) as Repeticiones FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as Repeticiones,
                             (Select group_concat(DISTINCT PesoPropuesto) as PesoPropuesto FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as PesoPropuesto,
                             (SELECT u.Abreviatura FROM serie s join unidadespeso u ON s.TipoPeso=u.UP_ID where id_SubrutinaEjercicio=sep.SEP_ID LIMIT 1) AS UnidadPeso,
-                            0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, TiempoDescansoEntreSerie,
+                            0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, NotaSocio, TiempoDescansoEntreSerie,
                             p.ImagenUrl as ImagenUrl1, sp.ImagenUrl as ImagenUrl2, p.VideoUrl as VideoUrl1, sp.VideoUrl as VideoUrl2,
                             2 as TipoDeEjercicio
 
@@ -830,6 +845,9 @@ class Subrutina{
 
                                     $item["AliasEjercicio"]=$row["AliasEjercicio"];
                                     if ($item["AliasEjercicio"]==NULL){$item["AliasEjercicio"]='';}
+
+                                    $item["CodigoAparato"]=$row["CodigoAparato"];
+                                    if ($item["CodigoAparato"]==NULL){$item["CodigoAparato"]='';}
 
                                     $item["CodigoImagen1"]=$row["CodigoImagen1"];
                                     if ($item["CodigoImagen1"]==NULL){$item["CodigoImagen1"]=0;}
@@ -890,6 +908,15 @@ class Subrutina{
 
                                     $item["Observaciones"]=$row["Observaciones"];
                                     if ($item["Observaciones"]==NULL){$item["Observaciones"]='';}
+
+                                    $item["NotaSocio"]=$row["NotaSocio"];
+                                    if ($item["NotaSocio"]==NULL){$item["NotaSocio"]='';}
+
+                                    // Se verifica, sí el ejercicio es génerico (CodigoImagen 2 mayor a cero), entonces en el nombre, regresamos las observaciones
+                                     if ($item["CodigoImagen2"]>0 and $item["Observaciones"]!='') {
+                                         $item["NombreEjercicio"]=$item["Observaciones"];
+                                     }
+
 
 
                                     //********************************************************

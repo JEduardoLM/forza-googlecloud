@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "forza-1355",
+  "private_key_id": "7a68170c45a115486167ada428752bf3b110097e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDVeKTf7IBcCpdT\nrYuorUIZfkXIca4UwSilJ9wBEWHJrgtbAqgUbiCi0trXabigIcu8cGVZxS+Fw0nA\nbcvMUjgsq0NCd9oKBg9it4JQZPE7q0aI8yAc7Xe9D90qcmmy1AJNnycFFlIExIdj\nVIKRrGie4o5nKMdGTMtc+en8HA55Gb2riH7Lll3uEMh8OaKuZAMJnScaGUfrDmnB\neLGjIkGkGDXP6SD++BhwlmatyUDjv+tERHA4xbZMkOHBpFDOY9i6x8z4lvRsiFdg\nO0J1M89M0egaxNyv2JrZ2iUzqiKvMPyIMf0vznG4RpfU3DoNtRUoK6bhF40K24zk\n7ZJeJ7gfAgMBAAECggEAaXNdTthPWChLNKTIFpzvyBQeeLPfYJVCdMNJ5KUnfy8g\noOahDOaR7JzoSf0JnODU+dMz3bKQlS0xI4OZZuc+pKI9aXo3FTiFJSitkPUsTWOA\nRmqDdIbB3X0Wrb8zA4nDUYDLD7JE9eH3V1QJ49gdHk+gNMlqFwocc2No+IcLhzoO\ni72ZrYgDp5sEuQYSoB6nkLSTvA/SIgI1Z0O28/q6y1rpT5ljZInQU2YJKfeKbBXc\nwZOBfYB8GKFgHQJok61b4i4l4diQC8n0XGnQPZVmDOWqRg60Tagy3oeLjaEPtINw\nuPPMQ4bKsofdKeTa0mDHI4qCkQZXL+6G+C8T+tbQEQKBgQD5bwZ4MX4zmYHHEaz8\nD5A5somB5kAabrYGaVNybTLzLrMpIjKHvWrW2Fuvw60RzkGioUvSGIlZeTIDWRR4\naidyDUVqmnxyDzyuHko5rQhVW1il335FnNIzAbQVaqOYYIMODcfTE/UXU3GmetEs\nt5iOKc1DORWhZDPeWi17wXlSHQKBgQDbF0MWB1D61yOaKKAjTj0qVu7rRkK+CaKc\n/qeL2nZgrU27kwsbZkvy12RqJc6HRbIWaX8uMa4bwNbiV+eHHeP/cKb+8A7izXDb\nc7XhZCBAHuWlhXT5IB2yfHL4Wo1CUfGwkxUNsbydfLVQm708YHEgXdTwWgQJvr5m\nrBqpE68eawKBgA4eyOD4/EnzgLNCPuauAt4hS0N9Q1e7uLY4NC8gG2hE1oOXmgCx\nKmErMlWK4DtHz9NjCiXEmdHk2H30BwKiD8WXFrzoLe9PCYJZ2J3XO8eJOkV5l25d\naFDW4djshoJTxFeBVDSQxqkhYieogDrl0c8KcsJBcwYF5CHMPRLqavHJAoGATqGF\nqUVM8gn+tBg6iRFOcICs1PHtiEjq/M+EkHQComXwjQ6UIOxQ+8IEPvh8rB3+cX7B\nb3HTHBDUzn1gEiVPK+FhfgPoQ8wZ4hkgQNlvnbO5FfPU7IhzQBjcJnhRVGkWhhnz\np2uP1zHn3RtYCnBOiaBDiVO1OU4lBbJlCyOOaSsCgYEA1tEkeVuYra8zjW7BJwcA\nvbhf0UArdhrE1HpFopYxofr3ZQW1InzJ3T38w3XTkz+NwFUJd0r5Fz3QxCoBHRPO\nViZJcHAGyt7VcI8Fg5FBASB5JIUw+VE6sFL6NnvBahiej4+b0UuTe7g7/m/FuIsF\nLskrrVbJkl0plgUgagNEqR0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "forza-1355@appspot.gserviceaccount.com",
+  "client_id": "103180591637975208347",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/forza-1355%40appspot.gserviceaccount.com"
+}

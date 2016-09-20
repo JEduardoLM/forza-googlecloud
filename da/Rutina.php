@@ -130,11 +130,13 @@ class Rutina{
 
                                     //Una vez que tenemos la subrutina, vamos a proceder a duplicar los registros de la tabla de cardio.
                                     $sqlCardio="INSERT INTO subrutinaejerciciocardio
-                                        (SELECT NULL as SEC_ID, '$idSubrutinaNueva' as Id_Subrutina, Id_EjercicioCardio, Tiempototal, Velocidadpromedio, TipoDeVelocidad, DistanciaTotal, TipoDistancia, Ritmocardiaco, Nivel, Observaciones, Orden, Circuito FROM subrutinaejerciciocardio where Id_Subrutina=$idSubrutinaOrigen);";
+                                        (SELECT NULL as SEC_ID, '$idSubrutinaNueva' as Id_Subrutina, Id_EjercicioCardio, Tiempototal, Velocidadpromedio, TipoDeVelocidad, DistanciaTotal, TipoDistancia, Ritmocardiaco, Nivel, Observaciones, Orden, Circuito, NotaSocio FROM subrutinaejerciciocardio where Id_Subrutina=$idSubrutinaOrigen);";
 
                                     if($resultCardio = mysqli_query($conexion, $sqlCardio)){
 
                                         //Si se ejecutó correctamente la duplicidad de los ejercicios de cárdio, procedemos con la duplicidad de los ejercicios de pesas
+
+                                        // En este proceso, lo realizamos diferente, primero vamos a consultar todos los ejercicios de pesas, y posteriormente, vamos a proceder a insertarlos uno por uno, ya que necesitamos obtener el id de cada ejercicio de pesa, para posteriormente agregar las series.
                                         $sqlPesa="SELECT SEP_ID, Id_Subrutina, Id_EjercicioPeso, Circuito, TiempoDescansoEntreSerie, Observaciones, Orden
                                         FROM subrutinaejerciciopeso where Id_Subrutina=$idSubrutinaOrigen ;"; //Ya que necesitamos obtener el id de cada registro ingresado, vamos a proceder a recorrer cada ejercicio de pesas de la serie, para irlos registrando.
 

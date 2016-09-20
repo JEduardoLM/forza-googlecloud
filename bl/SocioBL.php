@@ -8,6 +8,9 @@
     // Rutina
     // Subrutina
 
+    header("Access-Control-Allow-Origin: *");
+
+
 	 $data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
     // $json = '{"metodo":"actulizarPesoEnSerie","IdSerie":"6","PesoNuevo":"10","TipoPeso":"1","IdEjercicio":"2","CircuitoColor":"0"}';
@@ -295,7 +298,7 @@
 
         if ($IdSerie!=NULL and $IdSerie>0 ){
             $serie= new Serie();
-            $response["Serie"] = $serie->updatePesoEnSerie($IdSerie,$PesoNuevo,$TipoPeso) ;
+            $response["Serie"] = $serie->updatePesoEnSerie($IdSerie,$PesoNuevo,$TipoPeso,$idEjercicio) ;
 
             if ($response["Serie"]["success"]==0){
                 $subrutina = new Subrutina();

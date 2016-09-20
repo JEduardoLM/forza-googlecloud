@@ -4,6 +4,8 @@
 	// 26/01/2016
 	// Creación de archivo PHP, el cual permite obtener el listado de aparatos, agregar un nuevo aparato o modificar uno existente
 
+    header("Access-Control-Allow-Origin: *");
+
     $data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
 //    $json = '{"metodo":"getAparato","id":1}';

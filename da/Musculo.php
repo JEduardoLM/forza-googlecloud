@@ -91,7 +91,7 @@ class Musculo{
 			$sql="INSERT INTO musculo (`Nombre`, `Descripcion`, `Estatus`, `Imagen`, `TipoFuenteImagen`, `TamañoFuenteImagen`, `ColorFuenteImagen`)
 							   VALUES ('$nombre', '$descripcion', 1, '$imagen', '$tipoFuenteImagen', '$tamañoFuenteImagen', '$colorFuenteImagen');";
 
-			echo '++'.$sql.'++';
+
 			if($result = mysqli_query($conexion, $sql)){
 
 				// Volvemos a consultar el listado de Musculos

@@ -1,5 +1,7 @@
 <?php
 
+
+
 	define('SERVIDOR', 'localhost');
 	define('USUARIO', 'admin');
 	define('CONTRASENA','enforma123');
@@ -17,5 +19,7 @@
 		die("Connection failed: " . $conn->connect_error);
 	}
 		echo "Connected successfully";*/
+
+
 
 ?>
