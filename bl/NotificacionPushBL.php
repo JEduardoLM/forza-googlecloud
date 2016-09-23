@@ -1,5 +1,71 @@
 <?PHP
 
+
+	// JELM
+	// 21/09/2016
+	// Creación de archivo PHP, el cual permite actualizar el id de notificaciones push
+
+
+    //Se agrega cabezara, para permitir el acceso CORS
+    header("Access-Control-Allow-Origin: *");
+
+    // Las variables se reciben por el método POST desde un objeto JSON
+     $data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
+
+    require('../da/UsuarioEnforma.php'); //Se requiere el archivo de acceso a la base de datos
+
+
+
+	//Extraemos la información del método POST, y lo asignamos a diferentes variables
+	$metodoBl = $data["Metodo"];
+    $idNotificacionesBl=$data["IdNotificaciones"];
+    $idUsuarioBl=$data["IdUsuarioEnforma"];
+
+
+    // ****************************************************************************************************************************************
+    // ****************************************************************************************************************************************
+
+    function updateIdNotificaciones($idUsuario, $idNotificacion){
+
+        if ($idUsuario===NULL or $idUsuario==='' or $idUsuario===0){
+                $respuesta["success"]=5;
+                $respuesta["message"]='El Id del usuario debe ser diferente de nulo o cero';
+        }
+        else{
+                    $user = new UsuarioEnforma();
+                    $respuesta= $user->saveIdNotificaciones($idUsuario, $idNotificacion);
+        }
+        return $respuesta;
+    }
+
+
+
+
+//******************************************************************************************************************************************
+//******************************************************************************************************************************************
+//******************************************************************************************************************************************
+
+
+
+		switch ($metodoBl) {
+        case "updateIdNotificaciones": // Método utilizado para actualizar el id de notificaciones
+                $response=updateIdNotificaciones($idUsuarioBl, $idNotificacionesBl);
+		break;
+
+		default:
+		{
+			$response["success"]=2;
+			$response["message"]='El método indicado no se encuentra registrado';
+		}
+	}
+
+    echo json_encode ($response)
+
+
+
+
+
+/* //Se comentan métodos utilizados para enviar las notificaciones PUSH
 class NotificacionPush{
 
   function enviarMensajePuntual($mensaje, $destinatarios){
@@ -43,6 +109,8 @@ class NotificacionPush{
 
 }
 
+
+
   $np = new NotificacionPush();
 
   $destino=array ("a72114ef-3b2b-4257-bb58-6b79c6015fda","664122d7-2eb9-4428-a4fa-b9f236f9566a");
@@ -56,5 +124,7 @@ class NotificacionPush{
   print("\n\nJSON received:\n");
   print($return);
   print("\n");
+
+  */
 
 ?>

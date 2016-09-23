@@ -4,7 +4,7 @@ require_once('conexion.php');
 
 class Socio{
 
-	function getSocioByIdUsuarioIdGym($idUsuario,$idGym){ // Esta función nos regresa los socios que esten asociados a un usuario/gymnasio (en teoría sólo debe haber un registro así)
+function getSocioByIdUsuarioIdGym($idUsuario,$idGym){ // Esta función nos regresa los socios que esten asociados a un usuario/gymnasio (en teoría sólo debe haber un registro así)
 		//Creamos la conexión con la función anterior
 		$conexion = obtenerConexion();
 
@@ -320,6 +320,70 @@ function actualizarSucursalSocio($idSocio, $idSucursal){
 
 }
 
+function getSociosDisponibles($idSucursal){
+    //Este método es utilizado para poder determinar cuantos socios se pueden agregar a una sucursal
+
+        //Creamos la conexión
+		$conexion = obtenerConexion();
+
+        if ($conexion){
+		mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
+
+        // Armamos la consulta, para determinar cuantos socios quedan disponibles para ser asignados a la sucursal.
+		$sql= "Select  (SELECT NumeroSocios FROM sucursal where S_Id=$idSucursal) as LimiteDeSocios,
+                        ((SELECT NumeroSocios FROM sucursal where S_Id=$idSucursal) -
+                (SELECT COUNT(Id_Sucursal) as SociosActivos FROM socio where Id_Sucursal=$idSucursal and Estatus=1)) as SociosDisponibles;";
+
+            if($result = mysqli_query($conexion, $sql))
+            {
+                if($result!=null){
+                    if ($result->num_rows>0){
+
+                        $response["SociosDisponibles"] = 0;
+                        while($row = mysqli_fetch_array($result))
+                        {
+
+                            $response["SociosDisponibles"]=$row["SociosDisponibles"];
+                            $response["LimiteDeSocios"]=$row["LimiteDeSocios"];
+
+                        }
+                        $response["success"]=0;
+                        $response["message"]='Consulta exitosa';
+                    }
+                    else{
+                        $response["success"]=5;
+                        $response["message"]='Se presentó un error al calcular el número de socios disponibles';
+                    }
+
+                }
+                else
+                    {
+                        $response["success"]=5;
+                        $response["message"]='Se presentó un error al calcular el número de socios disponibles';
+                    }
+            }
+            else
+            {
+                $response["success"]=4;
+                $response["message"]='Se presentó un error al ejecutar la consulta';
+            }
+
+
+		desconectar($conexion); //desconectamos la base de datos
+        }
+    else
+    {
+        $response["success"]=3;
+        $response["message"]='Se presentó un error al realizar la conexión';
+
+    }
+		return ($response); //devolvemos el array
+
+
+
+
+}
+
 }
 
 
@@ -327,8 +391,7 @@ function actualizarSucursalSocio($idSocio, $idSucursal){
 
 
 //$UG = new Socio();
-//$UGs=$UG->actualizarSucursalSocio(7,2);
-//$UGs=$UG->asociarSocioGimnasio(1,2,3);
+//$UGs=$UG->getSociosDisponibles(1);
 //echo json_encode ($UGs);
 
 

@@ -228,31 +228,58 @@
      if ($idUsuario!=NULL and $idUsuario>0){  //Validamos que el id envíado sea diferente de NULO
             if ($idGimnasio!=NULL and $idGimnasio>0){
                 if ($idSucursal!=NULL and $idSucursal>0){
+                    // ***********************   20/09/2016 ********************************************
+                    // Se procede a validar que el usuario aún se pueda registrar dentro de la sucursal.
+                    // *********************************************************************************
+
                     if (is_numeric($idUsuario)){
                         if (is_numeric($idGimnasio)){
                             if (is_numeric($idSucursal)){
+                                $socio = new socio();
 
-                                $gym = new Gimnasio();
+                                //Mandamos a llamar el método para verificar cuantos lugares estan disponibles.
+                                $sociosDisponibles=$socio->getSociosDisponibles($idSucursal);
 
-                                if ($gym->validarSucursalGimnasio($idGimnasio,$idSucursal)==1){
+                                if ($sociosDisponibles["success"]==0){
+                                    if ($sociosDisponibles["SociosDisponibles"]>0){
+                                        $gym = new Gimnasio();
 
-                                $usuarioGym = new UsuarioGym();
-                                $UGS=$usuarioGym->getUsuarioGymByIDU_IDGym($idUsuario, $idGimnasio);
-                                  if ($UGS["message"]=='Consulta exitosa'){
-                                    $response["success"]=13;
-                                    $response["message"]='El usuario ya se encuentra asociado al gimnasio';
+                                        if ($gym->validarSucursalGimnasio($idGimnasio,$idSucursal)==1){
+
+                                        $usuarioGym = new UsuarioGym();
+                                        $UGS=$usuarioGym->getUsuarioGymByIDU_IDGym($idUsuario, $idGimnasio);
+                                          if ($UGS["message"]=='Consulta exitosa'){
+                                            $response["success"]=13;
+                                            $response["message"]='El usuario ya se encuentra asociado al gimnasio';
+                                            }
+                                            else{
+
+
+                                                $response= $socio->asociarSocioGimnasio($idUsuario, $idGimnasio, $idSucursal);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            $response["success"]=12;
+                                            $response["message"]='La sucursal indicada no corresponde al gimnasio';
+                                        }
+
+
                                     }
                                     else{
-
-                                        $socio = new socio();
-                                        $response= $socio->asociarSocioGimnasio($idUsuario, $idGimnasio, $idSucursal);
+                                            $response["success"]=13;
+                                            $response["message"]='Ha excedido el límite de socios el cual es de '.$sociosDisponibles["LimiteDeSocios"].' socios';
                                     }
+
                                 }
                                 else
-                                {
-                                $response["success"]=12;
-                                $response["message"]='La sucursal indicada no corresponde al gimnasio';
-                                }
+                                        {
+                                            $response["success"]=14;
+                                            $response["message"]='Error al consultar los socios disponibles: '. $sociosDisponibles["message"];
+                                        }
+
+
+                                //**********************************************************************
 
                             }
                             else
@@ -358,7 +385,32 @@
             if (is_numeric($estatus) and $estatus<2){
                 if (is_numeric($idSucursal) and $idSucursal>0){
                     $socio = new Socio();
-                    $response= $socio->modificarEstatusSocio($idUsuarioGym, $estatus,$idSucursal);
+
+                    if ($estatus==0){
+                         $response= $socio->modificarEstatusSocio($idUsuarioGym, $estatus,$idSucursal);
+                    }
+                    else{
+                    //************************************************************************************************
+                        //Mandamos a llamar el método para verificar cuantos lugares estan disponibles.
+                        $sociosDisponibles=$socio->getSociosDisponibles($idSucursal);
+
+                        if ($sociosDisponibles["success"]==0){
+                            if ($sociosDisponibles["SociosDisponibles"]>0){
+                                    $response= $socio->modificarEstatusSocio($idUsuarioGym, $estatus,$idSucursal);
+                            }
+                            else{
+                                $response["success"]=13;
+                                $response["message"]='Ha excedido el límite de socios el cual es de '.$sociosDisponibles["LimiteDeSocios"].' socios';
+                            }
+
+                        }
+                        else
+                            {
+                                $response["success"]=14;
+                                $response["message"]='Error al consultar los socios disponibles: '. $sociosDisponibles["message"];
+                            }
+                    }
+                    //************************************************************************************************
                 }
                 else
                 {

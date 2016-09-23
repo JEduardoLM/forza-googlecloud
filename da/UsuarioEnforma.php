@@ -21,7 +21,7 @@ class UsuarioEnforma{
 
 		if ($idUsuarioEnforma!=0) //Si el id es igual a cero, obtenemos todos Usuarios, en caso contrario, vamos por el UsuarioEnforma especifico.
 		{
-			$sql="select Id, CodigoEnforma, Nombre, Apellidos, Correo, IdFacebook, Estatus from usuarioenforma where Id='$idUsuarioEnforma'";
+			$sql="select Id, CodigoEnforma, Nombre, Apellidos, Correo, IdFacebook, Estatus, IdNotificaciones from usuarioenforma where Id='$idUsuarioEnforma'";
 		}
 		else
 		{
@@ -44,6 +44,7 @@ class UsuarioEnforma{
                         $item["IdFacebook"]=$row["IdFacebook"];
                        // $item["Password"]=$row["Password"];
                         $item["Estatus"]=$row["Estatus"];
+                        $item["IdNotificaciones"]=$row["IdNotificaciones"];
                         $response["Usuario"]=$item;
                        // array_push($response["Usuarios"], $item);
                     }
@@ -954,6 +955,53 @@ class UsuarioEnforma{
 
 
    }
+
+    //******************************************************************************************************************************************************
+	//******************************************************************************************************************************************************
+	//******************************************************************************************************************************************************
+
+    function saveIdNotificaciones($idUsuario, $idNotificacion){
+        //Esta función nos permitirá actualizar el id de notificaciones de un usuario
+
+        //Realizamos la conexión con la base de datos
+		$conexion = obtenerConexion();
+
+        if ($conexion){ //Verificamos que la conexión se haya realizado de manera correcta
+
+            mysqli_set_charset($conexion, "utf8"); //Formato de datos utf8
+
+            //Procedemos a armar las consultas
+            //Primero insertamos el registro dentro de la tabla usuario
+            $sql= "UPDATE `usuarioenforma` SET `IdNotificaciones`='$idNotificacion' WHERE `Id`='$idUsuario';";
+
+
+
+                if($result = mysqli_query($conexion, $sql)) //Ejecutamos la consulta
+                {
+
+                                desconectar($conexion);
+                                $response["getUsuario"]=$this->getUsuarioEnformaByID($idUsuario);
+                                $response["success"]=0;
+                                $response["message"]='Id de notificaciones almacenado correctamente';
+
+                }
+
+                else
+                {
+
+                    $response["success"]=4;
+                    $response["message"]='Se presentó un error al guardar el usuario';
+
+                }
+        }
+        else
+        {
+            $response["success"]=3;
+            $response["message"]='Se presentó un error en la conexión con la base de datos';
+        }
+
+		return ($response); //devolvemos el array
+    }
 
 
 }
