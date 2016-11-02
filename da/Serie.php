@@ -468,6 +468,141 @@ class Serie{
     }
 
 
+     function configurarSeriesMasivas($arregloEjercicios,$arregloSeries){
+         // Esta función permite configurar todas las series de un conjunto de ejercicios
+
+
+        //Creamos la conexión a la base de datos
+		$conexion = obtenerConexion();
+
+
+        if ($conexion){ //Verificamos que la conexión se haya realizado de manera correcta
+
+          mysqli_set_charset($conexion, "utf8"); //Formato de datos utf8
+
+            $ejerciciosDepurados = array(); // Creamos un arreglo para almacenar los ejercicios que fueron depurados
+            $ejerciciosErrorAlDepurarse = array(); // Creamos un arreglo para almacenar los ejercicios cuyas series no pudieron ser depuradas
+            $serieAlmacenadaCorrectamente = array(); // Creamos un arreglo con las nuevas series almacenadas
+            $b=1; //Creamos una bandera para checar, cuando haya un error en las consultas
+
+            mysqli_autocommit($conexion, FALSE); //Desactivamos la opción de autocomit, para verificar que se actualicen todos los registros
+
+            mysqli_begin_transaction($conexion); // Iniciamos con la transacción
+
+          foreach ($arregloEjercicios as $datosEjercicio) {
+              // Recorreremos cada uno de los ejercicios del arreglo
+              $idEjercicio=$datosEjercicio["IdEjercicio"]; // Obtenemos el Id del ejercicio
+
+                //Lo primero que haremos será depurar las series, para que no exista inconsistencia en los datos
+                $sql= "DELETE FROM `serie` WHERE id_SubrutinaEjercicio='$idEjercicio';";
+
+                mysqli_query($conexion, $sql); //Ejecutamos la consulta
+
+              // Una vez que se ha depurados las series anteriores, procederemos a guardar mediante un ciclo, las nuevas series.
+
+              //**********************************************************************************************************************
+                $NumeroSerie=0;
+                foreach ($arregloSeries as $datosSerie) {
+                    // Recorremos cada una de las series
+
+                    $NumeroSerie=$NumeroSerie+1; // Incrementamos el número de serie
+                    $Observaciones=''; // Las observaciones siempre van en vacio
+
+
+                    switch ($datosSerie[TipoSerie]) {
+                        case "Peso fijo":
+                            $TipoSerieId=1;
+                        break;
+                        case "Ascendente":
+                            $TipoSerieId=2;
+                        break;
+                        case "Descendente":
+                            $TipoSerieId=3;
+                        break;
+                        case "Ascendente-descendente":
+                            $TipoSerieId=4;
+                        break;
+                        case "Descendente-ascendente":
+                            $TipoSerieId=5;
+                        break;
+                        default:
+                        {
+                            $TipoSerieId=1;
+                        }
+
+                    }
+
+
+
+                    $sql="INSERT INTO `serie` (`NumeroSerie`, `Repeticiones`, `id_TipoSerie`, `PesoPropuesto`, `id_SubrutinaEjercicio`, `Observaciones`, `TipoPeso`)
+                        VALUES ($NumeroSerie, $datosSerie[Repeticiones], $TipoSerieId , $datosSerie[Peso], $idEjercicio,'$Observaciones', $datosSerie[TipoPeso]);";
+
+                        if($result = mysqli_query($conexion, $sql)){
+                            //Ejecutamos la consulta para insertar en la tabla de series
+
+                            $fecha = new DateTime();
+                            $hoy = $fecha->getTimestamp(); //Obtenemos la fecha exacta del sistema, para el historico de pesos
+
+                            $idSerie=mysqli_insert_id($conexion); // Obtenemos el id de la serie, para registrarlo en el histórico de pesos
+                            $sql2="INSERT INTO pesoavances (`Peso`, `TipoPeso`, `id_Serie`,`Fecha`)
+                                    VALUES ($datosSerie[Peso], $datosSerie[TipoPeso], $idSerie, $hoy)";
+
+                            if($result = mysqli_query($conexion, $sql2)){
+                                // Ejecutamos la consulta para insertar en la tabla del histórico de pesos
+
+                            }
+                            else{
+                                $b=0;
+
+                               // En caso de que no se pueda almacenar correctamente algun dato en la tabla de histórico, haremos un rollback
+                                $response["success"]=5;
+                                $response["message"]='El peso no pudo ser almacenado correctamente en el histórico';
+                                break 2; // En caso de presentarse un error, salimos de ambos ciclos
+                            }
+
+
+                        }
+                        else{
+                            $b=0;
+                            echo $sql;
+                            // Si no se puede almacenar correctamente la serie, procederemos a revertir los cambios
+                            $response["success"]=4;
+                            $response["message"]='La serie no se pudo registrar correctamente';
+                            break 2; // En caso de presentarse un error, salimos de ambos ciclos
+
+                        }
+
+
+                }
+              //**********************************************************************************************************************
+
+
+          }
+
+            if ($b==0){
+                // Si se encontró algún error hacemos un rollback
+                mysqli_rollback($conexion);
+            }
+            else{
+                // Si existe algún error, se procede a hacer el commit
+                $response["success"]=0;
+				$response["message"]='Series almacenadas correctamente';
+                mysqli_commit($conexion);
+            }
+            desconectar($conexion); //desconectamos la base de datos
+
+        }
+         else
+        {
+            $response["success"]=3;
+            $response["message"]='Se presentó un error en la conexión con la base de datos';
+        }
+
+         return $response;
+
+     }
+
+
 }
 
 

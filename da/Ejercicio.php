@@ -302,8 +302,8 @@ class Ejercicio{
                                 Circuito,
                                 TiempoDescansoEntreSerie,
                                 (SELECT COUNT(Sr_ID) FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as NumeroSeries,
-                                (Select group_concat(Repeticiones) as Repeticiones FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as Repeticiones,
-                                (Select group_concat(DISTINCT PesoPropuesto) as PesoPropuesto FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as PesoPropuesto,
+                                (Select group_concat(Repeticiones order By NumeroSerie) as Repeticiones FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as Repeticiones,
+                                (Select group_concat(DISTINCT PesoPropuesto order By NumeroSerie) as PesoPropuesto FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as PesoPropuesto,
                                 (SELECT u.Abreviatura FROM serie s join unidadespeso u ON s.TipoPeso=u.UP_ID where id_SubrutinaEjercicio=sep.SEP_ID LIMIT 1) AS UnidadPeso,
                                 0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, NotaSocio, TiempoDescansoEntreSerie,
                                 p.ImagenUrl as ImagenUrl1, sp.ImagenUrl as ImagenUrl2, p.VideoUrl as VideoUrl1, sp.VideoUrl as VideoUrl2,
@@ -631,8 +631,8 @@ class Ejercicio{
                             Circuito,
                             TiempoDescansoEntreSerie,
                             (SELECT COUNT(Sr_ID) FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as NumeroSeries,
-                            (Select group_concat(Repeticiones) as Repeticiones FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as Repeticiones,
-                            (Select group_concat(DISTINCT PesoPropuesto) as PesoPropuesto FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as PesoPropuesto,
+                            (Select group_concat(Repeticiones order By NumeroSerie) as Repeticiones FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as Repeticiones,
+                            (Select group_concat(DISTINCT PesoPropuesto order By NumeroSerie) as PesoPropuesto FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as PesoPropuesto,
                             (SELECT u.Abreviatura FROM serie s join unidadespeso u ON s.TipoPeso=u.UP_ID where id_SubrutinaEjercicio=sep.SEP_ID LIMIT 1) AS UnidadPeso,
                             0 as TiempoTotal, 0 as VelocidadPromedio, 0 as UnidadVelocidad, 0 as DistanciaTotal, 0 as UnidadDistancia , 0 as RitmoCardiaco, 0 as Nivel, Observaciones, NotaSocio, TiempoDescansoEntreSerie,
                             p.ImagenUrl as ImagenUrl1, sp.ImagenUrl as ImagenUrl2, p.VideoUrl as VideoUrl1, sp.VideoUrl as VideoUrl2,
@@ -1251,6 +1251,151 @@ class Ejercicio{
 
 		return ($response); //devolvemos el array
     }
+
+    //******************************************************************************************************
+    //******************************************************************************************************
+
+        function getEjerciciosByArregloEjercicios ($listadoEjercicios){
+            // Esta función nos regresa el detalle de ejercicios contenidos en un listado de ejercicio
+            // Éste método es utilizado, para cuando se actulice un grupo de ejercicios
+
+		//Creamos la conexión con la función anterior
+		$conexion = obtenerConexion();
+
+        if ($conexion){
+
+
+
+            mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
+
+            if ($listadoEjercicios!='')
+            {
+
+                    $sql= "Select sep.SEP_ID as ID,
+                            (Select group_concat(Repeticiones order By NumeroSerie) as Repeticiones FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as Repeticiones,
+                            (Select group_concat(DISTINCT PesoPropuesto order By NumeroSerie) as PesoPropuesto FROM serie where id_SubrutinaEjercicio=sep.SEP_ID) as PesoPropuesto,
+                            (SELECT u.Abreviatura FROM serie s join unidadespeso u ON s.TipoPeso=u.UP_ID where id_SubrutinaEjercicio=sep.SEP_ID LIMIT 1) AS UnidadPeso
+                    from subrutinaejerciciopeso sep JOIN sucursalejerciciopesa sp on sep.id_EjercicioPeso=sp.SEP_ID
+                        join ejerciciopesa p on sp.id_EjercicioPesa=p.EP_ID
+                    where sep.SEP_ID in ($listadoEjercicios) order by Orden";
+
+
+
+                    if($result = mysqli_query($conexion, $sql))
+                    {
+                        if($result!=null){
+                            if ($result->num_rows>0){
+
+                                $response["ejercicios"] = array();
+                                $bandera=TRUE;
+                                while($row = mysqli_fetch_array($result))
+                                {
+                                    $item = array();
+                                    $item["ID"]=$row["ID"];
+
+                                    /*
+                                    $item["Orden"]=$row["Orden"];
+                                    if ($item["Orden"]==NULL){$item["Orden"]=0;}
+
+                                    $item["IdEjercicio"]=$row["IdEjercicio"];
+                                    if ($item["IdEjercicio"]==NULL){$item["IdEjercicio"]=0;}
+
+                                    $item["NombreEjercicio"]=$row["NombreEjercicio"];
+                                    if ($item["NombreEjercicio"]==NULL){$item["NombreEjercicio"]='';}
+
+                                    $item["AliasEjercicio"]=$row["AliasEjercicio"];
+                                    if ($item["AliasEjercicio"]==NULL){$item["AliasEjercicio"]='';}
+
+                                    $item["CodigoAparato"]=$row["CodigoAparato"];
+                                    if ($item["CodigoAparato"]==NULL){$item["CodigoAparato"]='';}
+
+                                    $item["CodigoImagen1"]=$row["CodigoImagen1"];
+                                    if ($item["CodigoImagen1"]==NULL){$item["CodigoImagen1"]=0;}
+
+                                    $item["CodigoImagen2"]=$row["CodigoImagen2"];
+                                    if ($item["CodigoImagen2"]==NULL){$item["CodigoImagen2"]=0;}
+
+                                    $item["ImagenGenerica1"]=$row["ImagenGenerica1"];
+                                    if ($item["ImagenGenerica1"]==NULL){$item["ImagenGenerica1"]='';}
+
+                                    $item["ImagenGenerica2"]=$row["ImagenGenerica2"];
+                                    if ($item["ImagenGenerica2"]==NULL){$item["ImagenGenerica2"]='';}
+
+                                    $item["TipoFuenteImagen"]=$row["TipoFuenteImagen"];
+                                    if ($item["TipoFuenteImagen"]==NULL){$item["TipoFuenteImagen"]='';}
+
+                                    $item["Circuito"]=$row["Circuito"];
+                                    if ($item["Circuito"]==NULL){$item["Circuito"]=0;}
+
+                                    //********************************************************
+
+
+                                    $item["TiempoDescansoEntreSerie"]=$row["TiempoDescansoEntreSerie"];
+                                    if ($item["TiempoDescansoEntreSerie"]==NULL){$item["TiempoDescansoEntreSerie"]=0;}
+
+
+                                    $item["NumeroSeries"]=$row["NumeroSeries"];
+                                    if ($item["NumeroSeries"]==NULL){$item["NumeroSeries"]=0;}
+*/
+                                    $item["Repeticiones"]=$row["Repeticiones"];
+                                    if ($item["Repeticiones"]==NULL){$item["Repeticiones"]=0;}
+
+                                    $item["PesoPropuesto"]=$row["PesoPropuesto"];
+                                    if ($item["PesoPropuesto"]==NULL){$item["PesoPropuesto"]=0;}
+
+
+                                    $item["UnidadPeso"]=$row["UnidadPeso"];
+                                    if ($item["UnidadPeso"]==NULL){$item["UnidadPeso"]='';}
+
+                                        $Series=array();
+                                        $Series=$this->getSerieByEjercicioSubrutina( $item["ID"]);
+                                        $item["Series"]=$Series;
+
+
+
+                                    array_push($response["ejercicios"], $item);
+                                }
+                                $response["success"]=0;
+                                $response["message"]='Consulta exitosa';
+                            }
+                            else{
+                                $response["success"]=1;
+                                $response["message"]='No se encontró detalle de la subrutina indicada';
+                            }
+
+                        }
+                        else
+                            {
+                                $response["success"]=1;
+                                $response["message"]='No se encontró detalle de la subrutina indicada';
+                            }
+                    }
+                    else
+                    {
+                        $response["success"]=4;
+                        $response["message"]='Se presento un error al ejecutar la consulta';
+                    }
+
+            }
+            else
+            {
+                $response["success"]=5;
+                $response["message"]='El listado de ejercicios se encuentra vacio';
+
+            }
+            desconectar($conexion); //desconectamos la base de datos
+        }
+        else
+        {
+            $response["success"]=3;
+            $response["message"]='Se presentó un error en la conexión con la base de datos';
+        }
+		return ($response); //devolvemos el array
+
+    }
+
+    //******************************************************************************************************
+    //******************************************************************************************************
 
 
 }

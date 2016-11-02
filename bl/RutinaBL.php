@@ -21,6 +21,7 @@
 
     $subrutinasBl= (array) $data["Subrutinas"];
     $ejerciciosBl= (array) $data["Ejercicios"];
+    $seriesBl= (array) $data["Series"];
 
     $idEjercicioBl= $data["IdEjercicio"];
     $tipoEjercicioBl= $data["TipoEjercicio"];
@@ -293,7 +294,7 @@
     }
 
 
-  function deleteSerie($idSerie, $idEjercicio, $numeroSerie){
+    function deleteSerie($idSerie, $idEjercicio, $numeroSerie){
         if ($idSerie!=NULL){
             if ($idSerie!=0){
                 $serie = new Serie();
@@ -311,7 +312,32 @@
 		return $response;
     }
 
+// *****************************************************************************************************************************************
 
+
+    function configurarSeriesMasivas($ejercicios,$series){
+
+        // Este método permite configurar las series de manera masiva
+        // Se recibe un arreglo de ejercicios, y un arreglo de series, para configurar todos los ejercicios en las series indicadas.
+        $response["getEjercicios"]='';
+        $serie = new Serie();
+        $response = $serie->configurarSeriesMasivas($ejercicios,$series);
+
+         if ($response["success"]==0){
+            $listadoEjercicios='0';
+            foreach ($ejercicios as $datosEjercicio) {
+                  // Recorreremos cada uno de los ejercicios del arreglo
+                  $listadoEjercicios=$listadoEjercicios.','.$datosEjercicio["IdEjercicio"];
+            }
+                $ejercicio = new Ejercicio();
+                $response["getEjercicios"] = $ejercicio->getEjerciciosByArregloEjercicios($listadoEjercicios);
+
+
+         }
+
+		return ($response); //devolvemos el array
+
+    }
 
 
 
@@ -362,6 +388,10 @@ switch ($metodoBl) {
 		break;
         case "deleteSerie": // Este método lo utilizaremos para obtener el id del instructor
 			$response=deleteSerie($idSerieBl,$idEjercicioBl,$numeroSerieBl);
+		break;
+
+        case "configurarSeriesMasivas": // Este método lo utilizaremos para obtener el id del instructor
+			$response=configurarSeriesMasivas($ejerciciosBl,$seriesBl);
 		break;
 
 
