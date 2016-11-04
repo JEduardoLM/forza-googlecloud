@@ -1,6 +1,6 @@
 /*jslint white:true*/
 /*global angular*/
-myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$rootScope', function($scope, $http, $cookies, $rootScope){
+myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', function($scope, $http, $cookies){
     "use strict";
 
     $scope.usuarioAutenticadoId = $cookies.get('usuarioAutenticadoId');
@@ -19,70 +19,35 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     $scope.styleStr = "";
     $scope.selectedItem = null;
 
-    $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/GimnasioBL.php",
-        data: {metodo:'getSucursalesByGym', id_Gym: $scope.gimnasioId, id_Usuario: $scope.usuarioAutenticadoId},
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-        .then(function (response) {
-            console.log(response);
-            console.log(response.data.success);
-            switch(response.data.success){
-                case 0:{
-                    $scope.aSucursal = response.data.sucursales;
-                    if ($scope.aSucursal.length == 1){
-                        $scope.selectedItem = $scope.aSucursal[0];
-                        $scope.getUserBySucursal();
-                    }
-                    break;
-                }
-                default:{
-                    $rootScope.showAlert(response.data.message);
-                    break;
-                }
-            }
-        }, function (error) {
-            $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
-        });
+    console.log("starting user module...");
 
-    $scope.selectUser = function(socio, index){
-        $scope.codigoForza = '';
-        $scope.usuarioConsultado = socio;
-        $scope.setButtonsVisibility(socio.Estatus=='0'? 6 : 5);
-    }
-
-    /*******
-    * Metodos a la base de datos
-    ********/
+    $http.post('/bl/GimnasioBL.php', {metodo:'getSucursalesByGym', id_Gym: $scope.gimnasioId, id_Usuario: $scope.usuarioAutenticadoId})
+        .success(function (data) {
+            $scope.aSucursal = data.sucursales;
+    })
+    .error(function(data){
+        console.log('Error: ' + data);
+    });
 
     $scope.getUserByCode = function(){
         if($scope.codigoForza.length === 7)
         {
-            $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/UsuarioEnformaBL.php",
-                data: {metodo:'getUsuarioEnformaByCodigo', codigoEnforma: $scope.codigoForza, gimansio: $scope.gimnasioId, sucursal: $scope.selectedItem.S_Id},
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-                .then(function (response) {
-                    console.log(response);
-                    console.log(response.data.success);
-                    switch(response.data.success){
-                        case 0:
-                        case 5:
-                        case 6:
-                        case 9:{
-                            $scope.usuarioConsultado = response.data.Usuario;
-                            $scope.setButtonsVisibility(response.data.success);
-                            break;
-                        }
-                        case 1:{
+            $http.post('/bl/UsuarioEnformaBL.php', {metodo:'getUsuarioEnformaByCodigo', codigoEnforma: $scope.codigoForza, gimansio: $scope.gimnasioId, sucursal: $scope.selectedItem.S_Id})
+                .success(function(data){
+                        if(data.success === 0 || data.success === 5 || data.success === 6 || data.success === 9)
+                        {
+                            $scope.usuarioConsultado = data.Usuario;
+                            $scope.setButtonsVisibility(data.success);
+                        }else if(data.success === 1){
                             $scope.usuarioConsultado = {Nombre:"Socio no encontrado, verifique el código.", Apellidos:""};
-                            $scope.setButtonsVisibility(response.data.success);
-                            break;
+                            $scope.setButtonsVisibility(data.success);
+                        }else
+                        {
+                            console.log(data);
                         }
-                        default:{
-                            $rootScope.showAlert(response.data.message);
-                            break;
-                        }
-                    }
-                }, function (error) {
-                    $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+                })
+                .error(function(data){
+                    console.log(data);
                 });
         }
         else{
@@ -92,24 +57,18 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     };
 
     $scope.getUserBySucursal = function(){
-        $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
-            data: {metodo:'obtenerSociosBySucursal', idSucursal: $scope.selectedItem.S_Id},
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-            .then(function (response) {
-                console.log(response);
-                console.log(response.data.success);
-                switch(response.data.success){
-                    case 0:{
-                        $scope.aSocios = response.data.socios;
-                        break;
+        $http.post('/bl/SocioBL.php', {metodo:'obtenerSociosBySucursal', idSucursal: $scope.selectedItem.S_Id})
+            .success(function(data){
+                    if(data.success === 0)
+                    {
+                        $scope.aSocios = data.socios;
+                    }else
+                    {
+                        console.log(data);
                     }
-                    default:{
-                        $rootScope.showAlert(response.data.message);
-                        break;
-                    }
-                }
-            }, function (error) {
-                $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+            })
+            .error(function(data){
+                console.log('Error: ' + data);
             });
     };
 
@@ -169,86 +128,55 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
                 $scope.styleStr = "color: #ff6e40;";
                 break;
             }
-            default:{
-                $scope.isAsociar = false;
-                $scope.isCambioSuc = false;
-                $scope.isBaja = false;
-                $scope.isReingresar = false;
-                $scope.styleStr = "color: #000;";
-                break;
-            }
         }
     };
 
     //Asociar usuario a gym
     $scope.asociarUsuario = function(){
-        $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
-            data: {metodo:'asociarUsuarioAGimnasio', idGimnasio:$scope.gimnasioId, idUsuario:parseInt($scope.usuarioConsultado.UsuarioEnformaId), idSucursal:$scope.selectedItem.S_Id},
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-            .then(function (response) {
-                console.log(response);
-                console.log(response.data.success);
-                switch(response.data.success){
-                    case 0:{
+        $http.post('/bl/SocioBL.php', {metodo:'asociarUsuarioAGimnasio', idGimnasio:$scope.gimnasioId, idUsuario:parseInt($scope.usuarioConsultado.UsuarioEnformaId), idSucursal:$scope.selectedItem.S_Id})
+            .success(function(data){
+                    if(data.success === 0)
+                    {
                         $scope.cleanAndRefresh();
-                        $scope.aSocios = response.data.socios.socios;
-                        break;
+                    }else
+                    {
+                        console.log(data);
                     }
-                    default:{
-                        $rootScope.showAlert(response.data.message);
-                        break;
-                    }
-                }
-            }, function (error) {
-                $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+            })
+            .error(function(data){
+                console.log('Error: ' + data);
             });
     };
     //Reingresar y dar de baja
     $scope.actualizarEstatus = function(estatus){
-        $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
-            data: {metodo:'actualizarEstatusSocio', idUsuarioGimnasio: $scope.usuarioConsultado.UsuarioGymId, estatus: estatus, idSucursal: $scope.selectedItem.S_Id},
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-            .then(function (response) {
-                console.log(response);
-                console.log(response.data.success);
-                switch(response.data.success){
-                    case 0:{
+        $http.post('/bl/SocioBL.php', {metodo:'actualizarEstatusSocio', idUsuarioGimnasio: $scope.usuarioConsultado.UsuarioGymId, estatus: estatus, idSucursal: $scope.selectedItem.S_Id})
+            .success(function(data){
+                    if(data.success === 0)
+                    {
                         $scope.cleanAndRefresh();
-                        $scope.aSocios = response.data.Socios.socios;
-                        break;
+                    }else
+                    {
+                        console.log(data);
                     }
-                    default:{
-                        $rootScope.showAlert(response.data.message);
-                        break;
-                    }
-                }
-            }, function (error) {
-                $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+            })
+            .error(function(data){
+                console.log('Error: ' + data);
             });
     };
     //Cambiar de sucursar
     $scope.actualizarSucursal = function(){
-        console.log($scope.usuarioConsultado.UsuarioEnformaId);
-        console.log($scope.selectedItem.S_Id);
-        $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
-            data: {metodo:'actualizarSucursalSocio', idSocio:parseInt($scope.usuarioConsultado.SocioId), idSucursal: $scope.selectedItem.S_Id},
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-            .then(function (response) {
-                console.log(response);
-                console.log(response.data.success);
-                switch(response.data.success){
-                    case 0:{
+        $http.post('/bl/SocioBL.php', {metodo:'actualizarSucursalSocio', idSocio:parseInt($scope.usuarioConsultado.UsuarioEnformaId), idSucursal: $scope.selectedItem.S_Id})
+            .success(function(data){
+                    if(data.success === 0)
+                    {
                         $scope.cleanAndRefresh();
-                        $scope.aSocios = response.data.Socios.socios;
-                        break;
+                    }else
+                    {
+                        console.log(data);
                     }
-                    default:{
-                        $rootScope.showAlert(response.data.message);
-                        break;
-                    }
-                }
-            }, function (error) {
-                $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+            })
+            .error(function(data){
+                console.log('Error: ' + data);
             });
     };
     //Limpiar datos y refrescar grid
@@ -256,7 +184,7 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     {
         $scope.usuarioConsultado = null;
         $scope.codigoForza = "";
-        //$scope.getUserBySucursal();
+        $scope.getUserBySucursal();
         $scope.setButtonsVisibility(-1);
     };
 }]);

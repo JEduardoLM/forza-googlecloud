@@ -37,18 +37,19 @@ myApplication.controller('AparatosCommand', ['$scope', '$http', function ($scope
         console.log($scope.aparatoSelected);
     };
 
+    console.log('starting aparatosBL...');
 
-    $http.post('/DemoGym/bl/AparatoBL.php', {metodo:'getAparato', id:0})
+    $http.post('/bl/AparatoBL.php', {metodo:'getAparato', id:0})
         .success(function (data) {
             $scope.aAparato = data.aparatos;
     })
     .error(function(data){
-        console.log('Error: ' + data);
+        console.log(data);
     });
 
     $scope.saveAparato = function(){
         console.log($scope.aparatoID + " -name " + $scope.name + " -descripcion " + $scope.descripcion + " -status "+$scope.status);
-        $http.post('/DemoGym/bl/AparatoBL.php', {metodo:'saveAparato', id: $scope.aparatoID, nombre: $scope.name, descripcion: $scope.descripcion, estatus: $scope.status})
+        $http.post('/bl/AparatoBL.php', {metodo:'saveAparato', id: $scope.aparatoID, nombre: $scope.name, descripcion: $scope.descripcion, estatus: $scope.status})
             .success(function(data){
             $scope.aAparato = data.aparatos;
         })

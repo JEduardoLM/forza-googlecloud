@@ -7,38 +7,38 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="/DemoGym/front/utils/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <!-- Optional theme -->
-        <link rel="stylesheet" href="/DemoGym/front/utils/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
         <!-- AngularJS -->
-        <script src="/DemoGym/front/utils/js/angular.min.js"></script>
-        <script src="/DemoGym/front/utils/js/angular-route.min.js"></script>
-        <script src="/DemoGym/front/utils/js/angular-animate.min.js"></script>
-        <script src="/DemoGym/front/utils/js/angular-cookies.min.js"></script>
-        <script src="/DemoGym/front/utils/angu-fixed-header-table.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-route.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-animate.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-cookies.min.js"></script>
+        <script src="https://code.angularjs.org/1.5.2/angular-messages.js"></script>
+        <script src="/front/utils/angu-fixed-header-table.js"></script>
 
-        <link rel="stylesheet" href="/DemoGym/front/utils/css/ng-table.min.css">
-        <script src="/DemoGym/front/utils/js/ng-table.min.js"></script>
+        <link rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css">
+        <script src="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.js"></script>
 
-        <script type="text/javascript" src="/DemoGym/front/shell/js/angularBase.js"></script>
-        <script type="text/javascript" src="/DemoGym/front/modulos/usuariosModulo/js/UsuarioBL.js"></script>
+        <script type="text/javascript" src="/front/shell/js/angularModule.js"></script>
+        <script type="text/javascript" src="/front/modulos/usuariosModulo/js/UsuarioBL.js"></script>
 
         <!-- jQuery-->
-        <script type="text/javascript" src="/DemoGym/front/utils/jquery.js"></script>
-        <script type="text/javascript" src="/DemoGym/front/utils/js/jquery-ui.min.js"></script>
-        <link rel="stylesheet" href="/DemoGym/front/utils/css/jquery-ui.min.css">
+        <script type="text/javascript" src="/front/utils/jquery.js"></script>
 
         <!-- CSS iconos -->
-        <link href="/DemoGym/front/utils/iconos.css" rel="stylesheet" type="text/css" />
-        <link href="/DemoGym/front/modulos/usuariosModulo/css/usersStyle.css" rel="stylesheet" type="text/css"/>
+        <link href="/front/utils/iconos.css" rel="stylesheet" type="text/css" />
+        <link href="/front/modulos/usuariosModulo/css/usersStyle.css" rel="stylesheet" type="text/css"/>
 
         <style>
 
         </style>
     </head>
 
-    <body data-ng-controller="baseCommand">
-        <nav class="navbar navbar-fixed-top" role="navigation" style="background-color: #{{colorPrincipal}}">
+    <body data-ng-controller="loginCommand">
+        <!--div data-ng-include src=" '/front/shell/view/menuNav.html' "></div-->
+        <nav class="navbar navbar-fixed-top" role="navigation" data-ng-controller="UsuariosCommand">
             <div class="container">
                 <div class="navbar-brand">
                     {{nombreGym}}
@@ -52,64 +52,79 @@
             </div>
         </nav>
 
-        <div class="backgroundWhite-t">
-            <div class="divMenu" data-ng-controller="UsuariosCommand" style="{{colorToRgba(colorPrincipal, 0.3)}}">
-                <button data-ng-click="backToMenu()" class="btn iconMedium ic_back" style="{{colorToRgba(colorPrincipal, 0.4)}}"></button>
-                <label>USUARIOS</label>
+        <div class="divMenu" data-ng-controller="UsuariosCommand">
+            <button data-ng-click="backToMenu()" class="btn iconMedium ic_back"></button>
+            <label>USUARIOS</label>
 
-                <div class="divFilter">
-                    Sucursal:
-                    <select class="cbDropDown" data-ng-model="selectedItem"
-                            data-ng-options="sucursal as sucursal.Nombre for sucursal in aSucursal" data-ng-change="getUserBySucursal()">
-                    </select>
+            <div class="divFilter">
+                Sucursal:
+                <select class="cbDropDown" data-ng-model="selectedItem"
+                        data-ng-options="sucursal as sucursal.Nombre for sucursal in aSucursal" data-ng-change="getUserBySucursal()">
+                </select>
+            </div>
 
+            <div class="divFilter">
+                <label>Asociar nuevo socio:</label> <label style="{{styleStr}}">{{usuarioConsultado.Nombre}} {{usuarioConsultado.Apellidos}}</label>
+                <div>
                     <input type="text" class="text-input-search" data-ng-model="codigoForza" data-ng-change="getUserByCode()" placeholder="ejemplo: ABC0123" maxlength="7" pattern="[A-Za-z0-9]{1,8}" data-ng-disabled="selectedItem === null">
-
-                    <label>Asociar nuevo socio:</label> <label style="{{styleStr}}">{{usuarioConsultado.NombreUsuario}} {{usuarioConsultado.Apellidos}}</label>
-
                     <button class="btn iconMedium ic_user_asociar" data-ng-show="isAsociar" title="Asociar" data-ng-click="asociarUsuario()"></button>
                     <button class="btn iconMedium ic_user_cambio_suc" data-ng-show="isCambioSuc" title="Cambiar de sucursal" data-ng-click="actualizarSucursal()"></button>
                     <button class="btn iconMedium ic_user_baja" data-ng-show="isBaja" title="Dar de baja" data-ng-click="actualizarEstatus(0)"></button>
                     <button class="btn iconMedium ic_user_reingresar" data-ng-show="isReingresar" title="Reingresar" data-ng-click="actualizarEstatus(1)"></button>
+                    <!--button class="btn iconMedium ic_edit"></button-->
                 </div>
+            </div>
 
-                <div class="divFilter">
-                    <input class="inputTextFilter" type="text" placeholder="Filtrar por nombre y descripcion"
-                       data-ng-model="searchItem">
-                </div>
-
-                 <div class="divGrid">
-                     <table class="table table-striped table-condensed" fixed-header>
-                        <thead>
-                            <tr>
-                                <th class="td-centered">Estatus</th>
-                                <th class="td-centered">ID-FORZA</th>
-                                <th class="td-centered">Nombre</th>
-                                <th class="td-centered">Correo</th>
-                                <!--<th class="td-centered">IdFacebook</th>-->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="socio in aSocios | filter:searchItem" ng-click="selectUser(socio, $index)">
-                                <td data-title="'Estatus'" class="tdBoulet">
-                                   <div class="divBoulet" data-ng-class="{'divBoulet-On':{{socio.Estatus=='1'}}, 'divBoulet-Off':{{socio.Estatus=='0'}}}"></div>
-                               </td>
-                               <td class="td-centered">
-                                   {{socio.CodigoEnforma}}
-                               </td>
-                               <td class="td-centered">
-                                   {{socio.NombreUsuario}} {{socio.Apellidos}}
-                               </td>
-                               <td class="td-centered">
-                                   {{socio.Correo}}
-                               </td>
-                               <!--<td class="td-centered">
-                                   {{socio.IdFacebook}}
-                               </td>-->
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+             <div class="divGrid">
+                 <table class="table table-striped table-condensed" fixed-header>
+                    <thead>
+                        <tr>
+                            <th class="td-centered">Estatus</th>
+                            <th class="td-centered">ID-FORZA</th>
+                            <th class="td-centered">Nombre</th>
+                            <th class="td-centered">Correo</th>
+                            <th class="td-centered">IdFacebook</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="socio in aSocios | filter:searchItem">
+                            <td data-title="'Estatus'" class="tdBoulet">
+                               <div class="divBoulet" data-ng-class="{'divBoulet-On':{{socio.Estatus=='1'}}, 'divBoulet-Off':{{socio.Estatus=='0'}}}"></div>
+                           </td>
+                           <td class="td-centered">
+                               {{socio.CodigoEnforma}}
+                           </td>
+                           <td class="td-centered">
+                               {{socio.Nombre}}
+                           </td>
+                           <td class="td-centered">
+                               {{socio.Correo}}
+                           </td>
+                           <td class="td-centered">
+                               {{socio.IdFacebook}}
+                           </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--<table ng-table="usersTable" class="table table-striped table-condensed">
+                   <tr ng-repeat="socio in aSocios" data-ng-class="{'info':$index == selectedRow}" data-ng-click="setClickedRow($index, socio)">
+                       <td data-title="'Estatus'" class="tdBoulet">
+                           <div class="divBoulet" data-ng-class="{'divBoulet-On':{{socio.Estatus=='1'}}, 'divBoulet-Off':{{socio.Estatus=='0'}}}"></div>
+                       </td>
+                       <td data-title="'ID-FORZA'" class="td-centered">
+                           {{socio.CodigoEnforma}}
+                       </td>
+                       <td data-title="'Nombre'" class="td-centered">
+                           {{socio.Nombre}} {{socio.Apellidos}}
+                       </td>
+                       <td data-title="'Apellidos'" class="td-centered">
+                           {{socio.Correo}}
+                       </td>
+                       <td data-title="'IdFacebook'" class="td-centered">
+                           {{socio.IdFacebook}}
+                       </td>
+                   </tr>
+                </table>-->
             </div>
         </div>
 

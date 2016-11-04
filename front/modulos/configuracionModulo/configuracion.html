@@ -16,21 +16,19 @@
         <script src="https://code.angularjs.org/1.5.2/angular-animate.min.js"></script>
         <script src="https://code.angularjs.org/1.5.2/angular-cookies.min.js"></script>
         <script src="https://code.angularjs.org/1.5.2/angular-messages.js"></script>
-        <script src="/DemoGym/front/utils/angu-fixed-header-table.js"></script>
+        <script src="/front/utils/angu-fixed-header-table.js"></script>
 
-        <!--<link rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css">
-        <script src="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.js"></script>-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ng-table/1.0.0/ng-table.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-table/1.0.0/ng-table.min.js"></script>
+        <link rel="stylesheet" href="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.css">
+        <script src="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.js"></script>
 
         <!-- CSS iconos -->
-        <link href="/DemoGym/front/utils/iconos.css" rel="stylesheet" type="text/css" />
-        <link href="/DemoGym/front/modulos/usuariosModulo/css/usersStyle.css" rel="stylesheet" type="text/css"/>
+        <link href="/front/utils/iconos.css" rel="stylesheet" type="text/css" />
+        <link href="/front/modulos/usuariosModulo/css/usersStyle.css" rel="stylesheet" type="text/css"/>
 
         <!-- jQuery-->
-        <script type="text/javascript" src="/DemoGym/front/utils/jquery.js"></script>
+        <script type="text/javascript" src="/front/utils/jquery.js"></script>
 
-        <script type="text/javascript" src="/DemoGym/front/shell/js/angularModule.js"></script>
+        <script type="text/javascript" src="/front/shell/js/angularModule.js"></script>
 
         <style>
             html, body{
@@ -42,7 +40,7 @@
                 padding-left: 5px;
                 background-size: contain;
                 background-repeat: no-repeat;
-                background-image: url(/DemoGym/front/assets/icons/artecLogo.svg);
+                background-image: url(/front/assets/icons/artecLogo.svg);
                 background-color: dimgray;
             }
 
@@ -93,7 +91,7 @@
             }
 
             .btnBackIcon{
-                background-image: url(/DemoGym/front/assets/icons/keyboard-backspace.svg) !important;
+                background-image: url(/front/assets/icons/keyboard-backspace.svg) !important;
                 background-color: lightgray
             }
 
@@ -101,7 +99,7 @@
     </head>
 
     <body data-ng-controller="loginCommand">
-        <!--div data-ng-include src=" '/DemoGym/front/shell/view/menuNav.html' "></div-->
+        <!--div data-ng-include src=" '/front/shell/view/menuNav.html' "></div-->
         <nav class="navbar navbar-fixed-top" role="navigation"
              data-ng-controller="ConfiguracionCommand">
             <div class="container">
@@ -131,7 +129,7 @@
             </div-->
         </div>
 
-        <script type="text/javascript" src="/DemoGym/front/modulos/aparatosModulo/js/AparatoBL.js"></script>
+        <script type="text/javascript" src="/front/modulos/aparatosModulo/js/AparatoBL.js"></script>
         <!--<div class="divContent" data-ng-view data-ng-controller="AparatosCommand"></div>-->
         <div class="divContent" data-ng-view></div>
 
@@ -153,10 +151,10 @@
 
             myApplication.config(['$routeProvider', function($routeProvider){
                 $routeProvider.when('/musculos',{
-                    templateUrl: '/DemoGym/front/modulos/musculosModulo/view/musculosBandeja.html',
+                    templateUrl: '/front/modulos/musculosModulo/view/musculosBandeja.html',
                 }).
                 when('/aparatos',{
-                    templateUrl: '/DemoGym/front/modulos/aparatosModulo/view/aparatosBandeja.html',
+                    templateUrl: '/front/modulos/aparatosModulo/view/aparatosBandeja.html',
                 }).
                 otherwise({
                     redirectTo: '/',
