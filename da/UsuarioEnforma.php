@@ -100,7 +100,7 @@ class UsuarioEnforma{
                                 $idUsuario=$item["UsuarioEnformaId"];
 
                                 $item["CodigoEnforma"]=$row["CodigoEnforma"];
-                                $item["Nombre"]=$row["Nombre"];
+                                $item["NombreUsuario"]=$row["Nombre"];
 
                                 $item["Apellidos"]=$row["Apellidos"];
                                 if ($item["Apellidos"]==NULL){$item["Apellidos"]='';}

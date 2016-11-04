@@ -819,6 +819,51 @@ class Rutina{
     //********************************************************************************************************************
     //********************************************************************************************************************
 
+
+
+    //********************************************************************************************************************
+    //********************************************************************************************************************
+    //********************************************************************************************************************
+
+
+    function actualizarEstatusRutina($R_ID, $estatus){
+
+        //Creamos la conexión a la base de datos
+		$conexion = obtenerConexion();
+
+        if ($conexion){ //Verificamos que la conexión se haya realizado de manera correcta
+
+            mysqli_set_charset($conexion, "utf8"); //Formato de datos utf8
+
+            //Procedemos a armar las consultas
+
+                $sql="UPDATE `rutina` SET `Estatus`='$estatus' WHERE `R_ID`='$R_ID';";
+
+                if($result = mysqli_query($conexion, $sql)) //Ejecutamos la consulta
+                {
+
+                            $response["Rutina"]=$this->getRutinaById($R_ID);
+                            $response["success"]=0;
+                            $response["message"]='Estatus actualizado correctamente';
+
+
+                }
+                else
+                {
+                    $response["success"]=4;
+                    $response["message"]='Se presento un error al ejecutar la consulta';
+                }
+                desconectar($conexion); //desconectamos la base de datos
+        }
+        else
+        {
+            $response["success"]=3;
+            $response["message"]='Se presentó un error en la conexión con la base de datos';
+        }
+
+		return ($response); //devolvemos el array
+    }
+
 }
 
     // $Rutina = new Rutina();

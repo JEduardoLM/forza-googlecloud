@@ -1,0 +1,84 @@
+body{
+    /*background-size: contain;*/
+    background-repeat: no-repeat;
+    padding-top: 60px;
+    /*background-image: url(/DemoGym/front/assets/icons/artecLogo.svg);*/
+    background-color: darkgray;
+    background-image: url(/DemoGym/front/assets/imgs/fondoForzaLogueado.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+body,html{
+    height: 100%;
+    width: 100%;
+}
+
+table{
+    background-color: rgba(0,0,0,0.0) !important;
+    border-color: rgba(0,0,0,0) !important;
+    padding: 0px !important;
+}
+
+.btnMenu{
+    background-size: 144px;
+    background-repeat: no-repeat;
+    height: 160px;
+    width: 180px;
+    /*margin-right: 50px;*/
+    margin-top: 50px;
+    color: white;
+    background-position: top;
+    transition: all .2s;
+}
+.btnMenu:hover{
+    box-shadow: 0px 0px 20px #fff;
+}
+
+.btnUsersIcon{
+    background-image: url(/DemoGym/front/assets/icons/account-multiple.svg) !important;
+    background-color: #00e676;
+}
+.btnNotifyIcon{
+    background-image: url(/DemoGym/front/assets/icons/tooltip-text.svg) !important;
+    background-color: #ff6e40;
+}
+.btnSettingIcon{
+    background-image: url(/DemoGym/front/assets/icons/bike.svg) !important;
+    background-color: #00b0ff;;
+}
+.btnCalendarIcon{
+    background-image: url(/DemoGym/front/assets/icons/calendar-today.svg) !important;
+    background-color: #7c4dff;
+}
+
+.btnAparatoIcon{
+    background-image: url(/DemoGym/front/assets/icons/settings.svg) !important;
+    background-color: #757575;
+}
+
+.btnLabel{
+    margin-top: 128px;
+}
+
+//Animate
+.ng-hide-add, .ng-hide-remove {
+    /* ensure visibility during the transition */
+    display: block !important; /* yes, important */
+}
+.cssFade {
+    transition: 0.5s linear all;
+    opacity: 1;
+}
+.cssFade.ng-hide {
+    opacity: 0;
+}
+
+a{
+    color: white;
+    font-weight: bold;
+}
+
+div{
+    color: white;
+}

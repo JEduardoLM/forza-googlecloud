@@ -1,8 +1,8 @@
 /*jslint white:true*/
 /*global angular*/
-var myApplication = angular.module('demoGym', ['anguFixedHeaderTable', 'ngTable', 'ngAnimate', 'ngRoute', 'ngMessages', 'ngCookies']);
+/*var myApplication = angular.module('demoGym', ['anguFixedHeaderTable', 'ngTable', 'ngAnimate', 'ngRoute', 'ngMessages', 'ngCookies']);*/
 
-myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookies', function($scope, $http, $window, $cookies){
+myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookies', '$rootScope', function($scope, $http, $window, $cookies, $rootScope){
     "use strict";
 
     $scope.messageLogin = "Error";
@@ -15,7 +15,8 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
         $scope.showModal = !$scope.showModal;
     }
 
-    console.log('starting...');
+    //$scope.aGym = [];
+    //$scope.selectedItem = null;
 
     $scope.showHideLogin = function(ruta)
     {
@@ -25,111 +26,108 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
         $window.location.href = ruta;
     };
 
-    $scope.loginHandler = function(){
-        console.log('email:'+$scope.email_login + ' pass:'+$scope.pass_login);
-        //Local
-        //$window.location = "/front/shell/menu.html";
-
-        $http.post('/bl/UsuarioEnformaBL.php', {metodo:'logueoCorreoPassword', Correo: $scope.email_login, Password: $scope.pass_login})
-            .success(function(data){
-                    console.log(data);
-                    if(data.success === 0)
-                    {
-                        $cookies.put('usuarioAutenticadoId', data.Usuario.Id);
-                        $cookies.put('usuarioAutenticadoNombre', data.Usuario.Nombre + " " + data.Usuario.Apellidos);
-
-                        //console.log($cookies.get('usuarioAutenticado'));
-                        //$window.location = "/front/shell/menu.html";
-                        $scope.getGymByUsuarioId(data.Usuario.Id);
-                    }else
-                    {
-                        $scope.messageLogin = data.message;
-                        $("#dialog").dialog({
-                            show:{
-                                effect: "shake",
-                                duration: 300
-                            },
-                            hide:{
-                                effect: "explode",
-                                duration: 300
-                            }
-                        });
-                    }
-        })
-        .error(function(data){
-            console.log('Error: ' + data);
-            $scope.messageLogin = data.message;
-            $("#dialog").dialog({
-                show:{
-                    effect: "shake",
-                    duration: 300
-                },
-                hide:{
-                    effect: "explode",
-                    duration: 300
-                }
-            });
+    /*$scope.showAlert = function(msg){
+        $scope.messageLogin = msg;
+        $("#dialog").dialog({
+            show:{
+                effect: "shake",
+                duration: 300
+            },
+            hide:{
+                effect: "explode",
+                duration: 300
+            }
         });
+    }*/
+
+    $scope.loginHandler = function(){
+        $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/UsuarioEnformaBL.php",
+            data: {metodo:'logueoCorreoPassword', Correo: $scope.email_login, Password: $scope.pass_login},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+            .then(function (response) {
+                console.log(response);
+                console.log(response.data.success);
+                switch(response.data.success){
+                    case 0:{
+                        $cookies.put('usuarioAutenticadoId', response.data.Usuario.Id);
+                        $cookies.put('usuarioAutenticadoNombre', response.data.Usuario.Nombre + " " + response.data.Usuario.Apellidos);
+                        $scope.getGymByUsuarioId(response.data.Usuario.Id);
+                        break;
+                    }
+                    case 5:{ //5 = email not exist
+                        $rootScope.showAlert('El correo no se encuentra registrado.');
+                        break;
+                    }
+                    case 6:{ //6 = pass incorrect
+                        $rootScope.showAlert('La contraseña es incorrecta.');
+                        break;
+                    }
+                    default:{
+                        $rootScope.showAlert(response.data.message);
+                        break;
+                    }
+                }
+            }, function (error) {
+                $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+            });
     };
 
-
     $scope.getGymByUsuarioId = function(userId){
-        $http.post('/bl/SocioBL.php', {metodo:'obtenerGimnasiosDeUsuario',  idUsuario: userId})
-            .success(function(data){
-                    console.log(data);
-                    if(data.success === 0)
-                    {
-                        $scope.aGym = data.usuarioGyms;
+        $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
+            data: {metodo:'obtenerGimnasiosDeUsuario',  idUsuario: userId},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+            .then(function (response) {
+                console.log(response.data);
+                switch(response.data.success){
+                    case 0:{
+                        $scope.aGym = response.data.usuarioGyms;
                         if($scope.aGym.length > 1)
-                            {
-                                console.log($scope.aGym);
-                                //$scope.changeViewMain('#/selectGym');
-                                $scope.toggleModal();
-                            }
-                        else{
-                            if($scope.aGym.length == 1)
-                                {
-                                    $cookies.put('GymId', $scope.aGym[0].IdGym);
-                                    $window.location = "/front/shell/menu.html";
-                                }
-                            else{
-                                $scope.messageLogin = data.message;
-                                $("#dialog").dialog({
-                                    show:{
-                                        effect: "shake",
-                                        duration: 300
-                                    },
-                                    hide:{
-                                        effect: "explode",
-                                        duration: 300
-                                    }
-                                });
-                            }
+                        {
+                            console.log($scope.aGym);
+                            $scope.toggleModal();
                         }
-                    }else
-                    {
-                        console.log(data);
+                        else{
+                            //$scope.setGymRootScope($scope.aGym[0]);
+                            $cookies.put('GymId', $scope.aGym[0].IdGym);
+                            $cookies.put('nombreGym', $scope.aGym[0].NombreGimnasio);
+                            $cookies.put('colorPrimary', $scope.aGym[0].Configuracion.configuracion["0"].ColorFondo);
+                            $cookies.put('ColorComplementario', $scope.aGym[0].Configuracion.configuracion["0"].ColorComplementario);
+                            $window.location = "/DemoGym/front/shell/menu.html";
+                        }
+                        break;
                     }
-            })
-            .error(function(data){
-                console.log('Error: ' + data);
-            });
+                    default:{
+                        $rootScope.showAlert(response.data.message);
+                        break;
+                    }
+                }
+            }, function (error) {
+                $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+        });
+    }
+
+    $scope.setGymRootScope = function(gym){
+        $rootScope.colorPrincipal = gym.Configuracion.configuracion["0"].ColorFondo;
+        $rootScope.colorSecundario = gym.Configuracion.configuracion["0"].ColorComplementario;
     }
 
     $scope.goToMenu = function(gym)
     {
+        $scope.setGymRootScope(gym);
         console.log(gym);
         $cookies.put('GymId', gym.IdGym);
         $cookies.put('nombreGym', gym.NombreGimnasio);
+        $cookies.put('colorPrimary', gym.Configuracion.configuracion["0"].ColorFondo);
+        $cookies.put('ColorComplementario', gym.Configuracion.configuracion["0"].ColorComplementario);
         //console.log($scope.selectedItem);
         //$cookies.put('GymId', $scope.selectedItem.IdGym);
-        $window.location = "/front/shell/menu.html";
+        $window.location = "/DemoGym/front/shell/menu.html";
     };
 
 
-    $scope.backToMenu = function(){
-        $window.location = "/front/shell/menu.html";
-    };
+    /*$scope.backToMenu = function(){
+        $window.location = "/DemoGym/front/shell/menu.html";
+    };*/
 
     /*$scope.names = [{Id: '1', name: 'Alexandra', phone:'83846284357'},
                     {Id: '2', name: 'Daddario', phone:'75473946235'},
@@ -182,9 +180,9 @@ myApplication.directive('modal', function(){
 
             scope.$watch(attrs.visible, function(value){
                 if(value == true)
-                    {
-                        $(element).modal('show');
-                    }
+                {
+                    $(element).modal('show');
+                }
                 else{
                     $(element).modal('hide');
                 }
@@ -193,7 +191,6 @@ myApplication.directive('modal', function(){
             $(element).on('shown.bs.modal', function(){
                 scope.$apply(function(){
                     scope.$parent[attrs.visible] = true;
-                    console.log('shown');
                 });
             });
 
@@ -210,10 +207,10 @@ myApplication.directive('modal', function(){
 
 /*myApplication.config(['$routeProvider', function($routeProvider){
     $routeProvider.when('/login',{
-        templateUrl: '/front/shell/view/login.html',
+        templateUrl: '/DemoGym/front/shell/view/login.html',
     }).
     when('/selectGym',{
-        templateUrl: '/front/shell/view/selectGym.html',
+        templateUrl: '/DemoGym/front/shell/view/selectGym.html',
     }).
     otherwise({
         redirectTo: '/login',

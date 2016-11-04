@@ -51,9 +51,13 @@
 
     $notaSocioBl= $data["NotaSocio"];
 
+    $idRutinaBl = $data["IdRutina"];
+    $estatusBl = $data["Estatus"];
+
     require('../da/Subrutina.php');
     require('../da/Ejercicio.php');
     require('../da/Serie.php');
+    require('../da/Rutina.php');
 
 
     function actualizarOrdenSubrutina($subrutinas){
@@ -339,6 +343,27 @@
 
     }
 
+// *****************************************************************************************************************************************
+
+
+    function actualizarEstatusRutina($idRutina, $estatus){
+        if ($idRutina!=NULL){
+            if ($idRutina!=0){
+                $rutina = new Rutina();
+                $response = $rutina->actualizarEstatusRutina($idRutina, $estatus);
+            }
+            else {
+                $response["success"]=6;
+                $response["message"]='El id de la rutina debe ser diferente de cero';
+            }
+        }
+        else {
+            $response["success"]=5;
+            $response["message"]='El id de la rutina debe ser diferente de NULO';
+        }
+		return $response;
+    }
+
 
 
 
@@ -393,6 +418,12 @@ switch ($metodoBl) {
         case "configurarSeriesMasivas": // Este método lo utilizaremos para obtener el id del instructor
 			$response=configurarSeriesMasivas($ejerciciosBl,$seriesBl);
 		break;
+
+
+        case "actualizarEstatusRutina": // Este método lo utilizaremos para obtener el id del instructor
+			$response=actualizarEstatusRutina($idRutinaBl,$estatusBl);
+		break;
+
 
 
 

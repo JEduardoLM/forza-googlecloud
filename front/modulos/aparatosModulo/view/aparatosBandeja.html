@@ -15,8 +15,8 @@
         <script src="https://code.angularjs.org/1.5.2/angular-route.min.js"></script>
         <script src="https://code.angularjs.org/1.5.2/angular-animate.min.js"></script>
         <script src="https://code.angularjs.org/1.5.2/angular-cookies.min.js"></script>
-            <script src="/front/utils/angu-fixed-header-table.js"></script>
-        <!--<link href="/front/utils/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />-->
+            <script src="/DemoGym/front/utils/angu-fixed-header-table.js"></script>
+        <!--<link href="/DemoGym/front/utils/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />-->
 
         <script src="https://code.angularjs.org/1.5.2/angular-messages.js"></script>
 
@@ -24,9 +24,9 @@
         <script src="https://rawgit.com/esvit/ng-table/master/dist/ng-table.min.js"></script-->
 
         <!-- jQuery-->
-        <script type="text/javascript" src="/front/utils/jquery.js"></script>
+        <script type="text/javascript" src="/DemoGym/front/utils/jquery.js"></script>
 
-        <script type="text/javascript" src="/front/shell/js/angularModule.js"></script>
+        <script type="text/javascript" src="/DemoGym/front/shell/js/angularModule.js"></script>
         <script type="text/javascript" src="/front/modulos/aparatosModulo/js/AparatoBL.js"></script>
 
         <style>
@@ -48,17 +48,17 @@
             }
 
             .btnPlusIcon{
-                background-image: url(/front/assets/icons/plus.svg) !important;
+                background-image: url(/DemoGym/front/assets/icons/plus.svg) !important;
                 background-color: rgba(0,0,0,0);
             }
 
             .btnEditIcon{
-                background-image: url(/front/assets/icons/pencil.svg) !important;
+                background-image: url(/DemoGym/front/assets/icons/pencil.svg) !important;
                 background-color: rgba(0,0,0,0);
             }
 
             .btnConsultIcon{
-                background-image: url(/front/assets/icons/magnify.svg) !important;
+                background-image: url(/DemoGym/front/assets/icons/magnify.svg) !important;
                 background-color: rgba(0,0,0,0);
             }
 
@@ -71,7 +71,7 @@
             }
 
             .btnDeleteIcon{
-                background-image: url(/front/assets/icons/delete.svg) !important;
+                background-image: url(/DemoGym/front/assets/icons/delete.svg) !important;
                 background-color: rgba(230,230,230,1);
             }
 
@@ -212,7 +212,7 @@
                        data-ng-model="searchItem">
             </div>
 
-            <!--div class="transformable" ng-class="{'small':!isSmall, 'big':isSmall}" data-ng-include src=" '/front/modulos/aparatosModulo/view/altaAparatos.html' "></div-->
+            <!--div class="transformable" ng-class="{'small':!isSmall, 'big':isSmall}" data-ng-include src=" '/DemoGym/front/modulos/aparatosModulo/view/altaAparatos.html' "></div-->
             <div class="transformable" ng-class="{'small':!isSmall, 'big':isSmall}">
                 <div class="div-form" data-ng-show="isSmall" novalidate>
                     <form class="form-inline" role="form" name="aparatoForm" id="fAparato" data-ng-submit="saveAparato()">

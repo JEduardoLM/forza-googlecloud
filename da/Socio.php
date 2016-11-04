@@ -334,6 +334,7 @@ function getSociosDisponibles($idSucursal){
                         ((SELECT NumeroSocios FROM sucursal where S_Id=$idSucursal) -
                 (SELECT COUNT(Id_Sucursal) as SociosActivos FROM socio where Id_Sucursal=$idSucursal and Estatus=1)) as SociosDisponibles;";
 
+
             if($result = mysqli_query($conexion, $sql))
             {
                 if($result!=null){

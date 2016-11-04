@@ -14,7 +14,9 @@ body{
     background-size: contain;
     background-repeat: no-repeat;
     background-color: dimgray;
-    background-image: url(/front/assets/icons/artecLogo.svg);
+    background-image: url(/DemoGym/front/assets/imgs/fondoForza.jpg);
+    background-size: cover;
+    background-position: center;
 }
 
 h2{
@@ -153,11 +155,11 @@ select{
 
 /* validator */
 :required {
-    background: #fff url('/front/assets/icons/comment-alert-outline-red.svg') no-repeat 100% 0;
+    background: #fff url('/DemoGym/front/assets/icons/comment-alert-outline-red.svg') no-repeat 100% 0;
 }
 input:valid{
     background-color: #e8f5e9 !important;
-    background: url('/front/assets/icons/comment-check-outline-green.svg') no-repeat 100% 0;
+    background: url('/DemoGym/front/assets/icons/comment-check-outline-green.svg') no-repeat 100% 0;
 }
 /* fin validator */
 
