@@ -14,7 +14,9 @@ body{
     background-size: contain;
     background-repeat: no-repeat;
     background-color: dimgray;
-    background-image: url(/front/assets/icons/artecLogo.svg);
+    background-image: url(/front/assets/imgs/fondoForza.jpg);
+    background-size: cover;
+    background-position: center;
 }
 
 h2{

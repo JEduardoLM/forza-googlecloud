@@ -10,9 +10,10 @@ body{
     padding-left: 5px;
     padding-right: 5px;
     padding-bottom: 5px;
-    background-size: contain;
     background-repeat: no-repeat;
-    background-image: url(/front/assets/icons/artecLogo.svg);
+    background-image: url(/front/assets/imgs/fondoForzaLogueado.jpg);
+    background-size: cover;
+    background-position: center;
     background-color: dimgray;
 }
 
@@ -35,12 +36,18 @@ div{
     margin-bottom: 5px;
 }
 
+.backgroundWhite-t{
+    height: 100%;
+    width: 100%;
+    float: left;
+    background-color: rgba(255,255,255,.9);
+}
+
 .divMenu{
     /*height: calc(100% - (0px));*/
     height: 100%;
     width: 100%;
     float: left;
-    background: rgba(159,168,218,0.9);
 }
 
 select{
@@ -58,7 +65,7 @@ select{
 }
 
 .divGrid{
-    height: calc(100% - 140px);
+    height: calc(100% - 120px);
     background-color: rgba(158, 158, 158, .8);
     margin: 8px;
 }
@@ -102,3 +109,7 @@ label{
 .table {
     height: calc(100% - 24px);
 }
+
+.inputTextFilter{
+                width: 300px;
+            }

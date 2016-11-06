@@ -8,12 +8,12 @@ myApplication.controller('MenuCommand', ['$scope', '$cookies', '$window', '$root
     $rootScope.colorSecundario = $cookies.get('ColorComplementario');*/
 
     $scope.changeMenuHandler = function(){
-        $window.location = "/DemoGym/front/modulos/configuracionModulo/configuracion.html";
+        $window.location = "/front/modulos/configuracionModulo/configuracion.html";
     };
 
     $scope.goToUsuarioModule = function()
     {
-        $window.location = "/DemoGym/front/modulos/usuariosModulo/view/users.html";
+        $window.location = "/front/modulos/usuariosModulo/view/users.html";
     };
 
 }]);

@@ -96,11 +96,11 @@ class UsuarioEnforma{
                             while($row = mysqli_fetch_array($result))
                             {
                                 $item = array();
-                                $item["UsuarioEnformaId"]=$row["Id"];
-                                $idUsuario=$item["UsuarioEnformaId"];
+                                $item["Id"]=$row["Id"];
+                                $idUsuario=$item["Id"];
 
                                 $item["CodigoEnforma"]=$row["CodigoEnforma"];
-                                $item["NombreUsuario"]=$row["Nombre"];
+                                $item["Nombre"]=$row["Nombre"];
 
                                 $item["Apellidos"]=$row["Apellidos"];
                                 if ($item["Apellidos"]==NULL){$item["Apellidos"]='';}

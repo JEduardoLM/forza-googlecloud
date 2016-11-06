@@ -7,9 +7,9 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
 
     //config
     /*************---- PRODUCCION(Google Cloud) ----**************/
-    $rootScope.SERVER_URL = "http://forza-1355.appspot.com";
+    //$rootScope.SERVER_URL = "http://forza-1355.appspot.com";
     /*************---- DESARROLLO(Hostinger) ----**************/
-    //$rootScope.SERVER_URL = "http://enformadesarrollo.esy.es/DemoGym";
+    $rootScope.SERVER_URL = "http://enformadesarrollo.esy.es";
 
     $scope.usuarioAutenticadoId = $cookies.get('usuarioAutenticadoId');
     $scope.usuarioAutenticadoNombre =  $cookies.get('usuarioAutenticadoNombre');
@@ -50,6 +50,6 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
     }
 
     $rootScope.backToMenu = function(){
-        $window.location = "/DemoGym/front/shell/menu.html";
+        $window.location = "/front/shell/menu.html";
     };
 }]);

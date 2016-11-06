@@ -2,9 +2,9 @@ body{
     /*background-size: contain;*/
     background-repeat: no-repeat;
     padding-top: 60px;
-    /*background-image: url(/DemoGym/front/assets/icons/artecLogo.svg);*/
+    /*background-image: url(/front/assets/icons/artecLogo.svg);*/
     background-color: darkgray;
-    background-image: url(/DemoGym/front/assets/imgs/fondoForzaLogueado.jpg);
+    background-image: url(/front/assets/imgs/fondoForzaLogueado.jpg);
     background-size: cover;
     background-position: center;
 }
@@ -36,24 +36,24 @@ table{
 }
 
 .btnUsersIcon{
-    background-image: url(/DemoGym/front/assets/icons/account-multiple.svg) !important;
+    background-image: url(/front/assets/icons/account-multiple.svg) !important;
     background-color: #00e676;
 }
 .btnNotifyIcon{
-    background-image: url(/DemoGym/front/assets/icons/tooltip-text.svg) !important;
+    background-image: url(/front/assets/icons/tooltip-text.svg) !important;
     background-color: #ff6e40;
 }
 .btnSettingIcon{
-    background-image: url(/DemoGym/front/assets/icons/bike.svg) !important;
+    background-image: url(/front/assets/icons/bike.svg) !important;
     background-color: #00b0ff;;
 }
 .btnCalendarIcon{
-    background-image: url(/DemoGym/front/assets/icons/calendar-today.svg) !important;
+    background-image: url(/front/assets/icons/calendar-today.svg) !important;
     background-color: #7c4dff;
 }
 
 .btnAparatoIcon{
-    background-image: url(/DemoGym/front/assets/icons/settings.svg) !important;
+    background-image: url(/front/assets/icons/settings.svg) !important;
     background-color: #757575;
 }
 

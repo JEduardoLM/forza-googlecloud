@@ -1,6 +1,6 @@
 /*jslint white:true*/
 /*global angular*/
-myApplication.controller('AparatosCommand', ['$scope', '$http', function ($scope, $http) {
+myApplication.controller('AparatosCommand', ['$scope', '$http', '$rootScope', function ($scope, $http, $rootScope) {
     "use strict";
 
     $scope.names = [];
@@ -37,25 +37,70 @@ myApplication.controller('AparatosCommand', ['$scope', '$http', function ($scope
         console.log($scope.aparatoSelected);
     };
 
-    console.log('starting aparatosBL...');
 
-    $http.post('/bl/AparatoBL.php', {metodo:'getAparato', id:0})
+    /*$http.post($rootScope.SERVER_URL+'/bl/AparatoBL.php', {metodo:'getAparato', id:0})
         .success(function (data) {
             $scope.aAparato = data.aparatos;
     })
     .error(function(data){
-        console.log(data);
-    });
+        console.log('Error: ' + data);
+    });*/
+
+    $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/AparatoBL.php",
+        data: {metodo:'getAparato', id:0},
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+        .then(function (response) {
+            console.log(response);
+            console.log(response.data.success);
+            switch(response.data.success){
+                case 1:{
+                    $scope.aAparato = response.data.aparatos;
+                    break;
+                }
+                default:{
+                    console.log('Error: ' + response.data);
+                    //$rootScope.showAlert(response.data.message);
+                    break;
+                }
+            }
+        }, function (error) {
+            console.log(error);
+            //$rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+        });
+
+
 
     $scope.saveAparato = function(){
         console.log($scope.aparatoID + " -name " + $scope.name + " -descripcion " + $scope.descripcion + " -status "+$scope.status);
-        $http.post('/bl/AparatoBL.php', {metodo:'saveAparato', id: $scope.aparatoID, nombre: $scope.name, descripcion: $scope.descripcion, estatus: $scope.status})
+        /*$http.post($rootScope.SERVER_URL+'/bl/AparatoBL.php', {metodo:'saveAparato', id: $scope.aparatoID, nombre: $scope.name, descripcion: $scope.descripcion, estatus: $scope.status})
             .success(function(data){
             $scope.aAparato = data.aparatos;
         })
         .error(function(data){
             console.log('Error: ' + data);
+        });*/
+        $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/AparatoBL.php",
+        data: {metodo:'saveAparato', id: $scope.aparatoID, nombre: $scope.name, descripcion: $scope.descripcion, estatus: $scope.status},
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+        .then(function (response) {
+            console.log(response);
+            console.log(response.data.success);
+            switch(response.data.success){
+                case 1:{
+                    $scope.aAparato = response.data.aparatos;
+                    break;
+                }
+                default:{
+                    console.log('Error: ' + response.data);
+                    //$rootScope.showAlert(response.data.message);
+                    break;
+                }
+            }
+        }, function (error) {
+            console.log(error);
+            //$rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
         });
+
 
         $scope.isSmall = false;
         $scope.name = "";

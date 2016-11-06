@@ -9,17 +9,6 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
-#PHP
-
-- url: /bl/(.+\.php)(.*)
-  script: /bl/\1
-
-
-#PHP (CONEXIÓN A DATASTORAGE)
-
-- url: /datastorage/(.+\.php)(.*)
-  script: /datastorage/\1
-
 #CSS
 
 - url: /front/shell/css
@@ -31,7 +20,14 @@ handlers:
 - url: /front/modulos/usuariosModulo/css
   static_dir: front/modulos/usuariosModulo/css
 
+# New style
+- url: /front/utils
+  static_dir: front/utils
+
 # Utils
+
+- url: /front/assets/imgs
+  static_dir: front/assets/imgs
 
 - url: /front/utils
   static_dir: front/utils
@@ -47,16 +43,29 @@ handlers:
 - url: /front/utils/angu-fixed-header-table.js
   script: /front/utils/angu-fixed-header-table.js
 
+# New library
+- url: /front/utils/css
+  static_dir: /front/utils/css
+
 # JS
+
+- url: /front/shell/js/angularBase.js
+  script: /front/shell/js/angularBase.js
 
 - url: /front/shell/js/angularModule.js
   script: /front/shell/js/angularModule.js
+
+- url: /front/shell/js/menu.js
+  script: /front/shell/js/menu.js
 
 - url: /front/modulos/usuariosModulo/js
   static_dir: front/modulos/usuariosModulo/js
 
 - url: /front/modulos/aparatosModulo/js
   static_dir: front/modulos/aparatosModulo/js
+
+- url: /front/modulos/usuariosModulo/js
+  static_dir: front/modulos/usuariosModulo/js
 
 # HTML
 
@@ -75,7 +84,10 @@ handlers:
 - url: /front/modulos/musculosModulo/view/(.+\.html)(.*)
   script: /front/modulos/musculosModulo/view/\1
 
+#PHP
 
+- url: /bl/(.+\.php)(.*)
+  script: /bl/\1
 
 #DEFAULT
 
