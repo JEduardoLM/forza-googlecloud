@@ -22,15 +22,6 @@
 	$estatusBl = $data['Estatus'];
 
 
-
-
-	$metodoBl="getAparato";
-	$idAparatoBl=3;
-	$nombreBl='BARRA Z';
-	$descripcionBl='APARATO DE PRUEBA - NO EXISTE 14';
-	$estatusBl=1;
-
-
 	//***************************************************************************************************************************************
 	//***************************************************************************************************************************************
 	//**********               AQUI INICIA LA DEFINICIÓN DE FUNCIONES QUE A SU VEZ ACCEDERAN A LOS MÉTODOS DEL OBJETO $aparato    ***********
