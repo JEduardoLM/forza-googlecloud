@@ -33,7 +33,7 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
             return 'background-color: rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alp+')';
         }
         throw new Error('Bad Hex');
-    }
+    };
 
     $rootScope.showAlert = function(msg){
         $scope.messageLogin = msg;
@@ -47,7 +47,7 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
                 duration: 300
             }
         });
-    }
+    };
 
     $rootScope.backToMenu = function(){
         $window.location = "/front/shell/menu.html";

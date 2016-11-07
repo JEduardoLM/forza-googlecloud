@@ -80,7 +80,7 @@ myApplication.controller('AparatosCommand', ['$scope', '$http', '$rootScope', fu
             console.log('Error: ' + data);
         });*/
         $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/AparatoBL.php",
-        data: {metodo:'saveAparato', id: $scope.aparatoID, nombre: $scope.name, descripcion: $scope.descripcion, estatus: $scope.status},
+        data: {metodo:'saveAparato', IdAparato: $scope.aparatoID, Nombre: $scope.name, Descripcion: $scope.descripcion, Estatus: $scope.status},
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
         .then(function (response) {
             console.log(response);
