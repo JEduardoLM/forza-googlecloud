@@ -4,18 +4,26 @@
         <meta charset="utf-8">
         <title>Menu principal</title>
         <!-- Bootstrap -->
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="/front/utils/css/bootstrap.min.css">
+        <!--<link rel="stylesheet" href="/front/utils/css/bootstrap.min.css">-->
         <!-- Optional theme -->
-        <link rel="stylesheet" href="/front/utils/css/bootstrap-theme.min.css">
+        <!--<link rel="stylesheet" href="/front/utils/css/bootstrap-theme.min.css">-->
+
+        <!-- Material Angular -->
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
         <!-- AngularJS -->
         <script src="/front/utils/js/angular.min.js"></script>
         <script src="/front/utils/js/angular-route.min.js"></script>
         <script src="/front/utils/js/angular-animate.min.js"></script>
         <script src="/front/utils/js/angular-cookies.min.js"></script>
         <script src="/front/utils/angu-fixed-header-table.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+        <!-- Angular Material Library -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 
         <link rel="stylesheet" href="/front/utils/css/ng-table.min.css">
         <script src="/front/utils/js/ng-table.min.js"></script>
@@ -33,7 +41,28 @@
     </head>
 
     <body data-ng-controller="baseCommand" class="container">
-        <nav class="navbar navbar-fixed-top" role="navigation" style="background-color: #{{colorPrincipal}}">
+        <md-toolbar class="md-hue-2" style="background-color: #{{colorPrincipal}}">
+          <div class="md-toolbar-tools">
+            <!--<md-button class="md-icon-button" aria-label="Settings" ng-disabled="true">
+              <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+            </md-button>-->
+            <h2>
+              <span>{{nombreGym}}</span>
+            </h2>
+            <span flex></span>
+              <h2>
+                  <span>{{usuarioAutenticadoNombre}}</span>
+              </h2>
+            <!--<md-button class="md-icon-button" aria-label="Favorite">
+              <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+            </md-button>-->
+            <md-button class="md-icon-button" aria-label="More">
+              <md-icon md-svg-icon="/front/assets/icons/dots-vertical.svg"></md-icon>
+            </md-button>
+          </div>
+        </md-toolbar>
+
+        <!--<nav class="navbar navbar-fixed-top" role="navigation" style="background-color: #{{colorPrincipal}}">
             <div class="container">
                 <div class="navbar-brand">
                     {{nombreGym}}
@@ -45,7 +74,7 @@
                     </ul>
                 </div>
             </div>
-        </nav>
+        </nav>-->
 
         <table class="form-control" data-ng-controller="MenuCommand">
             <tr>

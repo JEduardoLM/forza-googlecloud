@@ -1,7 +1,7 @@
 body{
     /*background-size: contain;*/
     background-repeat: no-repeat;
-    padding-top: 60px;
+    padding-top: 0px;
     /*background-image: url(/front/assets/icons/artecLogo.svg);*/
     background-color: darkgray;
     background-image: url(/front/assets/imgs/fondoForzaLogueado.jpg);
@@ -24,12 +24,14 @@ table{
     background-size: 144px;
     background-repeat: no-repeat;
     height: 160px;
-    width: 180px;
-    /*margin-right: 50px;*/
-    margin-top: 50px;
+    width: 184px;
+    margin-left: 64px;
+    margin-top: 64px;
     color: white;
     background-position: top;
     transition: all .2s;
+    border-radius: 4px;
+    border: none;
 }
 .btnMenu:hover{
     box-shadow: 0px 0px 20px #fff;
@@ -58,7 +60,11 @@ table{
 }
 
 .btnLabel{
-    margin-top: 128px;
+    height: 136px;
+    width: 184px;
+    display: table-cell;
+    vertical-align: bottom;
+    text-align: center;
 }
 
 //Animate
