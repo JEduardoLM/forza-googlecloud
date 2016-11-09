@@ -57,20 +57,20 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
                         break;
                     }
                     case 5:{ //5 = email not exist
-                        $rootScope.showAlert('El correo no se encuentra registrado.');
+                        $rootScope.showAlert(evt, 'El correo no se encuentra registrado.', 'Error');
                         break;
                     }
                     case 6:{ //6 = pass incorrect
-                        $rootScope.showAlert('La contraseña es incorrecta.');
+                        $rootScope.showAlert(evt, 'La contraseña es incorrecta.', 'Error');
                         break;
                     }
                     default:{
-                        $rootScope.showAlert(response.data.message);
+                        $rootScope.showAlert(evt, response.data.message, 'Error');
                         break;
                     }
                 }
             }, function (error) {
-                $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+                $rootScope.showAlert(evt, 'Problemas en el servidor, intente de nuevo.', 'Error');
             });
     };
 
