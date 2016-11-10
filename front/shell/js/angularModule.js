@@ -42,13 +42,14 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
     }*/
 
     $scope.loginHandler = function(evt){
+        $rootScope.showProgress = true;
         $scope.evt = evt;
         $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/UsuarioEnformaBL.php",
             data: {metodo:'logueoCorreoPassword', Correo: $scope.email_login, Password: $scope.pass_login},
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
             .then(function (response) {
                 console.log(response);
-                console.log(response.data.success);
+                $rootScope.showProgress = false;
                 switch(response.data.success){
                     case 0:{
                         $cookies.put('usuarioAutenticadoId', response.data.Usuario.Id);
@@ -70,6 +71,7 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
                     }
                 }
             }, function (error) {
+                $rootScope.showProgress = false;
                 $rootScope.showAlert(evt, 'Problemas en el servidor, intente de nuevo.', 'Error');
             });
     };

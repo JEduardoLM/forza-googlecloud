@@ -42,18 +42,29 @@
 
     <body data-ng-controller="baseCommand" class="container">
         <md-toolbar class="md-hue-2" style="background-color: #{{colorPrincipal}}">
-          <div class="md-toolbar-tools">
-            <h2>
-              <span>{{nombreGym}}</span>
-            </h2>
-            <span flex></span>
-            <h2>
-              <span>{{usuarioAutenticadoNombre}}</span>
-            </h2>
-            <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
-              <md-icon md-svg-icon="/front/assets/icons/dots-vertical.svg"></md-icon>
-            </md-button>
-          </div>
+            <div class="md-toolbar-tools">
+                <h2>
+                  <span>{{nombreGym}}</span>
+                </h2>
+                <span flex></span>
+                <h2>
+                  <span>{{usuarioAutenticadoNombre}}</span>
+                </h2>
+                <md-menu md-position-mode="target-right target">
+                    <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+                        <md-icon md-svg-icon="/front/assets/icons/dots-vertical.svg"></md-icon>
+                    </md-button>
+                    <md-menu-content width="3" >
+                        <md-menu-item>
+                            <md-button ng-click="cerrarSesion()">
+                                <div layout="row" style="color: #000;" flex>
+                                    <p flex>Cerrar sesión</p>
+                                </div>
+                            </md-button>
+                    </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
         </md-toolbar>
 
         <table class="form-control" data-ng-controller="MenuCommand">

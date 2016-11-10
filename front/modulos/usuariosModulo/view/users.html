@@ -45,6 +45,13 @@
                 text-align: center;
                 margin-top: 0px;
             }
+
+            .progressCenter{
+                position: absolute;
+                top: 188px;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
         </style>
     </head>
 
@@ -58,9 +65,6 @@
                 <h2>
                     <span>{{usuarioAutenticadoNombre}}</span>
                 </h2>
-                <!--<md-button class="md-icon-button" aria-label="More">
-                    <md-icon md-svg-icon="/front/assets/icons/dots-vertical.svg"></md-icon>
-                </md-button>-->
                 <md-menu md-position-mode="target-right target">
                     <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
                         <md-icon md-svg-icon="/front/assets/icons/dots-vertical.svg"></md-icon>
@@ -86,15 +90,15 @@
                 <div class="divFilter">
                     <div layout="row">
                         <md-input-container class="md-block" flex="20">
-                            <label>State</label>
-                            <md-select ng-model="selectedItem" ng-change="getUserBySucursal()">
+                            <label>Sucursal</label>
+                            <md-select ng-model="selectedItem" ng-change="getUserBySucursal()" ng-disabled="showProgress">
                                 <md-option ng-repeat="sucursal in aSucursal" ng-value="sucursal">{{sucursal.Nombre}}</md-option>
                             </md-select>
                         </md-input-container>
 
                         <md-input-container class="md-block" flex="20">
                             <label>Buscar por codigo</label>
-                            <input type="text" class="text-input-search" data-ng-model="codigoForza" data-ng-change="getUserByCode()" placeholder="ejemplo: ABC0123" maxlength="7" pattern="[A-Za-z0-9]{1,8}" data-ng-disabled="selectedItem === null">
+                            <input type="text" class="text-input-search" data-ng-model="codigoForza" data-ng-change="getUserByCode()" placeholder="ejemplo: ABC0123" maxlength="7" pattern="[A-Za-z0-9]{1,8}" data-ng-disabled="selectedItem === null || showProgress">
                         </md-input-container>
 
                         <md-input-container class="md-block" flex="30">
@@ -113,7 +117,7 @@
                 <div class="margin-top-input" layout="row">
                     <md-input-container class="md-block" flex="40">
                         <input class="inputTextFilter" type="text" placeholder="Filtrar por nombre y descripcion"
-                        data-ng-model="searchItem">
+                        data-ng-model="searchItem" ng-disabled="showProgress">
                     </md-input-container>
                 </div>
 
@@ -139,6 +143,8 @@
                      </md-list>
                 </div>
             </div>
+
+            <md-progress-circular ng-disabled="!showProgress" ng-show="showProgress" class="md-hue-2 progressCenter" md-diameter="32px"></md-progress-circular>
         </div>
 
         <script>

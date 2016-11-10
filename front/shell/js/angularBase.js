@@ -30,11 +30,9 @@ var myApplication = angular.module('demoGym', ['anguFixedHeaderTable', 'ngTable'
             .accentPalette('pink');
     });;
 
-myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies', '$rootScope', '$mdDialog', function($scope, $http, $window, $cookies, $rootScope, $mdDialog){
+myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies', '$rootScope', '$mdDialog', '$interval', function($scope, $http, $window, $cookies, $rootScope, $mdDialog, $interval){
     "use strict";
 
-    console.log(window.location);
-    console.log($cookies.get('usuarioAutenticadoId'));
     if (window.location.pathname !== '/' && window.location.pathname !== '/index.html'){
         if ($cookies.get('usuarioAutenticadoId') == undefined){
             $window.location = "/index.html";
@@ -139,9 +137,21 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
             $rootScope.goToMenu(gym);
           $mdDialog.hide(gym);
         };
-    }
+    };
 
-    /***********---------____ CERRAR SESION ____---------*********/
+    /**************---------____ PROGRESS ____---------************/
+    $rootScope.showProgress = false;
+    /*$rootScope.determinateValue = 30;
+    $interval(function() {
+
+        self.determinateValue += 1;
+        if (self.determinateValue > 100) {
+          self.determinateValue = 30;
+        }
+
+      }, 100);*/
+
+    /**************---------____ CERRAR SESION ____---------************/
     $scope.cerrarSesion = function(){
         console.log($cookies.getAll());
         $cookies.remove('GymId', { path: '/' });

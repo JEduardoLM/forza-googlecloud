@@ -41,7 +41,15 @@
         <link href="/front/shell/css/angularStyle.css" type="text/css" rel="stylesheet"/>
 
         <!--<script type="application/javascript" src="/front/utils/bootstrap.min.js"></script>-->
+        <style>
 
+            .progressCenter{
+                position: absolute;
+                top: 50%;
+                left: 320px;
+                transform: translate(-50%, -50%);
+            }
+        </style>
     </head>
 
     <body data-ng-controller="baseCommand" onresize="adapta()" ng-cloak>
@@ -59,57 +67,23 @@
                                 <md-input-container class="md-block">
                                     <!-- Use floating placeholder instead of label -->
                                     <md-icon md-svg-src="front/assets/icons/email.svg" class="email"></md-icon>
-                                    <input data-ng-model="email_login" type="email" placeholder="Email (required)" ng-required="true" maxlength="250">
+                                    <input data-ng-model="email_login" type="email" placeholder="Email (required)" ng-required="true" maxlength="250" ng-disabled="showProgress">
                                 </md-input-container>
 
                                 <md-input-container class="md-block">
                                     <!-- Use floating placeholder instead of label -->
                                     <md-icon md-svg-src="front/assets/icons/key.svg" class="email"></md-icon>
-                                    <input type="password" class="form-control input-sm" placeholder="Contraseña (required)" data-ng-model="pass_login" maxlength="250" required>
+                                    <input type="password" class="form-control input-sm" placeholder="Contraseña (required)" data-ng-model="pass_login" maxlength="250" required ng-disabled="showProgress">
                                 </md-input-container>
 
                                 <div class="rigth-horizontal-align">
                                     <!--<md-button type="submit" class="md-primary md-raised" ng-click="showAdvanced($event)">Ingresar</md-button>-->
-                                    <md-button type="submit" class="md-primary md-raised">Ingresar</md-button>
+                                    <md-button type="submit" class="md-primary md-raised" ng-disabled="showProgress">Ingresar</md-button>
                                 </div>
                             </form>
-                            <!--</div>-->
-                            <!--<div>
-                                <form role="form" name="loginForm" id="fLogin" data-ng-submit="loginHandler()">
-                                    <table>
-                                        <tr>
-                                            <td dir="rtl" class="container" style="display:" id="correo">:Correo</td>
-                                            <td><input type="email" class="form-control input-sm" placeholder="example@something.com" data-ng-model="email_login" maxlength="250" required></td>
-                                        </tr>
-                                        <tr>
-                                            <td dir="rtl" class="container" style="display:" id="pass">:Contraseña</td>
-                                            <td><input type="password" class="form-control input-sm" placeholder="password" data-ng-model="pass_login" maxlength="250" required></td>
-                                        </tr>
-                                    </table>
 
-                                    <div class="rigth-horizontal-align dialog-demo-conten" layout="row" layout-wrap layout-margin layout-align="center">
-                                        <button class="btn btn-success" type="submit">Ingresar</button>
-                                        <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">Ingresar</md-button>
-                                    </div>
-                                </form>
-                            </div>-->
-
-                            <!--div data-ng-view></div-->
-                            <!--<modal title="Seleccione gimnasio" style="display:none" visible="showModal">
-                                <div class="container">
-                                    <div class="vertical-center-row sizeLogin">
-                                        Gimnasio:
-                                        <select data-ng-model="selectedItem"
-                                            data-ng-options="gym as gym.NombreGimnasio for gym in aGym" data-ng-change="goToMenu(selectedItem)">
-                                        </select>
-                                    </div>
-                                </div>
-                            </modal>-->
+                            <md-progress-circular ng-disabled="!showProgress" ng-show="showProgress" class="md-hue-2 progressCenter" md-diameter="32px"></md-progress-circular>
                         </div>
-
-                        <!--<div id="dialog" title="Error">
-                            {{messageLogin}}
-                        </div>-->
 
                         <div ng-style="{'background-color': 'black', height: '1px',width:'90%',margin:'auto'}"></div>
                         <div class="imglogcont">

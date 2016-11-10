@@ -19,12 +19,13 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     $scope.styleStr = "";
     $scope.selectedItem = null;
 
+    $rootScope.showProgress = true;
     $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/GimnasioBL.php",
         data: {metodo:'getSucursalesByGym', id_Gym: $scope.gimnasioId, id_Usuario: $scope.usuarioAutenticadoId},
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
         .then(function (response) {
             console.log(response);
-            console.log(response.data.success);
+            $rootScope.showProgress = false;
             switch(response.data.success){
                 case 0:{
                     $scope.aSucursal = response.data.sucursales;
@@ -40,6 +41,7 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
                 }
             }
         }, function (error) {
+            $rootScope.showProgress = false;
             $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
         });
 
@@ -56,13 +58,14 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     $scope.getUserByCode = function(){
         if($scope.codigoForza.length === 7)
         {
+            $rootScope.showProgress = true;
             console.log("gym:"+$scope.gimnasioId+" sucursal:"+$scope.selectedItem.S_Id);
             $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/UsuarioEnformaBL.php",
                 data: {metodo:'getUsuarioEnformaByCodigo', codigoEnforma: $scope.codigoForza, gimansio: $scope.gimnasioId, sucursal: $scope.selectedItem.S_Id},
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
                 .then(function (response) {
                     console.log(response);
-                    console.log(response.data.success);
+                    $rootScope.showProgress = false;
                     switch(response.data.success){
                         case 0:
                         case 5:
@@ -83,6 +86,7 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
                         }
                     }
                 }, function (error) {
+                    $rootScope.showProgress = false;
                     $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
                 });
         }
@@ -93,12 +97,13 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     };
 
     $scope.getUserBySucursal = function(){
+        $rootScope.showProgress = true;
         $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
             data: {metodo:'obtenerSociosBySucursal', idSucursal: $scope.selectedItem.S_Id},
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
             .then(function (response) {
+                $rootScope.showProgress = false;
                 console.log(response);
-                console.log(response.data.success);
                 switch(response.data.success){
                     case 0:{
                         $scope.aSocios = response.data.socios;
@@ -110,6 +115,7 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
                     }
                 }
             }, function (error) {
+                $rootScope.showProgress = false;
                 $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
             });
     };
@@ -173,13 +179,14 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
 
     //Asociar usuario a gym
     $scope.asociarUsuario = function(evt){
+        $rootScope.showProgress = true;
         console.log("idUsuario:" + parseInt($scope.usuarioConsultado.UsuarioEnformaId !== undefined? $scope.usuarioConsultado.UsuarioEnformaId : $scope.usuarioConsultado.Id));
         $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
             data: {metodo:'asociarUsuarioAGimnasio', idGimnasio:$scope.gimnasioId, idUsuario:0, idSucursal:$scope.selectedItem.S_Id},
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
             .then(function (response) {
                 console.log(response);
-                console.log(response.data.success);
+                $rootScope.showProgress = false;
                 switch(response.data.success){
                     case 0:{
                         $scope.cleanAndRefresh();
@@ -192,17 +199,19 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
                     }
                 }
             }, function (error) {
+                $rootScope.showProgress = false;
                 $rootScope.showAlert(evt, 'Problemas en el servidor, intente de nuevo.', 'Error');
             });
     };
     //Reingresar y dar de baja
     $scope.actualizarEstatus = function(estatus){
+        $rootScope.showProgress = true;
         $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
             data: {metodo:'actualizarEstatusSocio', idUsuarioGimnasio: $scope.usuarioConsultado.UsuarioGymId, estatus: estatus, idSucursal: $scope.selectedItem.S_Id},
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
             .then(function (response) {
                 console.log(response);
-                console.log(response.data.success);
+                $rootScope.showProgress = false;
                 switch(response.data.success){
                     case 0:{
                         $scope.cleanAndRefresh();
@@ -215,11 +224,13 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
                     }
                 }
             }, function (error) {
+                $rootScope.showProgress = false;
                 $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
             });
     };
     //Cambiar de sucursar
     $scope.actualizarSucursal = function(){
+        $rootScope.showProgress = true;
         console.log($scope.usuarioConsultado.UsuarioEnformaId);
         console.log($scope.selectedItem.S_Id);
         $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
@@ -227,7 +238,7 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
             .then(function (response) {
                 console.log(response);
-                console.log(response.data.success);
+                $rootScope.showProgress = false;
                 switch(response.data.success){
                     case 0:{
                         $scope.cleanAndRefresh();
@@ -240,6 +251,7 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
                     }
                 }
             }, function (error) {
+                $rootScope.showProgress = false;
                 $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
             });
     };
