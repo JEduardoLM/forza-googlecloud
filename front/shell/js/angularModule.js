@@ -8,6 +8,7 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
     $scope.messageLogin = "Error";
 
     $scope.isInGyms = false;
+    $scope.evt = null;
 
     $scope.showModal = false;
     $scope.toggleModal = function()
@@ -40,13 +41,15 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
         });
     }*/
 
-    $scope.loginHandler = function(){
+    $scope.loginHandler = function(evt){
+        $rootScope.showProgress = true;
+        $scope.evt = evt;
         $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/UsuarioEnformaBL.php",
             data: {metodo:'logueoCorreoPassword', Correo: $scope.email_login, Password: $scope.pass_login},
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
             .then(function (response) {
                 console.log(response);
-                console.log(response.data.success);
+                $rootScope.showProgress = false;
                 switch(response.data.success){
                     case 0:{
                         $cookies.put('usuarioAutenticadoId', response.data.Usuario.Id);
@@ -55,20 +58,21 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
                         break;
                     }
                     case 5:{ //5 = email not exist
-                        $rootScope.showAlert('El correo no se encuentra registrado.');
+                        $rootScope.showAlert(evt, 'El correo no se encuentra registrado.', 'Error');
                         break;
                     }
                     case 6:{ //6 = pass incorrect
-                        $rootScope.showAlert('La contraseña es incorrecta.');
+                        $rootScope.showAlert(evt, 'La contraseña es incorrecta.', 'Error');
                         break;
                     }
                     default:{
-                        $rootScope.showAlert(response.data.message);
+                        $rootScope.showAlert(evt, response.data.message, 'Error');
                         break;
                     }
                 }
             }, function (error) {
-                $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+                $rootScope.showProgress = false;
+                $rootScope.showAlert(evt, 'Problemas en el servidor, intente de nuevo.', 'Error');
             });
     };
 
@@ -80,11 +84,12 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
                 console.log(response.data);
                 switch(response.data.success){
                     case 0:{
-                        $scope.aGym = response.data.usuarioGyms;
-                        if($scope.aGym.length > 1)
+                        $rootScope.aGym = response.data.usuarioGyms;
+                        if($rootScope.aGym.length > 1)
                         {
-                            console.log($scope.aGym);
-                            $scope.toggleModal();
+                            console.log($rootScope.aGym);
+                            //$scope.toggleModal();
+                            $rootScope.showAdvanced($scope.evt);
                         }
                         else{
                             //$scope.setGymRootScope($scope.aGym[0]);
@@ -111,7 +116,7 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
         $rootScope.colorSecundario = gym.Configuracion.configuracion["0"].ColorComplementario;
     }
 
-    $scope.goToMenu = function(gym)
+    $rootScope.goToMenu = function(gym)
     {
         $scope.setGymRootScope(gym);
         console.log(gym);
@@ -134,7 +139,7 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
                     {Id: '3', name: 'McAdams', phone: '4568523677'}];*/
     $scope.aGym = [/*{IdGym: '1', NombreGimnasio: 'Juarez', Direccion: 'AV. TEZIUTLAN NORTE # 95', Ciudad: 'PUEBLA', Estado: 'PUEBLA', Pais: 'MEXICO', C_Latitud: '19.058065', C_Longitud: '-98.23065', Id_Gimnasio: '2'},
                    {IdGym: '5', NombreGimnasio: 'Animas', Direccion: 'Juan Pablo II #3124', Ciudad: 'PUEBLA', Estado: 'PUEBLA', Pais: 'MEXICO', C_Latitud: '19.058063', C_Longitud: '-98.23063', Id_Gimnasio: '3'}*/];
-    $scope.selectedItem = null;
+    $rootScope.selectedItem = null;
 
     $scope.changeViewMain = function(ruta)
     {
