@@ -14,7 +14,6 @@
 
 	//Extraemos la información del método POST, y lo asignamos a diferentes variables
 	$metodoBl = $data["metodo"];
-	$CodigoEnformaBl= $data["CodigoEnforma"];
 	$nombreBl= $data["Nombre"];
 	$apellidosBl= $data["Apellidos"];
 	$correoBl= $data["Correo"];
@@ -151,10 +150,15 @@
 //***********************************************************************************
 
 	function getUsuarioEnformaByCodigo($codigo,$gimnasio,$sucursal){
+
 		$codigoValidado= validarTextoNulo($codigo, "El código del usuario");
+
 		if ($codigoValidado["success"]==1){
+
 				$usuario = new UsuarioEnforma();
+
 				$respuesta= $usuario->getUsuarioEnformaCodigo($codigo,$gimnasio,$sucursal);
+
 		}
 		else{$respuesta=$correoValidado;}
 		return $respuesta;

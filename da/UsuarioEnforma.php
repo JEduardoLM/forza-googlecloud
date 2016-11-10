@@ -89,6 +89,8 @@ class UsuarioEnforma{
 
             $sql="select * from usuarioenforma where CodigoEnforma='$codigo'";
 
+
+
             if($result = mysqli_query($conexion, $sql))
             {
                 if($result!=null){
@@ -127,6 +129,7 @@ class UsuarioEnforma{
                                 {
                                     $sql2="SELECT UG_Id, idGym, IdUsuario, UG.Estatus, So_Id, Id_Sucursal
                                     FROM usuariogimnasio UG left Join  socio S on UG_Id=Id_UsuarioGym where IdRol=1 and idGym=$gimnasio and IdUsuario=$idUsuario;";
+
 
                                     if($result2 = mysqli_query($conexion, $sql2)){
 
