@@ -43,38 +43,18 @@
     <body data-ng-controller="baseCommand" class="container">
         <md-toolbar class="md-hue-2" style="background-color: #{{colorPrincipal}}">
           <div class="md-toolbar-tools">
-            <!--<md-button class="md-icon-button" aria-label="Settings" ng-disabled="true">
-              <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-            </md-button>-->
             <h2>
               <span>{{nombreGym}}</span>
             </h2>
             <span flex></span>
-              <h2>
-                  <span>{{usuarioAutenticadoNombre}}</span>
-              </h2>
-            <!--<md-button class="md-icon-button" aria-label="Favorite">
-              <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
-            </md-button>-->
-            <md-button class="md-icon-button" aria-label="More">
+            <h2>
+              <span>{{usuarioAutenticadoNombre}}</span>
+            </h2>
+            <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
               <md-icon md-svg-icon="/front/assets/icons/dots-vertical.svg"></md-icon>
             </md-button>
           </div>
         </md-toolbar>
-
-        <!--<nav class="navbar navbar-fixed-top" role="navigation" style="background-color: #{{colorPrincipal}}">
-            <div class="container">
-                <div class="navbar-brand">
-                    {{nombreGym}}
-                </div>
-
-                <div class="collapse navbar-collapse navHeaderCollapse">
-                    <ul class=" nav navbar-nav navbar-right">
-                        <li class="active"> <a href="#"> {{usuarioAutenticadoNombre}} </a> </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>-->
 
         <table class="form-control" data-ng-controller="MenuCommand">
             <tr>

@@ -33,6 +33,14 @@ var myApplication = angular.module('demoGym', ['anguFixedHeaderTable', 'ngTable'
 myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies', '$rootScope', '$mdDialog', function($scope, $http, $window, $cookies, $rootScope, $mdDialog){
     "use strict";
 
+    console.log(window.location);
+    console.log($cookies.get('usuarioAutenticadoId'));
+    if (window.location.pathname !== '/' && window.location.pathname !== '/index.html'){
+        if ($cookies.get('usuarioAutenticadoId') == undefined){
+            $window.location = "/index.html";
+        }
+    }
+
     //config
     /*************---- PRODUCCION(Google Cloud) ----**************/
     //$rootScope.SERVER_URL = "http://forza-1355.appspot.com";
