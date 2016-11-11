@@ -27,20 +27,6 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
         $window.location.href = ruta;
     };
 
-    /*$scope.showAlert = function(msg){
-        $scope.messageLogin = msg;
-        $("#dialog").dialog({
-            show:{
-                effect: "shake",
-                duration: 300
-            },
-            hide:{
-                effect: "explode",
-                duration: 300
-            }
-        });
-    }*/
-
     $scope.loginHandler = function(evt){
         $rootScope.showProgress = true;
         $scope.evt = evt;
@@ -52,8 +38,8 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
                 $rootScope.showProgress = false;
                 switch(response.data.success){
                     case 0:{
-                        $cookies.put('usuarioAutenticadoId', response.data.Usuario.Id);
-                        $cookies.put('usuarioAutenticadoNombre', response.data.Usuario.Nombre + " " + response.data.Usuario.Apellidos);
+                        $cookies.put('usuarioAutenticadoId', response.data.Usuario.Id, { path: '/' });
+                        $cookies.put('usuarioAutenticadoNombre', response.data.Usuario.Nombre + " " + response.data.Usuario.Apellidos, { path: '/' });
                         $scope.getGymByUsuarioId(response.data.Usuario.Id);
                         break;
                     }
@@ -85,18 +71,19 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
                 switch(response.data.success){
                     case 0:{
                         $rootScope.aGym = response.data.usuarioGyms;
+                        $cookies.put('gyms', JSON.stringify($rootScope.aGym), { path: '/' });
                         if($rootScope.aGym.length > 1)
                         {
                             console.log($rootScope.aGym);
                             //$scope.toggleModal();
-                            $rootScope.showAdvanced($scope.evt);
+                            $rootScope.dialogGimnasios($scope.evt);
                         }
                         else{
                             //$scope.setGymRootScope($scope.aGym[0]);
-                            $cookies.put('GymId', $scope.aGym[0].IdGym);
-                            $cookies.put('nombreGym', $scope.aGym[0].NombreGimnasio);
-                            $cookies.put('colorPrimary', $scope.aGym[0].Configuracion.configuracion["0"].ColorFondo);
-                            $cookies.put('ColorComplementario', $scope.aGym[0].Configuracion.configuracion["0"].ColorComplementario);
+                            $cookies.put('GymId', $scope.aGym[0].IdGym, { path: '/' });
+                            $cookies.put('nombreGym', $scope.aGym[0].NombreGimnasio, { path: '/' });
+                            $cookies.put('colorPrimary', $scope.aGym[0].Configuracion.configuracion["0"].ColorFondo, { path: '/' });
+                            $cookies.put('ColorComplementario', $scope.aGym[0].Configuracion.configuracion["0"].ColorComplementario, { path: '/' });
                             $window.location = "/front/shell/menu.html";
                         }
                         break;
@@ -111,21 +98,9 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
         });
     }
 
-    $scope.setGymRootScope = function(gym){
-        $rootScope.colorPrincipal = gym.Configuracion.configuracion["0"].ColorFondo;
-        $rootScope.colorSecundario = gym.Configuracion.configuracion["0"].ColorComplementario;
-    }
-
     $rootScope.goToMenu = function(gym)
     {
-        $scope.setGymRootScope(gym);
-        console.log(gym);
-        $cookies.put('GymId', gym.IdGym);
-        $cookies.put('nombreGym', gym.NombreGimnasio);
-        $cookies.put('colorPrimary', gym.Configuracion.configuracion["0"].ColorFondo);
-        $cookies.put('ColorComplementario', gym.Configuracion.configuracion["0"].ColorComplementario);
-        //console.log($scope.selectedItem);
-        //$cookies.put('GymId', $scope.selectedItem.IdGym);
+        $rootScope.setGymRootScope(gym);
         $window.location = "/front/shell/menu.html";
     };
 

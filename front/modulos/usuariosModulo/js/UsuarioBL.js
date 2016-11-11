@@ -3,11 +3,6 @@
 myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$rootScope', function($scope, $http, $cookies, $rootScope){
     "use strict";
 
-    $scope.usuarioAutenticadoId = $cookies.get('usuarioAutenticadoId');
-    $scope.usuarioAutenticadoNombre =  $cookies.get('usuarioAutenticadoNombre');
-    $scope.gimnasioId = parseInt($cookies.get('GymId'), 10);
-    $scope.nombreGym = $cookies.get('nombreGym');
-
     $scope.usuarioConsultado = null;
 
     //Booleans for butoons
@@ -19,9 +14,9 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     $scope.styleStr = "";
     $scope.selectedItem = null;
 
-    $rootScope.showProgress = true;
+    /*$rootScope.showProgress = true;
     $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/GimnasioBL.php",
-        data: {metodo:'getSucursalesByGym', id_Gym: $scope.gimnasioId, id_Usuario: $scope.usuarioAutenticadoId},
+        data: {metodo:'getSucursalesByGym', id_Gym: $rootScope.gimnasioId, id_Usuario: $rootScope.usuarioAutenticadoId},
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
         .then(function (response) {
             console.log(response);
@@ -43,7 +38,36 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
         }, function (error) {
             $rootScope.showProgress = false;
             $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
-        });
+        });*/
+
+    $scope.getSucursalByGym = function(){
+        $rootScope.showProgress = true;
+        console.log("gym:"+$rootScope.gimnasioId+" usuario:"+$rootScope.usuarioAutenticadoId);
+        $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/GimnasioBL.php",
+            data: {metodo:'getSucursalesByGym', id_Gym: parseInt($rootScope.gimnasioId), id_Usuario: parseInt($rootScope.usuarioAutenticadoId)},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+            .then(function (response) {
+                console.log(response);
+                $rootScope.showProgress = false;
+                switch(response.data.success){
+                    case 0:{
+                        $scope.aSucursal = response.data.sucursales;
+                        if ($scope.aSucursal.length == 1){
+                            $scope.selectedItem = $scope.aSucursal[0];
+                            $scope.getUserBySucursal();
+                        }
+                        break;
+                    }
+                    default:{
+                        $rootScope.showAlert(response.data.message);
+                        break;
+                    }
+                }
+            }, function (error) {
+                $rootScope.showProgress = false;
+                $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
+            });
+    }
 
     $scope.selectUser = function(socio, index){
         $scope.codigoForza = '';
@@ -231,8 +255,6 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     //Cambiar de sucursar
     $scope.actualizarSucursal = function(){
         $rootScope.showProgress = true;
-        console.log($scope.usuarioConsultado.UsuarioEnformaId);
-        console.log($scope.selectedItem.S_Id);
         $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
             data: {metodo:'actualizarSucursalSocio', idSocio:parseInt($scope.usuarioConsultado.SocioId), idSucursal: $scope.selectedItem.S_Id},
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
@@ -258,9 +280,17 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     //Limpiar datos y refrescar grid
     $scope.cleanAndRefresh = function()
     {
+        $scope.aSocios = [];
         $scope.usuarioConsultado = null;
         $scope.codigoForza = "";
-        //$scope.getUserBySucursal();
         $scope.setButtonsVisibility(-1);
+    };
+
+    $rootScope.goToMenu = function(gym)
+    {
+        $scope.aSucursal = [];
+        $scope.cleanAndRefresh();
+        $rootScope.setGymRootScope(gym);
+        $scope.getSucursalByGym();
     };
 }]);

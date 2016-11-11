@@ -34,7 +34,7 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
     "use strict";
 
     if (window.location.pathname !== '/' && window.location.pathname !== '/index.html'){
-        if ($cookies.get('usuarioAutenticadoId') == undefined){
+        if ($cookies.get('usuarioAutenticadoId', { path: '/' }) == undefined){
             $window.location = "/index.html";
         }
     }
@@ -47,12 +47,12 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
     /*************---- Raiz(Local) ----**************/
     /*$rootScope.SERVER_URL = "";*/
 
-    $scope.usuarioAutenticadoId = $cookies.get('usuarioAutenticadoId');
-    $scope.usuarioAutenticadoNombre =  $cookies.get('usuarioAutenticadoNombre');
-    $scope.gimnasioId = parseInt($cookies.get('GymId'), 10);
-    $scope.nombreGym = $cookies.get('nombreGym');
-    $rootScope.colorPrincipal = $cookies.get('colorPrimary');
-    $rootScope.colorSecundario = $cookies.get('ColorComplementario');
+    $rootScope.usuarioAutenticadoId = $cookies.get('usuarioAutenticadoId', { path: '/' });
+    $rootScope.usuarioAutenticadoNombre =  $cookies.get('usuarioAutenticadoNombre', { path: '/' });
+    $rootScope.gimnasioId = parseInt($cookies.get('GymId', { path: '/' }), 10);
+    $rootScope.nombreGym = $cookies.get('nombreGym', { path: '/' });
+    $rootScope.colorPrincipal = $cookies.get('colorPrimary', { path: '/' });
+    $rootScope.colorSecundario = $cookies.get('ColorComplementario', { path: '/' });
     console.log($rootScope.colorPrincipal);
     $rootScope.colorAccent = '00bfa5';
 
@@ -69,6 +69,26 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
         }
         throw new Error('Bad Hex');
     };
+
+    try{
+        $rootScope.aGym = JSON.parse($cookies.get('gyms', { path: '/' }));
+    } catch (e){
+        console.log(e);
+    }
+
+    $rootScope.setGymRootScope = function(gym){
+        $cookies.put('GymId', gym.IdGym, { path: '/' });
+        $cookies.put('nombreGym', gym.NombreGimnasio, { path: '/' });
+        $cookies.put('colorPrimary', gym.Configuracion.configuracion["0"].ColorFondo, { path: '/' });
+        $cookies.put('ColorComplementario', gym.Configuracion.configuracion["0"].ColorComplementario, { path: '/' });
+
+        $rootScope.gimnasioId = gym.IdGym;
+        $rootScope.nombreGym = gym.NombreGimnasio;
+        $rootScope.colorPrincipal = gym.Configuracion.configuracion["0"].ColorFondo;
+        $rootScope.colorSecundario = gym.Configuracion.configuracion["0"].ColorComplementario;
+    }
+
+    console.log($cookies.getAll());
 
     $rootScope.backToMenu = function(){
         $window.location = "/front/shell/menu.html";
@@ -107,19 +127,19 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
         });
     };
 
-    $rootScope.showAdvanced = function(ev) {
+    $rootScope.dialogGimnasios = function(ev) {
         $mdDialog.show({
-          controller: DialogController,
-          templateUrl: 'dialog1.tmpl.html',
-          parent: angular.element(document.body),
-          targetEvent: ev,
-          clickOutsideToClose:true,
-          fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            controller: DialogController,
+            templateUrl: '/front/shell/view/dialogGyms.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose:true,
+            fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
         })
         .then(function(answer) {
-          $rootScope.status = 'You said the information was "' + answer + '".';
+            //make something
         }, function() {
-          $rootScope.status = 'You cancelled the dialog.';
+            //another thing
         });
     };
 
@@ -135,7 +155,7 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
 
         $scope.answer = function(gym) {
             $rootScope.goToMenu(gym);
-          $mdDialog.hide(gym);
+            $mdDialog.hide(gym);
         };
     };
 
@@ -160,6 +180,7 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
         $cookies.remove('ColorComplementario', { path: '/' });
         $cookies.remove('usuarioAutenticadoId', { path: '/' });
         $cookies.remove('usuarioAutenticadoNombre', { path: '/' });
+        $cookies.put('gyms', '[]');
         console.log($cookies.getAll());
         $window.location = "/index.html";
     };

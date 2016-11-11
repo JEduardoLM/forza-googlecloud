@@ -76,14 +76,22 @@
                                     <p flex>Cerrar sesión</p>
                                 </div>
                             </md-button>
-                    </md-menu-item>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-button ng-click="dialogGimnasios($event)">
+                                <div layout="row" style="color: #000;" flex>
+                                    <p flex>Seleccionar gimnasio</p>
+                                </div>
+                            </md-button>
+                        </md-menu-item>
                     </md-menu-content>
                 </md-menu>
             </div>
         </md-toolbar>
 
         <div class="backgroundWhite-t">
-            <div class="divMenu" data-ng-controller="UsuariosCommand" style="{{colorToRgba(colorPrincipal, 0.2)}}">
+            <div class="divMenu" data-ng-controller="UsuariosCommand" style="{{colorToRgba(colorPrincipal, 0.2)}}" ng-init="getSucursalByGym()">
                 <button data-ng-click="backToMenu()" class="btn iconMedium ic_back" style="{{colorToRgba(colorPrincipal, 0.4)}}"></button>
                 <label>USUARIOS</label>
 

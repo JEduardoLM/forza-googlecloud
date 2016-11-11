@@ -61,7 +61,15 @@
                                     <p flex>Cerrar sesión</p>
                                 </div>
                             </md-button>
-                    </md-menu-item>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-button ng-click="dialogGimnasios($event)">
+                                <div layout="row" style="color: #000;" flex>
+                                    <p flex>Seleccionar gimnasio</p>
+                                </div>
+                            </md-button>
+                        </md-menu-item>
                     </md-menu-content>
                 </md-menu>
             </div>
@@ -98,5 +106,41 @@
                 </td>
             </tr>-->
         </table>
+        <script type="text/ng-template" id="dialog1.tmpl.html">
+            <md-dialog aria-label="Seleccione un gimnasio">
+                <form ng-cloak>
+                    <md-toolbar>
+                        <div class="md-toolbar-tools">
+                            <h2>Seleccione un gimnasio</h2>
+                            <span flex></span>
+                            <md-button class="md-icon-button" ng-click="cancel()">
+                              <md-icon md-svg-src="/front/assets/icons/close.svg" aria-label="Close dialog"></md-icon>
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+
+                    <md-dialog-content>
+                      <div class="md-dialog-content">
+                        <div class="container">
+                            <div class="vertical-center-row sizeLogin">
+                                Gimnasio:
+                                <!--<select data-ng-model="selectedItem"
+                                    data-ng-options="gym as gym.NombreGimnasio for gym in aGym" data-ng-change="goToMenu(selectedItem)">-->
+                                <select data-ng-model="selectedItem"
+                                    data-ng-options="gym as gym.NombreGimnasio for gym in aGym">
+                                </select>
+                            </div>
+                        </div>
+                      </div>
+                    </md-dialog-content>
+
+                    <md-dialog-actions layout="row">
+                        <span flex></span>
+                            <md-button ng-click="cancel()">Cancelar</md-button>
+                            <md-button ng-click="answer(selectedItem)">Ir</md-button>
+                    </md-dialog-actions>
+                </form>
+            </md-dialog>
+        </script>
     </body>
 </html>
