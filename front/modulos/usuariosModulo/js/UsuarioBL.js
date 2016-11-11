@@ -14,32 +14,6 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
     $scope.styleStr = "";
     $scope.selectedItem = null;
 
-    /*$rootScope.showProgress = true;
-    $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/GimnasioBL.php",
-        data: {metodo:'getSucursalesByGym', id_Gym: $rootScope.gimnasioId, id_Usuario: $rootScope.usuarioAutenticadoId},
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-        .then(function (response) {
-            console.log(response);
-            $rootScope.showProgress = false;
-            switch(response.data.success){
-                case 0:{
-                    $scope.aSucursal = response.data.sucursales;
-                    if ($scope.aSucursal.length == 1){
-                        $scope.selectedItem = $scope.aSucursal[0];
-                        $scope.getUserBySucursal();
-                    }
-                    break;
-                }
-                default:{
-                    $rootScope.showAlert(response.data.message);
-                    break;
-                }
-            }
-        }, function (error) {
-            $rootScope.showProgress = false;
-            $rootScope.showAlert('Problemas en el servidor, intente de nuevo.');
-        });*/
-
     $scope.getSucursalByGym = function(){
         $rootScope.showProgress = true;
         console.log("gym:"+$rootScope.gimnasioId+" usuario:"+$rootScope.usuarioAutenticadoId);
@@ -201,12 +175,29 @@ myApplication.controller('UsuariosCommand', ['$scope', '$http', '$cookies', '$ro
         }
     };
 
+    $rootScope.responsePositive = function(evt){
+        console.log(evt);
+        switch(evt.target.name){
+            case 'btnAsociar':{
+                $scope.asociarUsuario(evt)
+                break;
+            }
+            case 'btnBaja':{
+                $scope.actualizarEstatus(0);
+                break;
+            }
+        }
+    }
+
     //Asociar usuario a gym
     $scope.asociarUsuario = function(evt){
+        console.log(evt);
+        console.log(parseInt($scope.usuarioConsultado.UsuarioEnformaId !== undefined? $scope.usuarioConsultado.UsuarioEnformaId : $scope.usuarioConsultado.Id));
         $rootScope.showProgress = true;
         console.log("idUsuario:" + parseInt($scope.usuarioConsultado.UsuarioEnformaId !== undefined? $scope.usuarioConsultado.UsuarioEnformaId : $scope.usuarioConsultado.Id));
+
         $http({method: 'POST', url: $rootScope.SERVER_URL+"/bl/SocioBL.php",
-            data: {metodo:'asociarUsuarioAGimnasio', idGimnasio:$scope.gimnasioId, idUsuario:0, idSucursal:$scope.selectedItem.S_Id},
+            data: {metodo:'asociarUsuarioAGimnasio', idGimnasio:$scope.gimnasioId, idUsuario:parseInt($scope.usuarioConsultado.UsuarioEnformaId !== undefined? $scope.usuarioConsultado.UsuarioEnformaId : $scope.usuarioConsultado.Id), idSucursal:$scope.selectedItem.S_Id},
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
             .then(function (response) {
                 console.log(response);

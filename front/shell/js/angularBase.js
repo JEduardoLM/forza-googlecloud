@@ -121,9 +121,9 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
               .cancel('Cancelar');
 
         $mdDialog.show(confirm).then(function() {
-          $rootScope.status = 'You decided to get rid of your debt.';
+            $rootScope.responsePositive(ev);
         }, function() {
-          $rootScope.status = 'You decided to keep your debt.';
+            //answer negative
         });
     };
 

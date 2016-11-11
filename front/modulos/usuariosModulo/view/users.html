@@ -114,9 +114,9 @@
                             <input style="{{styleStr}}" type="text" value="{{usuarioConsultado.NombreUsuario}}{{usuarioConsultado.Nombre}} {{usuarioConsultado.Apellidos}}" disabled>
                         </md-input-container>
                         <div layout="row">
-                        <button class="btn iconMedium ic_user_asociar" data-ng-show="isAsociar" title="Asociar" data-ng-click="asociarUsuario($event)" style="{{colorToRgba(colorPrincipal, 0.4)}}"></button>
+                        <button class="btn iconMedium ic_user_asociar" data-ng-show="isAsociar" title="Asociar" data-ng-click="showConfirm($event, '¿Estas seguro de asociar este usuario?', 'Confirmar')" name="btnAsociar" style="{{colorToRgba(colorPrincipal, 0.4)}}"></button>
                         <button class="btn iconMedium ic_user_cambio_suc" data-ng-show="isCambioSuc" title="Cambiar de sucursal" data-ng-click="actualizarSucursal()" style="{{colorToRgba(colorPrincipal, 0.4)}}"></button>
-                        <button class="btn iconMedium ic_user_baja" data-ng-show="isBaja" title="Dar de baja" data-ng-click="actualizarEstatus(0)" style="{{colorToRgba(colorPrincipal, 0.4)}}"></button>
+                        <button class="btn iconMedium ic_user_baja" data-ng-show="isBaja" title="Dar de baja" data-ng-click="showConfirm($event, '¿Estas seguro de dar de baja este usuario?', 'Confirmar')" name="btnBaja" style="{{colorToRgba(colorPrincipal, 0.4)}}"></button>
                         <button class="btn iconMedium ic_user_reingresar" data-ng-show="isReingresar" title="Reingresar" data-ng-click="actualizarEstatus(1)" style="{{colorToRgba(colorPrincipal, 0.4)}}"></button>
                             </div>
                     </div>
