@@ -79,12 +79,12 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
                             $rootScope.dialogGimnasios($scope.evt);
                         }
                         else{
-                            //$scope.setGymRootScope($scope.aGym[0]);
-                            $cookies.put('GymId', $scope.aGym[0].IdGym, { path: '/' });
-                            $cookies.put('nombreGym', $scope.aGym[0].NombreGimnasio, { path: '/' });
-                            $cookies.put('colorPrimary', $scope.aGym[0].Configuracion.configuracion["0"].ColorFondo, { path: '/' });
-                            $cookies.put('ColorComplementario', $scope.aGym[0].Configuracion.configuracion["0"].ColorComplementario, { path: '/' });
-                            $window.location = "/front/shell/menu.html";
+                            /*$cookies.put('GymId', $rootScope.aGym[0].IdGym, { path: '/' });
+                            $cookies.put('nombreGym', $rootScope.aGym[0].NombreGimnasio, { path: '/' });
+                            $cookies.put('colorPrimary', $rootScope.aGym[0].Configuracion.configuracion["0"].ColorFondo, { path: '/' });
+                            $cookies.put('ColorComplementario', $rootScope.aGym[0].Configuracion.configuracion["0"].ColorComplementario, { path: '/' });
+                            $window.location = "/front/shell/menu.html";*/
+                            $rootScope.goToMenu($rootScope.aGym[0]);
                         }
                         break;
                     }
@@ -100,8 +100,13 @@ myApplication.controller('loginCommand', ['$scope', '$http', '$window', '$cookie
 
     $rootScope.goToMenu = function(gym)
     {
-        $rootScope.setGymRootScope(gym);
-        $window.location = "/front/shell/menu.html";
+        console.log(gym);
+        if(gym.IdRol >= 3){
+            $rootScope.setGymRootScope(gym);
+            $window.location = "/front/shell/menu.html";
+        } else {
+            $rootScope.showAlert($scope.evt, 'No cuentas con los permisos necesarios, consulte con su administrador.', 'Aviso');
+        }
     };
 
 

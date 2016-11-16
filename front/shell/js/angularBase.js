@@ -161,15 +161,6 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
 
     /**************---------____ PROGRESS ____---------************/
     $rootScope.showProgress = false;
-    /*$rootScope.determinateValue = 30;
-    $interval(function() {
-
-        self.determinateValue += 1;
-        if (self.determinateValue > 100) {
-          self.determinateValue = 30;
-        }
-
-      }, 100);*/
 
     /**************---------____ CERRAR SESION ____---------************/
     $scope.cerrarSesion = function(){
@@ -180,7 +171,8 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
         $cookies.remove('ColorComplementario', { path: '/' });
         $cookies.remove('usuarioAutenticadoId', { path: '/' });
         $cookies.remove('usuarioAutenticadoNombre', { path: '/' });
-        $cookies.put('gyms', '[]');
+        $cookies.remove('gyms', { path: '/' })
+        $cookies.put('gyms', '[]', { path: '/' });
         console.log($cookies.getAll());
         $window.location = "/index.html";
     };
