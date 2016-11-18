@@ -13,8 +13,8 @@
 
 	 $data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
-    // $json = '{"metodo":"actulizarPesoEnSerie","IdSerie":"6","PesoNuevo":"10","TipoPeso":"1","IdEjercicio":"2","CircuitoColor":"0"}';
-  //   $data=(json_decode($json, true));
+    // $json = '{"metodo":"ObtenerSubrutinasByIdUIdGymCompleta","idUsuario":2,"idGimnasio":1}';
+    // $data=(json_decode($json, true));
 
 	require('../da/UsuarioGym.php'); //Se requiere el archivo de acceso a la base de datos
     require('../da/Socio.php'); //Se requiere el archivo de acceso a la base de datos

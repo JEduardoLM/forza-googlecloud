@@ -381,34 +381,33 @@ class Subrutina{
 		if ($idUsuario!=0)
         {
             if ($idGym!=0){
-                $sql= "SELECT SR_ID, Orden, IdRutina, Nombre
-                        FROM subrutina WHERE idRutina =
-                            (SELECT R_ID FROM rutina WHERE Estatus =1 AND id_Socio =
+
+                $sql0="SELECT R_ID,FechaInicio, NumeroSemanas FROM rutina WHERE Estatus =1 AND id_Socio =
                                 (SELECT So_Id FROM usuariogimnasio JOIN socio ON UG_Id = Id_UsuarioGym WHERE
                                 usuariogimnasio.Estatus =1 AND socio.Estatus =1 AND IdUsuario =$idUsuario AND IdGym =$idGym LIMIT 1 )
-                            ORDER BY FechaInicio DESC  LIMIT 1 )
-                        ORDER BY Orden
-                        ";
+                            ORDER BY FechaInicio DESC  LIMIT 1 ";
 
-                if($result = mysqli_query($conexion, $sql))
+
+
+                $IdRutina=0;
+                if($result0 = mysqli_query($conexion, $sql0))
                 {
-                    if($result!=null){
-                        if ($result->num_rows>0){
 
-                            $response["subrutinas"] = array();
-                            while($row = mysqli_fetch_array($result))
+                    if($result0!=null){
+
+                        if ($result0->num_rows>0){
+
+                            $response["rutina"] = array();
+                            while($row = mysqli_fetch_array($result0))
                             {
                                 $item = array();
-                                $item["Id"]=$row["SR_ID"];
-                                $item["Orden"]=$row["Orden"];
-                                $item["IdRutina"]=$row["IdRutina"];
-                                $item["Nombre"]=$row["Nombre"];
-                                $detalleSubrutina=$this->getDetalleSubrutina($item["Id"]);
-                                $item["Ejercicios"]=$detalleSubrutina;
-                                array_push($response["subrutinas"], $item);
+                                $item["R_ID"]=$row["R_ID"];
+                                $IdRutina=$row["R_ID"];
+                                $item["FechaInicio"]=$row["FechaInicio"];
+                                $item["NumeroSemanas"]=$row["NumeroSemanas"];
+                                $response["rutina"]= $item;
+
                             }
-                            $response["success"]=0;
-                            $response["message"]='Consulta exitosa';
                         }
                         else{
                             $response["success"]=1;
@@ -422,10 +421,60 @@ class Subrutina{
                             $response["message"]='No se encontró una rutina para el usuario y gimnasio indicado';
                         }
                 }
-                else
-                {
-                    $response["success"]=4;
-                    $response["message"]='Se presento un error al ejecutar la consulta';
+
+
+                if ($IdRutina>0){
+                    /*$sql= "SELECT SR_ID, Orden, IdRutina, Nombre
+                            FROM subrutina WHERE idRutina =
+                                (SELECT R_ID FROM rutina WHERE Estatus =1 AND id_Socio =
+                                    (SELECT So_Id FROM usuariogimnasio JOIN socio ON UG_Id = Id_UsuarioGym WHERE
+                                    usuariogimnasio.Estatus =1 AND socio.Estatus =1 AND IdUsuario =$idUsuario AND IdGym =$idGym LIMIT 1 )
+                                ORDER BY FechaInicio DESC  LIMIT 1 )
+                            ORDER BY Orden
+                            "; */
+
+                    $sql= "SELECT SR_ID, Orden, IdRutina, Nombre
+                            FROM subrutina WHERE idRutina =$IdRutina
+                            ORDER BY Orden
+                            ";
+
+                    if($result = mysqli_query($conexion, $sql))
+                    {
+                        if($result!=null){
+                            if ($result->num_rows>0){
+
+                                $response["subrutinas"] = array();
+                                while($row = mysqli_fetch_array($result))
+                                {
+                                    $item = array();
+                                    $item["Id"]=$row["SR_ID"];
+                                    $item["Orden"]=$row["Orden"];
+                                    $item["IdRutina"]=$row["IdRutina"];
+                                    $item["Nombre"]=$row["Nombre"];
+                                    $detalleSubrutina=$this->getDetalleSubrutina($item["Id"]);
+                                    $item["Ejercicios"]=$detalleSubrutina;
+                                    array_push($response["subrutinas"], $item);
+                                }
+                                $response["success"]=0;
+                                $response["message"]='Consulta exitosa';
+                            }
+                            else{
+                                $response["success"]=1;
+                                $response["message"]='No se encontró una rutina para el usuario y gimnasio indicado';
+                            }
+
+                        }
+                        else
+                            {
+                                $response["success"]=1;
+                                $response["message"]='No se encontró una rutina para el usuario y gimnasio indicado';
+                            }
+                    }
+                    else
+                    {
+                        $response["success"]=4;
+                        $response["message"]='Se presento un error al ejecutar la consulta';
+                    }
                 }
 
             }
