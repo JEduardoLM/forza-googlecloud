@@ -382,7 +382,7 @@ class Subrutina{
         {
             if ($idGym!=0){
 
-                $sql0="SELECT R_ID,FechaInicio, NumeroSemanas FROM rutina WHERE Estatus =1 AND id_Socio =
+                $sql0="SELECT R_ID,FechaInicio,Objetivo, NumeroSemanas FROM rutina WHERE Estatus =1 AND id_Socio =
                                 (SELECT So_Id FROM usuariogimnasio JOIN socio ON UG_Id = Id_UsuarioGym WHERE
                                 usuariogimnasio.Estatus =1 AND socio.Estatus =1 AND IdUsuario =$idUsuario AND IdGym =$idGym LIMIT 1 )
                             ORDER BY FechaInicio DESC  LIMIT 1 ";
@@ -405,6 +405,7 @@ class Subrutina{
                                 $IdRutina=$row["R_ID"];
                                 $item["FechaInicio"]=$row["FechaInicio"];
                                 $item["NumeroSemanas"]=$row["NumeroSemanas"];
+                                $item["Objetivo"]=$row["Objetivo"];
                                 $response["rutina"]= $item;
 
                             }
