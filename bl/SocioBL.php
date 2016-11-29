@@ -480,6 +480,29 @@
         return $response;
     }
 
+	function getNotificaciones($idUsuario){
+
+        if ($idUsuario!=NULL){  //Validamos que el id envíado sea diferente de NULO
+
+            if (is_numeric($idUsuario)){
+                $socio = new Socio();
+                $response= $socio->getNotificaciones($idUsuario);
+            }
+            else
+            {
+            $response["success"]=5;
+			$response["message"]='El id del usuario debe ser un dato numérico';
+            }
+        }
+        else
+        {
+            $response["success"]=6;
+			$response["message"]='El id del usuario debe ser diferente de NULO';
+        }
+        return $response;
+
+    }
+
 	switch ($metodoBl) {
 		case "obtenerGimnasiosDeUsuario": // Mandar cero, para obtener todos los aparatos, o el id del aparatado especifico.
 			$response=getUsuarioGymByIDU($idUsuarioBl);
@@ -518,6 +541,10 @@
 
         case "getAvancesPesoPorEjercicio":
             $response=getAvancesPesoPorEjercicio($idEjercicioBl);
+		break;
+
+        case "getNotificaciones":
+            $response=getNotificaciones($idUsuarioBl);
 		break;
 
 

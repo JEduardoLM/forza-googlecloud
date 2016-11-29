@@ -13,6 +13,7 @@
      $data = json_decode(file_get_contents('php://input'), true);  //Recibimos un objeto json por medio del método POST, y lo decodificamos
 
     require('../da/UsuarioEnforma.php'); //Se requiere el archivo de acceso a la base de datos
+    require('../da/Notificacion.php');
 
 
 
