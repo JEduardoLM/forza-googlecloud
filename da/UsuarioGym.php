@@ -18,7 +18,7 @@ class UsuarioGym{
 
             if ($idUsuario!=0)
             {
-                $sql="SELECT UG_Id, IdGym, g.Nombre as NombreGimnasio, IdUsuario, ug.Estatus, IdRol, rol.Nombre as NombreRol,
+                $sql="SELECT UG_Id, IdGym, g.Nombre as NombreGimnasio, g.CodigoGym, IdUsuario, ug.Estatus, IdRol, rol.Nombre as NombreRol,
 									(SELECT CodigoSucursal FROM sucursal su join socio so on su.S_Id=so.Id_Sucursal
                                     where Id_UsuarioGym in (SELECT UG_Id FROM usuariogimnasio where IdUsuario=2 and IdGym=ug.IdGym)) as CodigoSucursal
                 FROM usuariogimnasio ug join gimnasio g on ug.IdGym=g.G_Id  join  rol on ug.idRol=rol.R_Id
@@ -26,7 +26,7 @@ class UsuarioGym{
             }
             else
             {
-                $sql="SELECT UG_Id, IdGym, gimnasio.Nombre as NombreGimnasio, IdUsuario, usuariogimnasio.Estatus, IdRol, rol.Nombre as NombreRol
+                $sql="SELECT UG_Id, IdGym, gimnasio.Nombre as NombreGimnasio, gimnasio.CodigoGym, IdUsuario, usuariogimnasio.Estatus, IdRol, rol.Nombre as NombreRol
                 FROM usuariogimnasio join gimnasio on usuariogimnasio.IdGym=gimnasio.G_Id join  rol on usuariogimnasio.idRol=rol.R_Id;";
             }
 
@@ -43,6 +43,7 @@ class UsuarioGym{
                             $item["UG_Id"]=$row["UG_Id"];
                             $item["IdGym"]=$row["IdGym"];
                             $item["NombreGimnasio"]=$row["NombreGimnasio"];
+                            $item["CodigoGym"]=$row["CodigoGym"];
                             $item["IdUsuario"]=$row["IdUsuario"];
                             $item["Estatus"]=$row["Estatus"];
                             $item["IdRol"]=$row["IdRol"];
@@ -102,7 +103,7 @@ class UsuarioGym{
 		if ($idUsuario!=0)
 		{
             if ($idGym!=0){
-                $sql="SELECT UG_Id, IdGym, gimnasio.Nombre as Gimnasio, IdUsuario, usuariogimnasio.Estatus, IdRol, rol.Nombre as Rol
+                $sql="SELECT UG_Id, IdGym, gimnasio.Nombre as Gimnasio, gimnasio.CodigoGym, IdUsuario, usuariogimnasio.Estatus, IdRol, rol.Nombre as Rol
                 FROM usuariogimnasio join gimnasio on usuariogimnasio.IdGym=gimnasio.G_Id  join  rol on usuariogimnasio.idRol=rol.R_Id
                 where IdUsuario='$idUsuario' and usuariogimnasio.idGym='$idGym'";
 
@@ -118,6 +119,7 @@ class UsuarioGym{
                                 $item["Id"]=$row["UG_Id"];
                                 $item["IdGym"]=$row["IdGym"];
                                 $item["Gimnasio"]=$row["Gimnasio"];
+                                $item["CodigoGym"]=$row["CodigoGym"];
                                 $item["IdUsuario"]=$row["IdUsuario"];
                                 $item["Estatus"]=$row["Estatus"];
                                 $item["IdRol"]=$row["IdRol"];

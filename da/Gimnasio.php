@@ -126,7 +126,8 @@ class Gimnasio{
 		//generamos la consulta
 		mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
 
-        $sql="SELECT S_Id, Nombre, Direccion, Ciudad, Estado, Pais, C_Latitud, C_Longitud, Id_Gimnasio FROM sucursal where Id_Gimnasio='$idGimnasio'";
+        $sql="SELECT S_Id, Nombre, Direccion, Ciudad, Estado, Pais, C_Latitud, C_Longitud, Id_Gimnasio, CodigoSucursal
+                FROM sucursal where Id_Gimnasio='$idGimnasio'";
 
                 if($result = mysqli_query($conexion, $sql))
                 {
@@ -159,6 +160,8 @@ class Gimnasio{
                                 if ($item["C_Longitud"]==NULL){$item["C_Longitud"]=0;}
 
                                 $item["Id_Gimnasio"]=$row["Id_Gimnasio"];
+
+                                $item["CodigoSucursal"]=$row["CodigoSucursal"];
 
                                 array_push($response["sucursales"], $item);
                             }
