@@ -133,8 +133,8 @@ class Serie{
                 }
 
 
-                $fecha = new DateTime();
-                $hoy = $fecha->getTimestamp();
+
+                 $hoy = round(microtime(true) * 1000);
 
                 $sql2="INSERT INTO pesoavances (`Peso`, `TipoPeso`, `id_Serie`,`Fecha`,`PesoMaximo`) VALUES ($NuevoPeso, $TipoDePeso, $idSerie, $hoy, $pesoMaximo)";
 
@@ -197,8 +197,8 @@ class Serie{
 
         	if($result = mysqli_query($conexion, $sql)){
 
-                $fecha = new DateTime();
-                $hoy = $fecha->getTimestamp();
+
+                 $hoy = round(microtime(true) * 1000);
                 $idSerie=mysqli_insert_id($conexion);
                 $sql2="INSERT INTO pesoavances (`Peso`, `TipoPeso`, `id_Serie`,`Fecha`) VALUES ($Peso, $TipoPeso, $idSerie, $hoy)";
 
@@ -338,8 +338,7 @@ class Serie{
 
         	if($result = mysqli_query($conexion, $sql)){
 
-                $fecha = new DateTime();
-                $hoy = $fecha->getTimestamp();
+                 $hoy = round(microtime(true) * 1000);
 
                 $sql2="UPDATE `pesoavances` SET `Peso`=$Peso, `TipoPeso`=$TipoPeso, `Fecha`=$hoy WHERE id_Serie=$idSerie order by Fecha desc limit 1;";
 
@@ -540,8 +539,7 @@ class Serie{
                         if($result = mysqli_query($conexion, $sql)){
                             //Ejecutamos la consulta para insertar en la tabla de series
 
-                            $fecha = new DateTime();
-                            $hoy = $fecha->getTimestamp(); //Obtenemos la fecha exacta del sistema, para el historico de pesos
+                             $hoy = round(microtime(true) * 1000);
 
                             $idSerie=mysqli_insert_id($conexion); // Obtenemos el id de la serie, para registrarlo en el histórico de pesos
                             $sql2="INSERT INTO pesoavances (`Peso`, `TipoPeso`, `id_Serie`,`Fecha`)

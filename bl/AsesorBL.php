@@ -38,27 +38,6 @@
 
 
 
-
-
-      // $metodoBl="deleteSubrutina";
-      // $idGimnasioBl=2;
-      // $idUsuarioBl=5;
-      // $idSucursalBl=2;
-      // $nombreBl='TEST XXXXXXXXXXXXXXXXXXXXXXXXXXX';
-      // $idRutinaBl =2;
-      // $idSocioBl = 2;
-      // $fechaBl = 1461202946527;
-      // $numeroSemanasBl = 2;
-	  // $objetivoBl = 'Ponerse mamer';
-	  // $idInstructorBl = 2;
-      // $estatus= 1;
-      // $idSubrutinaBl=2;
-      // $ordenBl=5;
-
-    //    $subrutinasBl=array(array("Id"=>"1", "Orden"=>"11");("Id"=>"1", "Orden"=>"11"));
-
-
-
 	//***************************************************************************************************************************************
 	//***************************************************************************************************************************************
 	//**********                          AQUI INICIA LA DEFINICIÓN DE FUNCIONES DE LA APLICACIÓN DEL INSTRUCTOR                  ***********
@@ -337,6 +316,7 @@
                     if ($id_Sucursal>0){
                         $rutinaRepetida = $rutina->buscarRutinaPorNombreYSucursal($id_Sucursal,$nombre);
 
+                        $nombre=addslashes($nombre);
                         if ($rutinaRepetida["success"]==1){ //Si el valor es igual a 1, significa que la rutina no esta dada de alta, y se puede proceder a clonar el valor
                             $response=$rutina->saveRutina($R_ID, $nombre, $fechaInicio, $numeroSemanas, $estatus, $objetivo, $id_Socio, $id_Sucursal , $id_Instructor );
                         }

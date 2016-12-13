@@ -18,9 +18,8 @@ class UsuarioGym{
 
             if ($idUsuario!=0)
             {
-                $sql="SELECT UG_Id, IdGym, g.Nombre as NombreGimnasio, g.CodigoGym, IdUsuario, ug.Estatus, IdRol, rol.Nombre as NombreRol,
-									(SELECT CodigoSucursal FROM sucursal su join socio so on su.S_Id=so.Id_Sucursal
-                                    where Id_UsuarioGym in (SELECT UG_Id FROM usuariogimnasio where IdUsuario=2 and IdGym=ug.IdGym)) as CodigoSucursal
+                $sql="SELECT UG_Id, IdGym, g.Nombre as NombreGimnasio, g.CodigoGym, IdUsuario, ug.Estatus, IdRol, rol.Nombre as NombreRol
+				,(SELECT CodigoSucursal FROM sucursal where S_id= (select id_sucursal from socio so where id_usuarioGym=ug.UG_Id and so.Estatus=1 limit 1)) as CodigoSucursal
                 FROM usuariogimnasio ug join gimnasio g on ug.IdGym=g.G_Id  join  rol on ug.idRol=rol.R_Id
                 where IdUsuario=$idUsuario and ug.Estatus>0";
             }

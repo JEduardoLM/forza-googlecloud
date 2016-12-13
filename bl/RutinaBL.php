@@ -145,6 +145,7 @@
             if ($idEjercicio!=0){
                 if ($Observaciones==NULL){$Observaciones='';}
                 $ejercicio = new Ejercicio();
+                $Observaciones=addslashes($Observaciones);
                 $response = $ejercicio->actualizarObservaciones($idEjercicio,$idTipo, $Observaciones);
             }
             else {
@@ -169,6 +170,7 @@
             if ($idEjercicio!=0){
                 if ($notaSocio==NULL){$notaSocio='';}
                 $ejercicio = new Ejercicio();
+                $notaSocio=addslashes($notaSocio);
                 $response = $ejercicio->actualizarNotaSocio($idEjercicio,$idTipo, $notaSocio);
             }
             else {
@@ -214,6 +216,8 @@
 
                 if ($ritmoCardiaco==NULL){$ritmoCardiaco=0;}
                 if ($nivel==NULL){$nivel=0;}
+
+                $observaciones=addslashes($observaciones);
                 $response = $ejercicio->actualizarInformaciónCardio($idEjercicio,$tiempoTotal, $velocidadPromedio, $tipoVelocidad, $distanciaTotal, $tipoDistancia, $ritmoCardiaco, $nivel,$observaciones);
             }
             else {

@@ -1162,8 +1162,7 @@ class Ejercicio{
 
 
                                 $item2 = array();
-                                $fecha = new DateTime();
-                                $hoy = $fecha->getTimestamp();
+                                $hoy = round(microtime(true) * 1000);
 
                                 $item2["Fecha"]=$hoy;
                                 $item2["PesoKg"]=$pesoMayorKg;

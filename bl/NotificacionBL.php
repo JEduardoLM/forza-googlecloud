@@ -25,6 +25,7 @@
     $tituloBl=$data["Titulo"];
     $descripcionBl=$data["Descripcion"];
     $idSucursalBl=$data["IdSucursal"];
+    $idGymBL=$data["IdGym"];
     $URLBl=$data["URL"];
     $codigoSucursalBl=$data["CodigoSucursal"];
     $codigoGymBl=$data["CodigoGym"];
@@ -49,7 +50,7 @@
     }
 
 
-    function saveNotificacion ($titulo, $descripcion, $idUsuario, $idSucursal, $URL, $codigoSucursal, $codigoGym, $color, $sound)
+    function saveNotificacion ($titulo, $descripcion, $idUsuario, $idGym, $idSucursal, $URL,  $codigoGym, $codigoSucursal, $color, $sound)
     {
         $noti= new Notificacion();
         if ($titulo==NULL or $titulo==''){
@@ -75,7 +76,9 @@
 
                         if ($codigoSucursal==NULL){$topic=$codigoGym;}else {$topic=$codigoSucursal;}
                         $sound="default";
-                        $respuesta = $noti->saveNotificacion ($titulo, $descripcion, $idUsuario, $idSucursal, $URL, $topic, $color, $sound);
+                        $titulo=addslashes($titulo);
+                        $descripcion=addslashes($descripcion);
+                        $respuesta = $noti->saveNotificacion ($titulo, $descripcion, $idUsuario, $idGym, $idSucursal, $URL, $topic, $color, $sound);
 
                     }
 
@@ -93,6 +96,34 @@
     }
 
 
+    function getNotificacionesByIdSucursal($idSucursal){
+
+        if ($idSucursal===NULL or $idSucursal==='' or $idSucursal===0){
+                $respuesta["success"]=5;
+                $respuesta["message"]='El Id de la sucursal debe ser diferente de nulo o cero';
+        }
+        else{
+                    $notif = new Notificacion();
+                    $respuesta= $notif->getNotificacionesByIdSucursal($idSucursal);
+        }
+        return $respuesta;
+    }
+
+
+
+    function getNotificacionesByIdGym($idGym){
+
+        if ($idGym===NULL or $idGym==='' or $idGym===0){
+                $respuesta["success"]=5;
+                $respuesta["message"]='El Id del gimnasio debe ser diferente de nulo o cero';
+        }
+        else{
+                    $notif = new Notificacion();
+                    $respuesta= $notif->getNotificacionesByIdGym($idGym);
+        }
+        return $respuesta;
+    }
+
 //******************************************************************************************************************************************
 //******************************************************************************************************************************************
 //******************************************************************************************************************************************
@@ -103,10 +134,15 @@
         case "updateIdNotificaciones": // Método utilizado para actualizar el id de notificaciones
                 $response=updateIdNotificaciones($idUsuarioBl, $idNotificacionesBl);
 		break;
-        case "saveNotificacion": // Método utilizado para actualizar el id de notificaciones
-                $response=saveNotificacion($tituloBl, $descripcionBl, $idUsuarioBl, $idSucursalBl, $URLBl, $codigoSucursalBl, $codigoGymBl, $colorBl, $soundBl);
+        case "getNotificacionesByIdSucursal": // Método utilizado para actualizar el id de notificaciones
+                $response=getNotificacionesByIdSucursal($idSucursalBl);
 		break;
-
+        case "getNotificacionesByIdGym": // Método utilizado para actualizar el id de notificaciones
+                $response=getNotificacionesByIdGym($idGymBL);
+		break;
+        case "saveNotificacion": // Método utilizado para actualizar el id de notificaciones
+                $response=saveNotificacion($tituloBl, $descripcionBl, $idUsuarioBl, $idGymBL, $idSucursalBl,  $URLBl, $codigoGymBl, $codigoSucursalBl, $colorBl, $soundBl);
+		break;
 		default:
 		{
 			$response["success"]=2;

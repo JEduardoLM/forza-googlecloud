@@ -173,8 +173,7 @@ function asociarSocioGimnasio($idUsuario, $idGimnasio, $idSucursal){
 
                 $idUsuarioGym=mysqli_insert_id($conexion); //Obtenemos el id del registro insertado
 
-                $fecha = new DateTime();
-                $hoy = $fecha->getTimestamp();
+                $hoy = round(microtime(true) * 1000);
 
                 $sql2="INSERT INTO socio (`Id_Sucursal`, `Id_UsuarioGym`, `FechaIngreso`, `Estatus`) VALUES ($idSucursal, $idUsuarioGym , $hoy , '1')";
 
@@ -401,10 +400,12 @@ function getNotificaciones($idUsuario){
         // Armamos la consulta, para determinar cuantos socios quedan disponibles para ser asignados a la sucursal.
 		$sql= "SELECT idnotificacion,titulo, Descripcion,fecha,
                 (SELECT concat(Nombre,' ', Apellidos) as Autor FROM usuarioenforma where Id=n.idUsuario) as Autor,
-                idSucursal, URL, (SELECT Id_Gimnasio FROM sucursal where S_Id=idSucursal) AS IdGym
+                idSucursal, URL, idGimnasio AS IdGym, (SELECT Id_Gimnasio FROM sucursal where S_Id=idSucursal) AS IdGym2
 		          FROM notificacion n where idSucursal in
-                        ( SELECT S_ID FROM sucursal su join socio so on su.S_Id=so.Id_Sucursal
-                                    where Id_UsuarioGym in (SELECT UG_Id FROM usuariogimnasio where IdUsuario=$idUsuario )) order by fecha desc";
+                        (SELECT S_ID FROM sucursal su join socio so on su.S_Id=so.Id_Sucursal
+                                    where Id_UsuarioGym in (SELECT UG_Id FROM usuariogimnasio where IdUsuario=$idUsuario and Estatus=1 ))
+                                    or idGimnasio in (SELECT IdGym FROM usuariogimnasio where IdUsuario=$idUsuario and Estatus=1)
+                                    order by fecha desc limit 10";
 
 
             if($result = mysqli_query($conexion, $sql))
@@ -422,13 +423,23 @@ function getNotificaciones($idUsuario){
                             $item["Fecha"]=$row["fecha"];
                             $item["Autor"]=$row["Autor"];
                             $item["IdSucursal"]=$row["idSucursal"];
+
                             $item["IdGym"]=$row["IdGym"];
+                            if ($item["IdGym"]==NULL or $item["IdGym"]==0 or $item["IdGym"]=='')
+                            {
+                                $item["IdGym"]=$row["IdGym2"];
+                            }
+
+                            if ( $item["IdSucursal"]==NULL){ $item["IdSucursal"]=0;}
+                            if ( $item["IdGym"]==NULL){ $item["IdGym"]=0;}
+
                             $item["URL"]=$row["URL"];
 
                             array_push($response["Notificaciones"], $item);
                         }
                         $response["success"]=0;
                         $response["message"]='Consulta exitosa';
+
                     }
                     else{
                         $response["success"]=1;
@@ -440,6 +451,76 @@ function getNotificaciones($idUsuario){
                     {
                         $response["success"]=1;
                         $response["message"]='No se encontraron notificaciones';
+                    }
+            }
+            else
+            {
+                $response["success"]=4;
+                $response["message"]='Se presentó un error al ejecutar la consulta';
+            }
+
+
+		desconectar($conexion); //desconectamos la base de datos
+        }
+    else
+    {
+        $response["success"]=3;
+        $response["message"]='Se presentó un error al realizar la conexión';
+
+    }
+        $response["getCodigos"]=$this->getCodigosActivos($idUsuario);
+		return ($response); //devolvemos el array
+
+
+
+
+}
+
+//******************************************************************************************************************
+//******************************************************************************************************************
+
+function getCodigosActivos($idUsuario){
+    //Este método es utilizado para poder determinar cuantos socios se pueden agregar a una sucursal
+
+        //Creamos la conexión
+		$conexion = obtenerConexion();
+
+        if ($conexion){
+		mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
+
+        // Armamos la consulta, para determinar cuantos socios quedan disponibles para ser asignados a la sucursal.
+            $sql= "Select CodigoSucursal, (SELECT CodigoGym FROM gimnasio where G_Id=su.Id_Gimnasio) as CodigoGym from socio so join sucursal su on so.Id_Sucursal=su.S_Id where Id_UsuarioGym in
+                    (Select UG_Id from usuarioenforma ue join usuariogimnasio ug on ue.Id=ug.IdUsuario where ue.Id=$idUsuario and ug.Estatus=1) and so.Estatus=1;";
+
+
+            if($result = mysqli_query($conexion, $sql))
+            {
+                if($result!=null){
+                    if ($result->num_rows>0){
+
+                        $response["Codigos"] = array();
+                        while($row = mysqli_fetch_array($result))
+                        {
+
+                            $item1=$row["CodigoSucursal"];
+                            $item2=$row["CodigoGym"];
+
+                            array_push($response["Codigos"], $item1);
+                            array_push($response["Codigos"], $item2);
+                        }
+                        $response["success"]=0;
+                        $response["message"]='Consulta exitosa';
+                    }
+                    else{
+                        $response["success"]=1;
+                        $response["message"]='No se encontraron codigos activos';
+                    }
+
+                }
+                else
+                    {
+                        $response["success"]=1;
+                        $response["message"]='No se encontraron codigos activos';
                     }
             }
             else

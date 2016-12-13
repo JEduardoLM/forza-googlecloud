@@ -882,8 +882,7 @@ class UsuarioEnforma{
 
                             //Si el código es correcto, procedemos a verificar que aún se encuentra vigente.
 
-                            $fecha = new DateTime();
-                            $hoy= $fecha->getTimestamp();
+                             $hoy = round(microtime(true) * 1000);
 
                            $tiempoDiferencia=$hoy-$fechaCodigoPassword;
 
