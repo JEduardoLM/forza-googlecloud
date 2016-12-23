@@ -48,7 +48,7 @@ class Gimnasio{
 		//generamos la consulta
 		mysqli_set_charset($conexion, "utf8"); //formato de datos utf8
 
-        $sql="SELECT C_Id, G_Id, Logo, ColorFondo, ColorComplementario, ColorFuenteTitulo, ColorFuenteTexto, TipoFuente FROM configuracion where G_Id='$idGimnasio'";
+        $sql="SELECT C_Id, G_Id, Logo, Cover, ColorFondo, ColorComplementario, ColorFuenteTitulo, ColorFuenteTexto, TipoFuente FROM configuracion where G_Id='$idGimnasio'";
 
                 if($result = mysqli_query($conexion, $sql))
                 {
@@ -64,6 +64,9 @@ class Gimnasio{
 
                                 $item["Logo"]=$row["Logo"];
                                 if ($item["Logo"]==NULL){$item["Logo"]='';}
+
+                                $item["Cover"]=$row["Cover"];
+                                if ($item["Cover"]==NULL){$item["Cover"]='';}
 
                                 $item["ColorFondo"]=$row["ColorFondo"];
                                 if ($item["ColorFondo"]==NULL){$item["ColorFondo"]='';}
@@ -81,6 +84,7 @@ class Gimnasio{
                                 if ($item["TipoFuente"]==NULL){$item["TipoFuente"]='';}
 
                                 array_push($response["configuracion"], $item);
+                                // echo $response["configuracion"][0]["Logo"];
                             }
                             $response["success"]=0;
                             $response["message"]='Consulta exitosa';

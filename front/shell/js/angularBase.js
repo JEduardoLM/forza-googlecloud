@@ -43,9 +43,9 @@ myApplication.controller('baseCommand', ['$scope', '$http', '$window', '$cookies
     /*************---- PRODUCCION(Google Cloud) ----**************/
     //$rootScope.SERVER_URL = "http://forza-1355.appspot.com";
     /*************---- DESARROLLO(Hostinger) ----**************/
-    $rootScope.SERVER_URL = "http://enformadesarrollo.esy.es";
+    //$rootScope.SERVER_URL = "http://enformadesarrollo.esy.es";
     /*************---- Raiz(Local) ----**************/
-    /*$rootScope.SERVER_URL = "";*/
+    $rootScope.SERVER_URL = "";
 
     $rootScope.usuarioAutenticadoId = $cookies.get('usuarioAutenticadoId', { path: '/' });
     $rootScope.usuarioAutenticadoNombre =  $cookies.get('usuarioAutenticadoNombre', { path: '/' });

@@ -93,6 +93,7 @@ class Notificacion{
           $response["success"]=0;
           $response["StatusCode"]= curl_getinfo($ch,     CURLINFO_HTTP_CODE);
           $response["message"]='Notificacion enviada correctamente.';
+          $response["Response HTTP Body"]= " - " .$result ." -";
         }
 
         curl_close($ch);
